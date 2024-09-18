@@ -1,0 +1,47 @@
+.sidebar {
+  width: 80px;
+  background-color: #B0B0B0;
+  height: 84.6vh; /* Use full height of the container */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+
+    li {
+      margin-bottom: 20px;
+      width: 100%;
+
+      a {
+        display: flex;
+        justify-content: center;
+        padding: 15px 0;
+        width: 100%;
+        text-align: center;
+        transition: background-color 0.3s ease;
+       
+
+        /* Hover state */
+        &:hover {
+          background-color: #D9D9D9;
+        }
+
+        /* Active state */
+        &.active {
+          background-color: #D9D9D9; /* Same background color as hover */
+        }
+
+        img {
+          height: 30px;
+          width: 30px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,139 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+.form-container {
+  font-family: Arial, sans-serif;
+  // display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 84.5vh;
+  width:100%
+}
+::ng-deep .content{
+  background-image: url('/img/background.png');
+  background-size: cover;
+
+  background-repeat: no-repeat;
+}
+
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #ffffff;
+  margin-left: 100px;
+}
+
+.candidate-form {
+  width: 85%;
+    background-color: #304470;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 850px;
+  color: white;
+  text-align: center;
+  margin-left: 100px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+  text-align: left;
+}
+
+
+
+.form-group label {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #D1D1E9;
+}
+
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #304470;
+  border-radius: 5px;
+  background-color: #FFFFFF;
+  color: #B3B3B3;
+}
+
+.form-group select {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #304470;
+  border-radius: 5px;
+  background-color: #FFFFFF;
+  color: #B3B3B3;
+  transition: background-color 0.3s ease;
+}
+
+// .form-group select:focus {
+//   background-color: #D1D1D9; /* Darker background color when focused */
+//   color: #000000; /* Text color can be adjusted if needed */
+// }
+
+// .form-group option:checked {
+//   color: #000000; /* Change the color of the selected option text */
+// }
+
+
+input::placeholder {
+  color: #B3B3B3;
+  opacity: 1;
+}
+
+
+.submit-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  background-color: #65558F;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: rgb(109, 85, 214);
+}
+
+/* Other existing styles */
+
+.error-message {
+  color: red; /* Color for error messages */
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border-color: red; /* Border color for invalid fields */
+}
+
+input.ng-valid.ng-touched,
+select.ng-valid.ng-touched {
+  border-color: #304470; /* Border color for valid fields */
+}
+
+form {
+  position: relative;
+}
+
