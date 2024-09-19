@@ -1,0 +1,71 @@
+<div class="form-container">
+  <h2>Candidate Form</h2>
+  <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()" class="candidate-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" formControlName="name" placeholder="Value">
+        <div *ngIf="candidateForm.get('name')?.invalid && candidateForm.get('name')?.touched" class="error-message">
+          <div *ngIf="candidateForm.get('name')?.errors?.['required']">Name is required.</div>
+          <div *ngIf="candidateForm.get('name')?.errors?.['pattern']">Name should not contain numbers or special characters.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="role">Role</label>
+        <input type="text" id="role" formControlName="role" placeholder="Value">
+        <div *ngIf="candidateForm.get('role')?.invalid && candidateForm.get('role')?.touched" class="error-message">
+          Role is required.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="candidate-id">Candidate ID</label>
+        <input type="text" id="candidate-id" formControlName="candidateId" placeholder="Value">
+        <div *ngIf="candidateForm.get('candidateId')?.invalid && candidateForm.get('candidateId')?.touched" class="error-message">
+          Candidate ID is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="stack">Stack</label>
+        <select id="stack" formControlName="stack">
+          <option value="" disabled>Select Stack</option>
+          <option value="frontend">Frontend</option>
+          <option value="backend">Backend</option>
+          <option value="fullstack">Fullstack</option>
+        </select>
+        <div *ngIf="candidateForm.get('stack')?.invalid && candidateForm.get('stack')?.touched" class="error-message">
+          Stack is required.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="interview-date">Interview Date</label>
+        <input type="date" id="interview-date" formControlName="interviewDate">
+        <div *ngIf="candidateForm.get('interviewDate')?.invalid && candidateForm.get('interviewDate')?.touched" class="error-message">
+          Interview Date is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="experience">Experience Level</label>
+        <select id="experience" formControlName="experience">
+          <option value="" disabled>Select Experience</option>
+          <option value="0-1">0-1 years</option>
+          <option value="1-3">1-3 years</option>
+          <option value="3-5">3-5 years</option>
+          <option value="5+">5+ years</option>
+        </select>
+        <div *ngIf="candidateForm.get('experience')?.invalid && candidateForm.get('experience')?.touched" class="error-message">
+          Experience Level is required.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <button type="submit" class="submit-button" [disabled]="candidateForm.invalid">START</button>
+    </div>
+  </form>
+</div>
