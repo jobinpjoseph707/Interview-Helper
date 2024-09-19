@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-import { Routes } from '@angular/router';
-
-export const routes: Routes = [];
-=======
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -29,4 +24,3 @@ export const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
->>>>>>> 63b7f755d719aa2dc2145748d796b4dee8268806
