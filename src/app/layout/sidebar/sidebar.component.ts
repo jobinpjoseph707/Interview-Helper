@@ -18,11 +18,11 @@ export class SidebarComponent {
         label: 'Candidate Form',
         routerLink: '/'
       },
-      // Uncomment these when the routes are available
-      // {
-      //   label: 'analysis',
-      //   routerLink: '/voc-analysis'
-      // },
+
+      {
+        label: 'Interview Summary',
+        routerLink: '/interview-summary'
+      },
       // {
       //   label: 'status',
       //   routerLink: '/voc-status'
