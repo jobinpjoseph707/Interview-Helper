@@ -1,0 +1,37 @@
+<div class="candidate-info">
+    <span class="name">Name: Jobin P Joseph</span>
+    <span class="candidate-id">Candidate ID:2345</span>
+    <div class="timer">
+      Timer: {{ minutes.toString().padStart(2, '0') }}:{{ seconds.toString().padStart(2, '0') }}
+      <button class="play-button" (click)="toggleTimer()">{{ isTimerRunning ? '⏸' : '▶' }}</button>
+    </div>
+  </div>
+  <div class="interview-container">
+    <nav class="tabs">
+      <button *ngFor="let tab of tabs" (click)="setActiveTab(tab)" [class.active]="activeTab === tab">
+        {{ tab }}
+      </button>
+    </nav>
+  
+    <div class="questions-container">
+      <ng-container *ngFor="let question of filteredQuestions">
+        <div class="question-card">
+          <p>{{ question.text }}</p>
+          <div class="answer-buttons">
+            <button (click)="answerQuestion(question.id, 'correct')" [class.selected]="question.answer === 'correct'">
+              ✓
+            </button>
+            <button (click)="answerQuestion(question.id, 'incorrect')" [class.selected]="question.answer === 'incorrect'">
+              ✗
+            </button>
+            <button (click)="answerQuestion(question.id, 'skip')" [class.selected]="question.answer === 'skip'">
+              ≫
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  
+    <button class="finish-button" (click)="finishInterview()">Finish</button>
+  </div>
+  
