@@ -1,0 +1,15 @@
+.header {
+  background-color: #25355A;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+}
+.header .logo {
+  display: flex;
+  align-items: center;
+}
+.header .logo img {
+  height: 50px;
+  width: auto;
+}/*# sourceMappingURL=header.component.css.map */

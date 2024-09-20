@@ -10,11 +10,11 @@ export const routes: Routes = [
     path: 'question-page',
     loadComponent: () => import('./pages/questionpage/questionpage.component').then((m) => m.QuestionpageComponent),
   },
-  // {
-  //   path: 'voc-analysis',
-  //   loadComponent: () => import('./pages/voc-analysis/voc-analysis.component').then((m) => m.VocAnalysisComponent),
+  {
+    path: 'interview-summary',
+    loadComponent: () => import('./pages/interview-summary/interview-summary.component').then((m) => m.InterviewSummaryComponent),
 
-  // },
+  },
   // {
   //   path: 'voc-status',
   //   loadComponent: () => import('./pages/voc-status/voc-status.component').then((m) => m.VocStatusComponent),
