@@ -1,0 +1,97 @@
+::ng-deep {
+  .content {
+    background-image: url('/img/background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+}
+h2{
+  font-size: 24px;
+  color: #ffffff;
+
+}
+
+.filter-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-field {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  color: white; // Input text color
+  padding: 10px;
+  border-radius: 5px;
+
+  &::placeholder {
+    color: white; // Placeholder text color
+    opacity: 1; // Ensures the placeholder color is fully white
+  }
+}
+
+.date-picker input {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  color: white; // Input text color
+  padding: 10px;
+  border-radius: 5px;
+
+  &::placeholder {
+    color: white; // Placeholder text color
+  }
+}
+
+.search-btn {
+  background-color: #304470;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.export-btn {
+
+  background: transparent;
+   border: none;
+   padding-left: 0.5px;
+   padding-right: 0.5px;
+   border-radius: 5px;
+   cursor: pointer;
+   border:1px solid white;
+   margin-left: 50px;
+
+}
+
+table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  color: white; // Table header and data color
+}
+
+.download-btn {
+  background-color: #6c4b8e;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.load-more {
+  background: none;
+  border: none;
+  color: white; // Text color for link
+  text-decoration: underline; // Underlined to look like a link
+  cursor: pointer;
+  padding: 0;
+  font-size: 16px;
+  margin-top: 20px;
+}

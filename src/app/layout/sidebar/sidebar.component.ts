@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
-  imports: [RouterModule] // Make sure RouterModule is imported
+  imports: [RouterModule] 
 })
 export class SidebarComponent {
   items: MenuItem[] | undefined;
