@@ -23,6 +23,10 @@ export class SidebarComponent {
         label: 'Interview Summary',
         routerLink: '/interview-summary'
       },
+      {
+        label:'Question-Page',
+        routerLink:'/question-page'
+      }
       // {
       //   label: 'status',
       //   routerLink: '/voc-status'

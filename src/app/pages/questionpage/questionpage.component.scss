@@ -1,0 +1,84 @@
+::ng-deep .content{
+    background-image: url('/img/background.png');
+    background-size: cover;
+    padding:0px;
+    background-repeat: no-repeat;
+  }
+.interview-container {
+    background-color: #1a1a2e94;
+    color: white;
+    min-height: 75%;
+  }
+  
+  .tabs {
+    display: flex;
+    margin-bottom: 20px;
+  
+    button {
+      background: none;
+      border: none;
+      color: #4a4a6a;
+      padding: 10px 20px;
+      cursor: pointer;
+  
+      &.active {
+        color: white;
+        border-bottom: 2px solid white;
+      }
+    }
+  }
+  .candidate-info{
+    background-color: #16213e;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+
+  }
+  .questions-container {
+    .question-card {
+      background-color: #16213e;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  
+      p {
+        margin: 0;
+      }
+  
+      .answer-buttons {
+        button {
+          background: none;
+          border: none;
+          color: white;
+          font-size: 18px;
+          margin-left: 10px;
+          cursor: pointer;
+  
+          &.selected {
+            &:nth-child(1) { color: #4caf50; }
+            &:nth-child(2) { color: #f44336; }
+            &:nth-child(3) { color: #2196f3; }
+          }
+        }
+      }
+    }
+  }
+  
+  .finish-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #7b2cbf;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }

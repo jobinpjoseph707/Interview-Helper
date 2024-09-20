@@ -1,11 +1,10 @@
 .sidebar {
   width: 80px;
   background-color: #B0B0B0;
-  height: 84.6vh; /* Use full height of the container */
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 
   .sidebar-menu {

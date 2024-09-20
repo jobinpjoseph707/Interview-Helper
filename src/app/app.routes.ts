@@ -5,7 +5,10 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./pages/candidate-page/candidate-page.component').then((m) => m.CandidatePageComponent),
-
+  },
+  {
+    path: 'question-page',
+    loadComponent: () => import('./pages/questionpage/questionpage.component').then((m) => m.QuestionpageComponent),
   },
   // {
   //   path: 'voc-analysis',
