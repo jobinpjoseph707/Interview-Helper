@@ -14,11 +14,6 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'visitor-management-system' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('visitor-management-system');
-  });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);

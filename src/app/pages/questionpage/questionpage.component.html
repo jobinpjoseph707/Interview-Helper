@@ -1,0 +1,104 @@
+<div class="candidate-info">
+    <span class="name">Name:{{candidateName}}</span>
+    <span class="candidate-id">Candidate ID:{{candidateId}}</span>
+    <div class="timer">
+      Timer: {{ minutes.toString().padStart(2, '0') }}:{{ seconds.toString().padStart(2, '0') }}
+      <button class="play-button" (click)="toggleTimer()">{{ isTimerRunning ? '⏸' : '▶' }}</button>
+    </div>
+  </div>
+  <!-- <div class="interview-container">
+    <nav class="tabs">
+      <button *ngFor="let tab of tabs" (click)="setActiveTab(tab)" [class.active]="activeTab === tab">
+        {{ tab }}
+      </button>
+    </nav>
+  
+    <div class="questions-container">
+      <ng-container *ngFor="let question of filteredQuestions">
+        <div class="question-card">
+          <p>{{ question.text }}</p>
+          <div class="answer-buttons">
+            <button (click)="answerQuestion(question.id, 'correct')" [class.selected]="question.answer === 'correct'">
+              ✓
+            </button>
+            <button (click)="answerQuestion(question.id, 'incorrect')" [class.selected]="question.answer === 'incorrect'">
+              ✗
+            </button>
+            <button (click)="answerQuestion(question.id, 'skip')" [class.selected]="question.answer === 'skip'">
+              ≫
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  
+    <button class="finish-button" (click)="finishInterview()">Finish</button>
+  </div> -->
+<div class="interview-container">
+    <nav class="tabs">
+      <button *ngFor="let tab of tabs" (click)="setActiveTab(tab)" [class.active]="activeTab === tab">
+        {{ tab }}
+      </button>
+    </nav>
+  <div class="questions-container">
+    <ng-container *ngFor="let question of filteredQuestions">
+      <div class="question-card">
+        <p>{{ question.text }}</p>
+        <div class="answer-buttons">
+          <button (click)="answerQuestion(question.id, 'correct')" [class.selected]="question.answer === 'correct'">
+            ✓
+          </button>
+          <button (click)="answerQuestion(question.id, 'incorrect')" [class.selected]="question.answer === 'incorrect'">
+            ✗
+          </button>
+          <button (click)="answerQuestion(question.id, 'skip')" [class.selected]="question.answer === 'skip'">
+            ≫
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <button class="finish-button" (click)="finishInterview()">Finish</button>
+  
+  
+  <!-- <div class="modal-overlay" *ngIf="showConfirmationModal">
+    <div class="modal-content">
+      <h2>Confirm Finish</h2>
+      <p>Are you sure you want to finish the interview?</p>
+      <div class="modal-buttons">
+        <button (click)="confirmFinish()">Yes</button>
+        <button (click)="cancelFinish()">No</button>
+      </div>
+    </div>
+  </div> -->
+
+
+  <div class="modal-overlay" *ngIf="showResultsModal">
+    <div class="modal-content">
+      <button class="close-button" (click)="closeModal()">×</button>
+      <h2>Candidate ID: {{ candidateId }}</h2>
+      <h3>Name: {{ candidateName }}</h3>
+  
+      <div *ngFor="let role of roles" class="role-section">
+        <div class="role-header" (click)="toggleRoleExpansion(role)">
+          <span>Role: {{ role.name }}</span>
+          <span>Total Percentage: {{ role.percentage }}%</span>
+          <span class="expand-icon">{{ role ? '▼' : '▶' }}</span>
+        </div>
+        <div *ngIf="role.expanded && role.details" class="role-details">
+          <p>Right: {{ role.details.right }}</p>
+          <p>Wrong: {{ role.details.wrong }}</p>
+          <p>Skipped: {{ role.details.skipped }}</p>
+        </div>
+      </div>
+  
+      <div class="overall-percentage">
+        Overall Percentage: {{ overallPercentage }}%
+      </div>
+  
+      <button class="download-button" (click)="downloadResults()">Download</button>
+    </div>
+  </div>
+  </div>
+  
