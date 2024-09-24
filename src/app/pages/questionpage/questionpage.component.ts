@@ -1,37 +1,8 @@
 import { Component } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-// type AnswerType = 'correct' | 'incorrect' | 'skip' | null;
+import { Question, RoleResult } from '../../Models/questions.interface';
 
-// interface Question {
-//   id: number;
-//   text: string;
-//   answer: AnswerType;
-// }
 
-// type AnswerType = 'correct' | 'incorrect' | 'skip' | null;  
-
-interface Question {  
-  id: number;  
-  text: string;  
-  role: string;
-  answer:  'correct' | 'incorrect' | 'skip' | null;  
-}  
-
-// interface QuestionCategory {  
-//   category: string;  
-//   questions: Question[];  
-// } 
-interface RoleResult {
-  name: string;
-  questions: Question[];
-  expanded: boolean;
-  details?: {
-    right: number;
-    wrong: number;
-    skipped: number;
-  };
-  percentage?: number;
-} 
 @Component({
   selector: 'app-questionpage',
   standalone: true,
