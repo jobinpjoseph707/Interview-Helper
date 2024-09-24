@@ -36,12 +36,17 @@
   </div> -->
 <div class="interview-container">
     <nav class="tabs">
-      <button *ngFor="let tab of tabs" (click)="setActiveTab(tab)" [class.active]="activeTab === tab">
+      @for (tab of tabs; track tab) {
+        <button (click)="setActiveTab(tab)" [class.active]="activeTab === tab">
+          {{ tab }}
+        </button>
+      }
+      <!-- <button *ngFor="let tab of tabs" (click)="setActiveTab(tab)" [class.active]="activeTab === tab">
         {{ tab }}
-      </button>
+      </button> -->
     </nav>
   <div class="questions-container">
-    <ng-container *ngFor="let question of filteredQuestions">
+    @for (question of filteredQuestions; track question.id) {
       <div class="question-card">
         <p>{{ question.text }}</p>
         <div class="answer-buttons">
@@ -56,7 +61,23 @@
           </button>
         </div>
       </div>
-    </ng-container>
+    }
+    <!-- <ng-container *ngFor="let question of filteredQuestions">
+      <div class="question-card">
+        <p>{{ question.text }}</p>
+        <div class="answer-buttons">
+          <button (click)="answerQuestion(question.id, 'correct')" [class.selected]="question.answer === 'correct'">
+            ✓
+          </button>
+          <button (click)="answerQuestion(question.id, 'incorrect')" [class.selected]="question.answer === 'incorrect'">
+            ✗
+          </button>
+          <button (click)="answerQuestion(question.id, 'skip')" [class.selected]="question.answer === 'skip'">
+            ≫
+          </button>
+        </div>
+      </div>
+    </ng-container> -->
   </div>
 
   <button class="finish-button" (click)="finishInterview()">Finish</button>
@@ -72,8 +93,40 @@
       </div>
     </div>
   </div> -->
+  @if (showResultsModal) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <button class="close-button" (click)="closeModal()">×</button>
+        <h2>Candidate ID: {{ candidateId }}</h2>
+        <h3>Name: {{ candidateName }}</h3>
 
+        @for (role of roles; track role.name) {
+          <div class="role-section">
+            <div class="role-header" (click)="toggleRoleExpansion(role)">
+              <span>Role: {{ role.name }}</span>
+              <span>Total Percentage: {{ role.percentage }}%</span>
+              <span class="expand-icon">{{ role.expanded ? '▼' : '▶' }}</span>
+            </div>
+            @if (role.expanded && role.details) {
+              <div class="role-details">
+                <p>Right: {{ role.details.right }}</p>
+                <p>Wrong: {{ role.details.wrong }}</p>
+                <p>Skipped: {{ role.details.skipped }}</p>
+              </div>
+            }
+          </div>
+        }
 
+        <div class="overall-percentage">
+          Overall Percentage: {{ overallPercentage }}%
+        </div>
+
+        <button class="download-button" (click)="downloadResults()">Download</button>
+      </div>
+    </div>
+
+    }
+<!-- 
   <div class="modal-overlay" *ngIf="showResultsModal">
     <div class="modal-content">
       <button class="close-button" (click)="closeModal()">×</button>
@@ -99,6 +152,6 @@
   
       <button class="download-button" (click)="downloadResults()">Download</button>
     </div>
-  </div>
+  </div> -->
   </div>
   
