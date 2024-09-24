@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "visitor-management-system": {
+    "IH": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/visitor-management-system",
+            "outputPath": "dist/ih",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -69,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "visitor-management-system:build:production"
+              "buildTarget": "IH:build:production"
             },
             "development": {
-              "buildTarget": "visitor-management-system:build:development"
+              "buildTarget": "IH:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -103,8 +103,5 @@
         }
       }
     }
-  },
-  "cli": {
-    "analytics": false
   }
 }
