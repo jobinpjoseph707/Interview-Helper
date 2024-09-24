@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
 import { Question, RoleResult } from '../../Models/questions.interface';
 
 
 @Component({
   selector: 'app-questionpage',
   standalone: true,
-  imports: [NgFor,NgIf],
+  imports: [],
   templateUrl: './questionpage.component.html',
   styleUrl: './questionpage.component.scss'
 })
@@ -14,7 +13,7 @@ export class QuestionpageComponent {
   minutes: number = 0;
   seconds: number = 0;
   isTimerRunning: boolean = false;
-  timerInterval: any;
+  timerInterval: any;//need to change this after api creation
 
 
 
