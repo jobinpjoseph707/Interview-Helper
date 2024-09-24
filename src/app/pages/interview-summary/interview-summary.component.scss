@@ -5,45 +5,81 @@
     background-repeat: no-repeat;
   }
 }
-h2{
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 75vh;
+  padding: 0 20px;
+}
+
+h2 {
   font-size: 24px;
   color: #ffffff;
-
 }
 
 .filter-section {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  justify-content: center; /* Center filter section items */
 }
 
-.input-field {
-  background-color: transparent;
-  border: 1px solid #ccc;
-  color: white; 
-  padding: 10px;
-  border-radius: 5px;
-
-  &::placeholder {
-    color: white; // Placeholder text color
-    opacity: 1; // Ensures the placeholder color is fully white
-  }
-}
-
+.input-field,
 .date-picker input {
   background-color: transparent;
   border: 1px solid #ccc;
-  color: white; // Input text color
+  color: white;
   padding: 10px;
   border-radius: 5px;
-
-  &::placeholder {
-    color: white; // Placeholder text color
-  }
+  width: 100px; /* Set a consistent width for all input fields */
+  height: 25px;
 }
 
-.search-btn {
-  background-color: #304470;
+input[type="date"] {
+  color: white; /* Text color in the calendar */
+  background-color: transparent;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  height: 25px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Inverts the color of the calendar icon */
+}
+
+.input-field::placeholder,
+.date-picker input::placeholder {
+  color: white; /* Placeholder text color */
+  opacity: 1; /* Ensures the placeholder color is fully white */
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
+.error-message {
+  color: red;
+  font-size: 10px;
+  width: 150px;
+  word-wrap: break-word;
+}
+
+/* Change border color to red when there is an error */
+input.ng-invalid.ng-touched,
+input.ng-invalid.ng-dirty {
+  border-color: red;
+}
+
+.search-btn,
+.export-btn,
+.download-btn {
+  background-color: #65558F;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -52,44 +88,31 @@ h2{
 }
 
 .export-btn {
-
   background: transparent;
-   border: none;
-   padding-left: 0.5px;
-   padding-right: 0.5px;
-   border-radius: 5px;
-   cursor: pointer;
-   border:1px solid white;
-   margin-left: 50px;
-
+  border: 1px solid white;
+  margin-left: 10px;
 }
 
 table {
   width: 100%;
+  max-width: 800px; /* Set a max width for the table */
   text-align: left;
   border-collapse: collapse;
+  margin-top: 20px; /* Add some space above the table */
 }
 
-th, td {
+th,
+td {
   padding: 15px;
   border-bottom: 1px solid #ddd;
-  color: white; // Table header and data color
-}
-
-.download-btn {
-  background-color: #6c4b8e;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  color: white; /* Table header and data color */
 }
 
 .load-more {
   background: none;
   border: none;
-  color: white; // Text color for link
-  text-decoration: underline; // Underlined to look like a link
+  color: white; /* Text color for link */
+  text-decoration: underline; /* Underlined to look like a link */
   cursor: pointer;
   padding: 0;
   font-size: 16px;
