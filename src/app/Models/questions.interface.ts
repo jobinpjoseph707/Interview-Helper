@@ -7,7 +7,6 @@ export interface Question {
   export interface RoleResult {
     name: string;
     questions: Question[];
-    expanded: boolean;
     details?: {
       right: number;
       wrong: number;

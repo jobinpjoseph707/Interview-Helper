@@ -8,11 +8,52 @@
     background-color: #1a1a2e94;
     color: white;
     min-height: 75%;
+    height: 75vh; 
+    max-height: 75%; 
+    overflow-y: auto; 
+    border-radius: 1%;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  }
+  .right-icon, .wrong-icon {
+    color: gray; /* Default color for both icons */
+    font-size: 24px;
+    margin-right: 10px;
   }
   
+  /* Selected correct answer style */
+  .right-icon.selected {
+    color: #538F76; /* Green for correct answer */
+  }
+  
+  /* Selected incorrect answer style */
+  .wrong-icon.selected {
+    color: #AF4949; /* Red for incorrect answer */
+  }
+  // .right-icon {
+  //   color: #538F76; /* Green for correct answer */
+  //   font-size: 24px;
+  //   margin-right: 10px;
+  // }
+  
+  // .wrong-icon {
+  //   color: #AF4949
+  //   ; /* Red for incorrect answer */
+  //   font-size: 24px;
+  // }
+  .timer{
+    color: white;
+    font-size: 16px;
+    padding: 0 .6rem;
+    gap: 7px;
+display: flex;
+align-items: center;
+  }
   .tabs {
-    display: flex;
-    margin-bottom: 20px;
+    background-color: #1a1a2e94;
+    position: sticky; /* Makes the tabs fixed when scrolling */
+    top: 0; /* Sticks to the top of the container */
+    z-index: 1000; /* Ensures it's always on top of other elements */
   
     button {
       background: none;
@@ -38,38 +79,65 @@
     color: white;
 
   }
-  .questions-container {
-    .question-card {
-      background-color: #16213e;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 15px;
+ 
+
+      .mat-mdc-card-content {
+        display: flex;
+        padding: 4 0rem !important;
+        justify-content: space-between;
+              }
+     .question-text{
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-  
-      p {
-        margin: 0;
-      }
-  
-      .answer-buttons {
-        button {
-          background: none;
-          border: none;
-          color: white;
-          font-size: 18px;
-          margin-left: 10px;
-          cursor: pointer;
-  
-          &.selected {
-            &:nth-child(1) { color: #4caf50; }
-            &:nth-child(2) { color: #f44336; }
-            &:nth-child(3) { color: #2196f3; }
-          }
-        }
-      }
+      align-self: flex-end;
+     }
+     .mat-mdc-card-outlined {
+
+      margin: 1rem 1rem;
+      background-color: #1f3674 !important;
     }
-  }
+    // .mat-mdc-icon-button .mat-icon {
+    //   color: #7b2cbf;
+    // }
+
+    .answer-buttons{
+      display: flex;
+      align-self: flex-end;
+    }
+     
+     
+    
+    
+    // .question-card {
+    //   background-color: #16213e;
+    //   border-radius: 8px;
+    //   padding: 20px;
+    //   margin-bottom: 15px;
+    //   display: flex;
+    //   justify-content: space-between;
+    //   align-items: center;
+  
+    //   p {
+    //     margin: 0;
+    //   }
+  
+    //   .answer-buttons {
+    //     button {
+    //       background: none;
+    //       border: none;
+    //       color: white;
+    //       font-size: 18px;
+    //       margin-left: 10px;
+    //       cursor: pointer;
+  
+    //       &.selected {
+    //         &:nth-child(1) { color: #4caf50; }
+    //         &:nth-child(2) { color: #f44336; }
+    //         &:nth-child(3) { color: #2196f3; }
+    //       }
+    //     }
+    //   }
+    // }
+  
   
   .finish-button {
     position: fixed;
@@ -105,6 +173,11 @@
     width: 80%;
     max-width: 500px;
   }
+  .modal-header {
+    display: flex;
+    justify-content: space-between; /* Pushes the close button to the right */
+    align-items: center;
+  }
   
   .close-button {
     float: right;
@@ -114,12 +187,18 @@
     font-size: 24px;
     cursor: pointer;
   }
-  
+  .closemodel {
+    color: white;
+    margin-left: 30rem; /* Ensures the close button is aligned to the right */
+
+  }
   .role-section {
+    font-size: 24px;
     margin-bottom: 15px;
   }
   
   .role-header {
+    font-size: 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -143,10 +222,13 @@
     display: block;
     margin: 20px auto 0;
     padding: 10px 20px;
-    background-color: #7b2cbf;
-    color: white;
+    background-color: #7b2cbf !important;
+    color: white !important;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    &:hover {
+      background-color: #ff69b4; /* Darker shade of pink on hover */
+    }
   }
   
