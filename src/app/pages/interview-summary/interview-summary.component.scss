@@ -5,6 +5,25 @@
   padding: 20px; // Add padding to the content area
 }
 
+:host {
+  ::ng-deep mat-label,span {
+    color: white !important;
+  }
+}
+:host {
+  ::ng-deep .mat-mdc-form-field-required-marker {
+    color: white !important; // Set required marker color to white
+  }
+}
+:host{
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    max-width: 170px;
+    max-height: 50px;
+  }
+}
+
+
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -16,9 +35,10 @@ margin-top: -70px;
   h2 {
     text-align: center;
     color: white;
-    margin-bottom: 30px;
-    font-size: 2.5em;
-    
+    margin-bottom: 10px;
+    font-size: 26px;
+    margin-top: 10px;
+
   }
 
   .filter-container {
@@ -37,47 +57,96 @@ margin-top: -70px;
         flex: 1; // Allow equal space for each section
         min-width: 250px; // Minimum width for responsiveness
 
+        .input-wrapper {
+          width: 150px; // Set a custom width
+          margin-bottom: 16px; // Optional: adjust spacing if needed
+
+          .mat-form-field-flex {
+            padding: 0 8px; // Adjust padding to reduce overall height
+          }
+
+          .mat-form-field-outline {
+            height: 36px; // Reduce the height of the outline container
+          }
+
+          .mat-form-field-infix {
+            padding: 4px 0; // Reduce padding inside the input field
+          }
+
+          input.mat-input-element {
+            height: 24px; // Adjust the input field height
+            line-height: 24px; // Ensure the text aligns properly
+            padding: 0 8px; // Control inner padding
+          }
+
+          .mat-form-field-label-wrapper {
+            line-height: 24px; // Align the label properly
+          }
+        }
+
+
+        img{
+          margin-left: 200px;
+
+        }
+
         h3 {
           margin-bottom: 10px;
           font-size: 1.5em;
-          color: #1976d2;
+          color: #1976d2; // Section title color
         }
 
         p {
           margin-bottom: 5px;
           font-size: 0.9em;
-          color: #555;
+          color: white; // Change to white as per your requirement
+        }
+        mat-icon {
+          margin-top: 4px; // Adjust as needed
         }
 
-        .input-wrapper {
-          margin-bottom: 10px; // Space between inputs
+
+        .name-role-container {
+          display: flex; // Use flexbox to align name and role fields
+          gap: 10px; // Space between the input fields
+          width: 100%; // Ensure it takes the full width available
+
+          .input-wrapper {
+            flex: 1; // Allow each field to grow equally
+            min-width: 200px; // Set a minimum width for responsive design
+          }
         }
 
+        .date-range-container {
+          display: flex; // Use flexbox to align date fields
+          gap: 10px; // Space between the date fields
+          width: 100%; // Ensure it takes the full width available
+          margin-left: 100px;
 
-  .name-role-container {
-    display: flex; // Use flexbox to align name and role fields
-    gap: 20px; // Space between the input fields
-    width: 100%; // Ensure it takes the full width available
-
-    .input-wrapper {
-      flex: 1; // Allow each field to grow equally
-      min-width: 200px; // Set a minimum width for responsive design
-    }
-  }
-
-  .date-range-container {
-    display: flex; // Use flexbox to align date fields
-    gap: 20px; // Space between the date fields
-    width: 100%; // Ensure it takes the full width available
-
-    .input-wrapper {
-      flex: 1; // Allow each field to grow equally
-      min-width: 200px; // Set a minimum width for responsive design
-    }
-  }
+          .input-wrapper {
+            flex: 1; // Allow each field to grow equally
+            min-width: 200px; // Set a minimum width for responsive design
+          }
+        }
       }
     }
+
+    // Styles for the action row
+    mat-action-row {
+      margin-top: 20px; // Space above the action row
+      button {
+        width: 100%; // Make button full width
+      }
+    }
+
+    // Additional button styling for export button if needed
+    .export-btn {
+      background-color: transparent; // Example style
+      border: none; // No border
+      cursor: pointer; // Pointer cursor
+    }
   }
+
 
 
 
