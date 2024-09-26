@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Hellen Jackson",
+    "date": "Oct 21, 2023",
+    "role": "Front End Developer",
+    "overallPercentage": 85,
+    "stacks": [
+      {
+        "stackName": "Angular",
+        "experience": "Mid",
+        "technologies": ["TypeScript", "RxJS", "NgRx"],
+        "percentage": 90
+      },
+      {
+        "stackName": "JavaScript",
+        "experience": "Senior",
+        "technologies": ["ES6", "React"],
+        "percentage": 80
+      }
+    ]
+  },
+  {
+    "name": "Alan Tom Andrews",
+    "date": "Oct 21, 2023",
+    "role": "Front End Developer",
+    "overallPercentage": 88,
+    "stacks": [
+      {
+        "stackName": "React",
+        "experience": "Senior",
+        "technologies": ["JSX", "Hooks", "Redux"],
+        "percentage": 85
+      },
+      {
+        "stackName": "JavaScript",
+        "experience": "Mid",
+        "technologies": ["ES6", "Node.js"],
+        "percentage": 91
+      }
+    ]
+  }
+]
