@@ -30,19 +30,26 @@
     position: relative; // Change from fixed to relative
     margin-top: auto; // Ensure it stays at the bottom of the content
     z-index: 1000;
+    background-color: #16213e;
+    color: white;
 
   }
 }
 :host{
-
-
 ::ng-deep .mat-mdc-icon-button svg{
   color: white;
 }
 ::ng-deep .mat-mdc-select-arrow svg{
 color: white;
 }
+::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: white;
 }
+::ng-deep .mat-mdc-select {
+  color:white;
+}
+}
+
 .search-button {
   background-color: #65558f;
   border: none;
@@ -188,17 +195,23 @@ scrollbar-width: none;
 
     mat-expansion-panel {
       margin-bottom: 10px; // Space between panels
-      background: #fff; // White background for expansion panels
+      background: #16213e; // White background for expansion panels
       border-radius: 8px; // Rounded corners
       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); // Shadow for depth
 
 
+
       mat-expansion-panel-header {
         border-radius: 8px; // Rounded corners
+
       }
 
       mat-panel-title {
         font-weight: bold; // Bold title
+        color: white;
+      }
+      mat-panel-description{
+        color: white;
       }
 
       .report-details-table {
@@ -215,6 +228,7 @@ scrollbar-width: none;
         td {
           padding: 8px; // Padding in table data cells
           border-bottom: 1px solid #ddd; // Light gray bottom border
+          color: white;
         }
       }
     }

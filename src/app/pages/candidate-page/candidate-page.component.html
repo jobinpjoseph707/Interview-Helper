@@ -9,7 +9,7 @@
           <label *ngIf="!(candidateForm.get('name')?.invalid && candidateForm.get('name')?.touched)">Name</label>
           <div *ngIf="candidateForm.get('name')?.invalid && candidateForm.get('name')?.touched" class="error-message">
             <div *ngIf="candidateForm.get('name')?.errors?.['required']">Name is required.</div>
-            <div *ngIf="candidateForm.get('name')?.errors?.['pattern']">Name should not contain numbers or special characters.</div>
+            <div *ngIf="candidateForm.get('name')?.errors?.['pattern']">The Name must only contain letters.</div>
           </div>
           <input type="text" id="name" formControlName="name" placeholder="Enter Name" />
         </div>
