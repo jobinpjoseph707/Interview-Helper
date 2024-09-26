@@ -8,13 +8,13 @@ import { Stack } from '../Models/stack';
 export class StackService {
 
   private stacks: Stack[] = [
-    { "stackName": "Angular", "experienceLevels": ["Fresher", "Mid", "Senior"] },
-    { "stackName": ".NET", "experienceLevels": ["Fresher", "Mid", "Senior"] },
-    { "stackName": "React", "experienceLevels": ["Fresher", "Mid", "Senior"] },
-    { "stackName": "Python", "experienceLevels": ["Fresher", "Mid", "Senior"] },
-    { "stackName": "Frontend", "experienceLevels": ["Fresher", "Mid", "Senior"] },
-    { "stackName": "Backend", "experienceLevels": ["Fresher", "Mid", "Senior"] },
-    { "stackName": "Fullstack", "experienceLevels": ["Fresher", "Mid", "Senior"] }
+    { "technology": "Angular", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+    { "technology": ".NET", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+    { "technology": "React", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+    { "technology": "Python", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+    { "technology": "Frontend", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+    { "technology": "Backend", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+    { "technology": "Fullstack", "experienceLevels": ["Fresher", "Mid", "Senior"] }
   ];
 
   constructor() {}

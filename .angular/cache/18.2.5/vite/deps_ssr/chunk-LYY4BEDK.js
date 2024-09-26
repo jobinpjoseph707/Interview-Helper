@@ -84,6 +84,20 @@ function transition(stateChangeExpr, steps, options = null) {
     options
   };
 }
+function animateChild(options = null) {
+  return {
+    type: AnimationMetadataType.AnimateChild,
+    options
+  };
+}
+function query(selector, animation, options = null) {
+  return {
+    type: AnimationMetadataType.Query,
+    selector,
+    animation,
+    options
+  };
+}
 var AnimationBuilder = class _AnimationBuilder {
   static {
     this.ɵfac = function AnimationBuilder_Factory(__ngFactoryType__) {
@@ -480,6 +494,8 @@ export {
   state,
   keyframes,
   transition,
+  animateChild,
+  query,
   NoopAnimationPlayer,
   AnimationGroupPlayer,
   ɵPRE_STYLE
@@ -493,4 +509,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-7LOM7XKZ.js.map
+//# sourceMappingURL=chunk-LYY4BEDK.js.map

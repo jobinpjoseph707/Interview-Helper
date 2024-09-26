@@ -3,25 +3,46 @@
   background-size: cover;
   background-repeat: no-repeat;
   padding: 20px; // Add padding to the content area
+
 }
 
 :host {
-  ::ng-deep mat-label,span {
+  ::ng-deep mat-label,
+  span {
     color: white !important;
   }
 }
+
 :host {
   ::ng-deep .mat-mdc-form-field-required-marker {
     color: white !important; // Set required marker color to white
   }
 }
-:host{
+
+:host {
   ::ng-deep .mat-mdc-text-field-wrapper {
     max-width: 170px;
     max-height: 50px;
   }
 }
+:host {
+  ::ng-deep .mat-mdc-paginator {
+    position: relative; // Change from fixed to relative
+    margin-top: auto; // Ensure it stays at the bottom of the content
+    z-index: 1000;
 
+  }
+}
+:host{
+
+
+::ng-deep .mat-mdc-icon-button svg{
+  color: white;
+}
+::ng-deep .mat-mdc-select-arrow svg{
+color: white;
+}
+}
 .search-button {
   background-color: #65558f;
   border: none;
@@ -30,32 +51,33 @@
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 4px;
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s ease;
   max-height: 50px;
   max-width: 170px;
-}
-.search-button:hover {
-  background-color: rgb(73, 63, 111);
+  padding: 5px;
+
+  &:hover {
+    background-color: rgb(73, 63, 111);
+  }
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-margin-top: -70px;
+  margin-top: -30px;
   border-radius: 10px; // Rounded corners
-  padding: 20px; // Padding inside the container
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); // Subtle shadow for depth
+  max-height: 100vh;
+
 
   h2 {
     text-align: center;
     color: white;
     margin-bottom: 10px;
     font-size: 26px;
-    margin-top: 10px;
-
+    margin-top: 30px;
   }
 
   .filter-container {
@@ -66,7 +88,7 @@ margin-top: -70px;
     .filter-form {
       display: flex; // Use flexbox for the form
       flex-wrap: wrap; // Allow wrapping on smaller screens
-      gap: 20px; // Space between sections
+      gap: 10px; // Space between sections
 
       .filter-section {
         display: flex; // Allow filter sections to stack elements inside
@@ -102,31 +124,20 @@ margin-top: -70px;
         }
 
 
-        img{
-          margin-left: 200px;
-
-        }
-
-        h3 {
-          margin-bottom: 10px;
-          font-size: 1.5em;
-          color: #1976d2; // Section title color
-        }
 
         p {
           margin-bottom: 5px;
           font-size: 0.9em;
           color: white; // Change to white as per your requirement
         }
-        mat-icon {
-          margin-top: 4px; // Adjust as needed
-        }
+
 
 
         .name-role-container {
           display: flex; // Use flexbox to align name and role fields
-          gap: 10px; // Space between the input fields
+          gap: 5px; // Space between the input fields
           width: 100%; // Ensure it takes the full width available
+
 
           .input-wrapper {
             flex: 1; // Allow each field to grow equally
@@ -136,9 +147,9 @@ margin-top: -70px;
 
         .date-range-container {
           display: flex; // Use flexbox to align date fields
-          gap: 10px; // Space between the date fields
+          gap: 5px; // Space between the date fields
           width: 100%; // Ensure it takes the full width available
-          margin-left: 100px;
+
 
           .input-wrapper {
             flex: 1; // Allow each field to grow equally
@@ -151,6 +162,7 @@ margin-top: -70px;
     // Styles for the action row
     mat-action-row {
       margin-top: 20px; // Space above the action row
+
       button {
         width: 100%; // Make button full width
       }
@@ -163,11 +175,16 @@ margin-top: -70px;
       cursor: pointer; // Pointer cursor
     }
   }
+.custom-accordion{
 
-
+overflow-y: scroll;
+max-height: 240px;
+min-height: 240px;
+scrollbar-width: none;
   // Accordion styling
   mat-accordion {
     margin-top: 20px; // Space above accordion
+
 
     mat-expansion-panel {
       margin-bottom: 10px; // Space between panels
@@ -175,8 +192,8 @@ margin-top: -70px;
       border-radius: 8px; // Rounded corners
       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); // Shadow for depth
 
+
       mat-expansion-panel-header {
-        background: #f5f5f5; // Light gray background for header
         border-radius: 8px; // Rounded corners
       }
 
@@ -188,10 +205,11 @@ margin-top: -70px;
         width: 100%; // Full width table
         border-collapse: collapse; // Collapsed borders
 
+
         th {
-          background-color: #1976d2; // Header background color
+          background-color: #65558f; // Header background color
           color: white; // Header text color
-          padding: 10px; // Padding in header cells
+        padding: 8px;
         }
 
         td {
@@ -201,6 +219,7 @@ margin-top: -70px;
       }
     }
   }
-
+}
 
 }
+

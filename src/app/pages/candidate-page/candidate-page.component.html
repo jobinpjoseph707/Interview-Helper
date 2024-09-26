@@ -18,9 +18,11 @@
           <label *ngIf="!(candidateForm.get('role')?.invalid && candidateForm.get('role')?.touched)">Role</label>
           <div *ngIf="candidateForm.get('role')?.invalid && candidateForm.get('role')?.touched" class="error-message">
             <div *ngIf="candidateForm.get('role')?.errors?.['required']">Role is required.</div>
-            <div *ngIf="candidateForm.get('role')?.errors?.['pattern']">Role should not contain numbers or special characters.</div>
           </div>
-          <input type="text" id="role" formControlName="role" placeholder="Enter Role" />
+          <select id="role" formControlName="role">
+            <option value="" disabled selected>Select Role</option>
+            <option *ngFor="let role of roleOptions" [value]="role.name">{{ role.name }}</option>
+          </select>
         </div>
 
         <div class="form-group">
@@ -30,7 +32,6 @@
           </div>
           <input type="date" id="interview-date" formControlName="interviewDate" />
         </div>
-
       </div>
 
       <!-- Right column for Stacks -->
@@ -45,7 +46,7 @@
                 </div>
                 <select id="stackName-{{i}}" formControlName="stackName" (change)="onStackChange(i)">
                   <option value="" disabled>Select Technology</option>
-                  <option *ngFor="let option of stackOptions" [value]="option.stackName">{{ option.stackName }}</option>
+                  <option *ngFor="let option of stackOptions" [value]="option.technology">{{ option.technology }}</option>
                 </select>
               </div>
 

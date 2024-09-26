@@ -15,15 +15,115 @@ export class InterviewReportService {
       "overallPercentage": 85,
       "stacks": [
         {
-          "stackName": "Angular",
+          "technology": "Angular",
           "experience": "Senior",
-          "technologies": ["TypeScript", "RxJS", "HTML", "CSS"],
+
           "percentage": 90
         },
         {
-          "stackName": "React",
+          "technology": "React",
           "experience": "Mid",
-          "technologies": ["JavaScript", "Redux", "React Router"],
+
+          "percentage": 80
+        }
+      ]
+    },
+    {
+      "name": "Hellen Jackson",
+      "date": "20-10-2021",
+      "role": "Front End Developer",
+      "overallPercentage": 85,
+      "stacks": [
+        {
+          "technology": "Angular",
+          "experience": "Senior",
+
+          "percentage": 90
+        },
+        {
+          "technology": "React",
+          "experience": "Mid",
+
+          "percentage": 80
+        }
+      ]
+    },
+    {
+      "name": "Hellen Jackson",
+      "date": "20-10-2021",
+      "role": "Front End Developer",
+      "overallPercentage": 85,
+      "stacks": [
+        {
+          "technology": "Angular",
+          "experience": "Senior",
+
+          "percentage": 90
+        },
+        {
+          "technology": "React",
+          "experience": "Mid",
+
+          "percentage": 80
+        }
+      ]
+    },
+    {
+      "name": "Hellen Jackson",
+      "date": "20-10-2021",
+      "role": "Front End Developer",
+      "overallPercentage": 85,
+      "stacks": [
+        {
+          "technology": "Angular",
+          "experience": "Senior",
+
+          "percentage": 90
+        },
+        {
+          "technology": "React",
+          "experience": "Mid",
+
+          "percentage": 80
+        }
+      ]
+    },
+    {
+      "name": "Hellen Jackson",
+      "date": "20-10-2021",
+      "role": "Front End Developer",
+      "overallPercentage": 85,
+      "stacks": [
+        {
+          "technology": "Angular",
+          "experience": "Senior",
+
+          "percentage": 90
+        },
+        {
+          "technology": "React",
+          "experience": "Mid",
+
+          "percentage": 80
+        }
+      ]
+    },
+    {
+      "name": "Hellen Jackson",
+      "date": "20-10-2021",
+      "role": "Front End Developer",
+      "overallPercentage": 85,
+      "stacks": [
+        {
+          "technology": "Angular",
+          "experience": "Senior",
+
+          "percentage": 90
+        },
+        {
+          "technology": "React",
+          "experience": "Mid",
+
           "percentage": 80
         }
       ]
@@ -35,15 +135,15 @@ export class InterviewReportService {
       "overallPercentage": 78,
       "stacks": [
         {
-          "stackName": "Vue.js",
+          "technology": "Vue.js",
           "experience": "Mid",
-          "technologies": ["Vuex", "Vuetify", "JavaScript"],
+
           "percentage": 75
         },
         {
-          "stackName": "React",
+          "technology": "React",
           "experience": "Fresher",
-          "technologies": ["Hooks", "Context API"],
+
           "percentage": 80
         }
       ]
@@ -55,15 +155,15 @@ export class InterviewReportService {
       "overallPercentage": 92,
       "stacks": [
         {
-          "stackName": "Node.js",
+          "technology": "Node.js",
           "experience": "Senior",
-          "technologies": ["Express", "MongoDB", "JWT"],
+
           "percentage": 95
         },
         {
-          "stackName": "React",
+          "technology": "React",
           "experience": "Senior",
-          "technologies": ["Redux", "Context API"],
+
           "percentage": 89
         }
       ]
@@ -75,15 +175,15 @@ export class InterviewReportService {
       "overallPercentage": 82,
       "stacks": [
         {
-          "stackName": "Node.js",
+          "technology": "Node.js",
           "experience": "Mid",
-          "technologies": ["Express", "Mongoose", "JWT"],
+
           "percentage": 84
         },
         {
-          "stackName": "Django",
+          "technology": "Django",
           "experience": "Fresher",
-          "technologies": ["Python", "REST Framework"],
+
           "percentage": 80
         }
       ]
