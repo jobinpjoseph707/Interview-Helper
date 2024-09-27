@@ -9,18 +9,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { InterviewReportService } from '../../services/interview-report.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { PageEvent } from '@angular/material/paginator';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { PageEvent } from '@angular/material/paginator'; // Import PageEvent for paginator
+import { MatPaginatorModule } from '@angular/material/paginator'; // Import MatPaginatorModule
 import { MatSelectModule } from '@angular/material/select';
-
-
+import { jsPDF } from 'jspdf';
+import { RoleService } from '../../services/role.service';
 @Component({
   selector: 'app-interview-summary',
   standalone: true,
   imports: [
-    MatExpansionModule,MatSelectModule ,
+    MatExpansionModule,
     MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
     MatInputModule,
     MatIconModule,
     MatButtonModule,
@@ -29,7 +31,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatDatepickerModule,
     MatNativeDateModule,
     HttpClientModule,
-    MatPaginatorModule
+    MatPaginatorModule // Add MatPaginatorModule to imports
   ],
   templateUrl: './interview-summary.component.html',
   styleUrls: ['./interview-summary.component.scss']
@@ -38,14 +40,14 @@ export class InterviewSummaryComponent implements OnInit {
   interviewForm: FormGroup;
   reports: any[] = []; // Holds the fetched interview reports
   pagedReports: any[] = []; // Reports for the current page
+  roleOptions: any[] = [];
   pageSize = 4; // Default page size
   currentPage = 0; // Current page index
-  roleOptions: { name: string }[] = []; // Array to hold role options
 
-  constructor(private fb: FormBuilder, private reportService: InterviewReportService) {
+  constructor(private fb: FormBuilder, private reportService: InterviewReportService, private roleService: RoleService) {
     this.interviewForm = this.fb.group({
       name: ['', [this.noSpecialCharsValidator]],
-      role: ['', [Validators.required]], // Required validator for role
+      role: ['', [Validators.required,this.noSpecialCharsValidator]],
       fromDate: [''],
       toDate: [''],
     });
@@ -81,26 +83,24 @@ export class InterviewSummaryComponent implements OnInit {
     }
   }
 
-  // Fetch roles from a service or define them statically
-  fetchRoles() {
-    this.roleOptions = [
-      { name: 'Frontend Developer' },
-      { name: 'Backend Developer' },
-      { name: 'Full Stack Developer' },
-      { name: 'Data Scientist' },
-      // Add more roles as needed
-    ];
-  }
-
   // Fetch reports on component initialization
   ngOnInit(): void {
-    this.fetchRoles(); // Fetch role options on initialization
     this.reportService.getInterviewReports().subscribe((data) => {
       this.reports = data;
       this.updatePagedReports(); // Initialize paged reports after fetching data
+      this.fetchRoles();
     });
   }
-
+  fetchRoles() {
+    this.roleService.getRoles().subscribe(
+      (roles) => {
+        this.roleOptions = roles;
+      },
+      (error) => {
+        console.error('Error fetching roles:', error);
+      }
+    );
+  }
   // Handle form submission
   onSubmit(): void {
     if (this.interviewForm.valid) {
@@ -146,5 +146,32 @@ export class InterviewSummaryComponent implements OnInit {
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex;
     this.updatePagedReports(); // Update displayed reports based on new page
+  }
+  downloadExpandedReport(report: any) {
+    const doc = new jsPDF();
+
+    // Add report details to PDF
+    doc.setFontSize(16);
+    doc.text('Interview Report', 10, 10);
+    doc.setFontSize(12);
+    doc.text(`Name: ${report.name}`, 10, 20);
+    doc.text(`Date: ${report.date}`, 10, 30);
+    doc.text(`Role: ${report.role}`, 10, 40);
+    doc.text(`Overall Percentage: ${report.overallPercentage}%`, 10, 50);
+    doc.text('Stack Details:', 10, 60);
+
+    // Adding stack details to PDF
+    let yOffset = 70;
+    report.stacks.forEach((stack: any) => {
+      doc.text(`Technology: ${stack.technology}`, 10, yOffset);
+      yOffset += 10;
+      doc.text(`Experience Level: ${stack.experience}`, 10, yOffset);
+      yOffset += 10;
+      doc.text(`Percentage: ${stack.percentage}%`, 10, yOffset);
+      yOffset += 15;
+    });
+
+    // Save PDF file
+    doc.save(`${report.name}-report.pdf`);
   }
 }

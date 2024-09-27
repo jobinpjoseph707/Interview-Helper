@@ -30,7 +30,7 @@
     position: relative; // Change from fixed to relative
     margin-top: auto; // Ensure it stays at the bottom of the content
     z-index: 1000;
-    background-color: #16213e;
+    background-color: #304470;
     color: white;
 
   }
@@ -48,6 +48,38 @@ color: white;
 ::ng-deep .mat-mdc-select {
   color:white;
 }
+
+}
+:host{
+::ng-deep .mat-expansion-indicator svg{
+  fill:white;
+}
+::ng-deep .mat-mdc-paginator-icon{
+  fill:white;
+}
+}
+.download-container {
+  text-align: right; // Align the button to the right
+  margin-top: 10px;
+
+  button {
+    background-color:#65558f; // Purple background
+    color: #ffffff; // White text color
+    padding: 10px 20px; // Add some padding
+    border: none; // Remove the border
+    border-radius: 8px; // Rounded corners
+    font-size: 16px; // Slightly increase font size
+    cursor: pointer; // Change cursor to pointer
+    transition: background-color 0.3s ease; // Smooth transition effect
+
+    &:hover {
+      background-color: #4500a0; // Darker shade on hover
+    }
+
+    &:active {
+      background-color: #37008d; // Even darker shade when clicked
+    }
+  }
 }
 
 .search-button {
@@ -195,7 +227,7 @@ scrollbar-width: none;
 
     mat-expansion-panel {
       margin-bottom: 10px; // Space between panels
-      background: #16213e; // White background for expansion panels
+      background: #304470; // White background for expansion panels
       border-radius: 8px; // Rounded corners
       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); // Shadow for depth
 
@@ -207,7 +239,7 @@ scrollbar-width: none;
       }
 
       mat-panel-title {
-        font-weight: bold; // Bold title
+
         color: white;
       }
       mat-panel-description{
