@@ -10,6 +10,14 @@
   box-sizing: border-box;
 }
 
+:host{
+  ::ng-deep .mat-mdc-table{
+    background-color: white;
+  //  border-radius: 10px !important;
+  }
+
+}
+
 .form-container {
   font-family: Arial, sans-serif;
   display: flex;
@@ -56,6 +64,7 @@ h2 {
 
 .right-column {
   max-height: 18rem;
+  min-height: 18rem;
   overflow-y: scroll;
   scrollbar-width: none;
   width: 62%;
@@ -112,11 +121,6 @@ input::placeholder {
     max-width: 200px;
   }
 
-  .add-button-container {
-    display: flex; // Flex container to hold the button
-    align-items: center; // Align vertically
-    margin-left: 10px; // Space between form groups and button
-  }
 }
 
 .error-message {
@@ -135,7 +139,7 @@ select.ng-valid.ng-touched {
   border-color: #304470;
 }
 
-.submit-button {
+.submit-button  {
   background-color: #65558f; // Base background color
   color: white; // Text color
   border: none; // Remove default border
@@ -182,12 +186,36 @@ button {
   }
 }
 
-.remove-button,
+
 .add-button {
   margin-top: 15px;
+  border-radius: 6px;
+  min-width: 50px;
+  background-color: #65558f;
+  color: white;
+  &:hover {
+    background-color: #7a6daa; // Darker color on hover
+    transform: scale(1.05); // Slightly enlarge on hover
+  }
+
+  &:disabled {
+    background-color: #65558f; // Lighter color when disabled
+    color: #a3a3a3; // Light grey text when disabled
+    cursor: not-allowed; // Change cursor to indicate disabled
+  }
 }
 
-.add-button img {
-  width: 24px; // Smaller icon width
-  height: 24px; // Smaller icon height
+
+.delete-icon {
+
+
+  &.disabled-icon {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+    pointer-events: none;
+
+    &:hover {
+      cursor: not-allowed !important;
+    }
+  }
 }
