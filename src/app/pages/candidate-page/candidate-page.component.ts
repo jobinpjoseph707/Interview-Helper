@@ -1,13 +1,14 @@
+import { CandidateFormService } from './../../services/candidate-form.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StackService } from '../../services/stack.service';
-import { RoleService } from '../../services/role.service';
 import { Stack } from '../../Models/stack';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-candidate-page',
@@ -20,13 +21,18 @@ export class CandidatePageComponent implements OnInit {
   candidateForm: FormGroup;
   stackOptions: Stack[] = [];
   roleOptions: any[] = [];
+  addedStacks: Array<{ technology: string; experienceLevel: string }> = [];
+  isStackAdded: boolean = false;
+
+
 
   displayedColumns: string[] = ['select', 'technology', 'experienceLevel', 'actions'];
 
-  dataSource: any[] = [];
-  selection = new SelectionModel<any>(true, []);
+  // Define dataSource as a MatTableDataSource instead of an array
+  dataSource = new MatTableDataSource<{ technology: string; experienceLevel: string }>([]);
+  selection = new SelectionModel<{ technology: string; experienceLevel: string }>(true, []);
 
-  constructor(private fb: FormBuilder, private stackService: StackService, private roleService: RoleService) {
+  constructor(private fb: FormBuilder, private stackService: StackService, private candidateFormService: CandidateFormService) {
     this.candidateForm = this.fb.group({
       name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       role: ['', [Validators.required]],
@@ -34,6 +40,7 @@ export class CandidatePageComponent implements OnInit {
       stackName: ['', Validators.required],
       experienceLevel: ['', Validators.required]
     });
+
   }
 
   ngOnInit(): void {
@@ -65,7 +72,7 @@ export class CandidatePageComponent implements OnInit {
   }
 
   loadRoles() {
-    this.roleService.getRoles().subscribe({
+    this.stackService.getRoles().subscribe({
       next: (roles) => {
         this.roleOptions = roles;
       },
@@ -81,69 +88,106 @@ export class CandidatePageComponent implements OnInit {
   }
 
   addStack() {
-    if (this.candidateForm.get('stackName')?.value && this.candidateForm.get('experienceLevel')?.value) {
-      const newStack = {
-        technology: this.candidateForm.get('stackName')?.value,
-        experienceLevel: this.candidateForm.get('experienceLevel')?.value
-      };
+    const stackName = this.candidateForm.get('stackName')?.value;
+    const experienceLevel = this.candidateForm.get('experienceLevel')?.value;
 
-      // Add the new stack to the data source
-      this.dataSource= [...this.dataSource, newStack];
+    if (stackName && experienceLevel) {
+      // Add the new stack to the addedStacks array
+      this.addedStacks.push({ technology: stackName, experienceLevel: experienceLevel });
 
-      // Reset stackName and experienceLevel without triggering validation or displaying errors
-      this.candidateForm.get('stackName')?.reset('', { emitEvent: false });
-      this.candidateForm.get('experienceLevel')?.reset('', { emitEvent: false });
+      // Update the dataSource using the setter method
+      this.dataSource.data = this.addedStacks; // This line correctly updates the table's data
 
-      // Clear the error state for stackName and experienceLevel
-      this.candidateForm.get('stackName')?.markAsUntouched();
-      this.candidateForm.get('experienceLevel')?.markAsUntouched();
+      this.isStackAdded = true;
+
+      // Clear stack fields after adding
+      // this.candidateForm.patchValue({
+      //   stackName: '',
+      //   experienceLevel: ''
+      // });
     }
   }
 
 
-  removeRow(element: any) {
-    const index = this.dataSource.indexOf(element);
+
+  removeRow(element: { technology: string; experienceLevel: string }) {
+    const index = this.addedStacks.indexOf(element);
     if (index >= 0) {
-      this.dataSource = this.dataSource.filter((_, i) => i !== index);
+      this.addedStacks.splice(index, 1);
+
+      // Update the dataSource data to reflect the removed row
+      this.dataSource.data = [...this.addedStacks];
       this.selection.deselect(element);
     }
   }
 
   removeSelectedStacks() {
-    this.selection.selected.forEach(item => {
-      const index = this.dataSource.findIndex(stack => stack === item);
-      if (index !== -1) {
-        this.dataSource.splice(index, 1);
-      }
-    });
-    this.dataSource = [...this.dataSource];
+    this.addedStacks = this.addedStacks.filter(row => !this.selection.isSelected(row));
+
+    // Update the dataSource data with the filtered rows
+    this.dataSource.data = [...this.addedStacks];
     this.selection.clear();
   }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.length;
+    const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
   masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.forEach(row => this.selection.select(row));
+    this.isAllSelected() ? this.selection.clear() : this.selection.select(...this.dataSource.data);
   }
 
   onSubmit() {
-    if (this.candidateForm.valid) {
+    console.log('Candidate Form Values:', this.candidateForm.value); // Log the current form values
+    console.log('Is Form Valid:', this.candidateForm.valid); // Log the form validity
+    console.log('Added Stacks:', this.addedStacks); // Log the added stacks to see their contents
+
+    if (this.candidateForm.valid && this.addedStacks.length > 0) {
       const formData = this.candidateForm.value;
-      const transformedData = {
+
+      const candidateData = {
         name: formData.name,
         role: formData.role,
-        interviewDate: formData.interviewDate,
-        stacks: this.dataSource
+        interview_date: formData.interviewDate,
+        technologies: this.addedStacks.map(stack => ({
+          technology: stack.technology,
+          experience_level: stack.experienceLevel
+        }))
       };
-      console.log('Transformed Data:', transformedData);
+
+      this.candidateFormService.submitCandidate(candidateData).subscribe(
+        (response) => {
+          console.log('Candidate submitted successfully', response);
+          this.resetForm(); // Reset the form after successful submission
+        },
+        (error) => {
+          console.error('Error submitting candidate:', error);
+        }
+      );
     } else {
-      console.error('Form is invalid');
+      console.error('Form is invalid or no stacks added');
+      // Mark all form controls as touched to display validation messages
+      Object.values(this.candidateForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+
+      // Optionally: You could log which specific controls are invalid
+      Object.entries(this.candidateForm.controls).forEach(([key, control]) => {
+        if (control.invalid) {
+          console.log(`${key} is invalid:`, control.errors);
+        }
     }
+  )}
+  }
+
+
+  resetForm() {
+    this.candidateForm.reset();
+    this.addedStacks = [];
+    this.dataSource.data = [];
+    this.isStackAdded = false;
+    this.selection.clear();
   }
 }

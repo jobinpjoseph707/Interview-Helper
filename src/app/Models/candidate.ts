@@ -4,5 +4,5 @@ export interface Candidate {
   name: string;
   role: string;
   interviewDate: string;
-  stacks: Stack[]; 
+  stacks: Stack[];
 }

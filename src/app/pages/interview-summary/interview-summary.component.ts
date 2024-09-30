@@ -14,7 +14,7 @@ import { PageEvent } from '@angular/material/paginator'; // Import PageEvent for
 import { MatPaginatorModule } from '@angular/material/paginator'; // Import MatPaginatorModule
 import { MatSelectModule } from '@angular/material/select';
 import { jsPDF } from 'jspdf';
-import { RoleService } from '../../services/role.service';
+import { StackService } from '../../services/stack.service';
 @Component({
   selector: 'app-interview-summary',
   standalone: true,
@@ -44,7 +44,7 @@ export class InterviewSummaryComponent implements OnInit {
   pageSize = 4; // Default page size
   currentPage = 0; // Current page index
 
-  constructor(private fb: FormBuilder, private reportService: InterviewReportService, private roleService: RoleService) {
+  constructor(private fb: FormBuilder, private reportService: InterviewReportService, private stackService: StackService) {
     this.interviewForm = this.fb.group({
       name: ['', [this.noSpecialCharsValidator]],
       role: ['', [Validators.required,this.noSpecialCharsValidator]],
@@ -92,7 +92,7 @@ export class InterviewSummaryComponent implements OnInit {
     });
   }
   fetchRoles() {
-    this.roleService.getRoles().subscribe(
+    this.stackService.getRoles().subscribe(
       (roles) => {
         this.roleOptions = roles;
       },

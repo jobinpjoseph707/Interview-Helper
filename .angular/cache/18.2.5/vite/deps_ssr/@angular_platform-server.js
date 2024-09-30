@@ -15,11 +15,11 @@ import {
   EVENT_MANAGER_PLUGINS,
   EventManagerPlugin
 } from "./chunk-RZI3VICU.js";
-import "./chunk-TEPAD2EZ.js";
 import {
   HTTP_ROOT_INTERCEPTOR_FNS,
   HttpClientModule
 } from "./chunk-BYPDXI4W.js";
+import "./chunk-TEPAD2EZ.js";
 import {
   DOCUMENT,
   NullViewportScroller,
