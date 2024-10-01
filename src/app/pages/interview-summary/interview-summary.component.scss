@@ -1,120 +1,271 @@
-::ng-deep {
-  .content {
-    background-image: url('/img/background.png');
-    background-size: cover;
-    background-repeat: no-repeat;
+::ng-deep .content {
+  background-image: url('/img/background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 20px; // Add padding to the content area
+
+}
+
+:host {
+  ::ng-deep mat-label,
+  span {
+    color: white !important;
   }
 }
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 75vh;
-  padding: 0 20px;
+
+:host {
+  ::ng-deep .mat-mdc-form-field-required-marker {
+    color: white !important; // Set required marker color to white
+  }
 }
 
-h2 {
-  font-size: 24px;
-  color: #ffffff;
+:host {
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    max-width: 170px;
+    max-height: 50px;
+  }
 }
+:host {
+  ::ng-deep .mat-mdc-paginator {
+    position: relative; // Change from fixed to relative
+    margin-top: auto; // Ensure it stays at the bottom of the content
+    z-index: 1000;
+    background-color: #304470;
+    color: white;
 
-.filter-section {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  justify-content: center; /* Center filter section items */
+  }
 }
-
-.input-field,
-.date-picker input {
-  background-color: transparent;
-  border: 1px solid #ccc;
+:host{
+::ng-deep .mat-mdc-icon-button svg{
   color: white;
-  padding: 10px;
-  border-radius: 5px;
-  width: 100px; /* Set a consistent width for all input fields */
-  height: 25px;
 }
-
-input[type="date"] {
-  color: white; /* Text color in the calendar */
-  background-color: transparent;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  height: 25px;
+::ng-deep .mat-mdc-select-arrow svg{
+color: white;
 }
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1); /* Inverts the color of the calendar icon */
-}
-
-.input-field::placeholder,
-.date-picker input::placeholder {
-  color: white; /* Placeholder text color */
-  opacity: 1; /* Ensures the placeholder color is fully white */
-}
-
-.input-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  position: relative;
-}
-
-.error-message {
-  color: red;
-  font-size: 10px;
-  width: 150px;
-  word-wrap: break-word;
-}
-
-/* Change border color to red when there is an error */
-input.ng-invalid.ng-touched,
-input.ng-invalid.ng-dirty {
-  border-color: red;
-}
-
-.search-btn,
-.export-btn,
-.download-btn {
-  background-color: #65558F;
+::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
   color: white;
-  padding: 10px 20px;
+}
+::ng-deep .mat-mdc-select {
+  color:white;
+}
+
+}
+:host{
+::ng-deep .mat-expansion-indicator svg{
+  fill:white;
+}
+::ng-deep .mat-mdc-paginator-icon{
+  fill:white;
+}
+}
+.download-container {
+  text-align: right; // Align the button to the right
+  margin-top: 10px;
+
+  button {
+    background-color:#65558f; // Purple background
+    color: #ffffff; // White text color
+    padding: 10px 20px; // Add some padding
+    border: none; // Remove the border
+    border-radius: 8px; // Rounded corners
+    font-size: 16px; // Slightly increase font size
+    cursor: pointer; // Change cursor to pointer
+    transition: background-color 0.3s ease; // Smooth transition effect
+
+    &:hover {
+      background-color: #4500a0; // Darker shade on hover
+    }
+
+    &:active {
+      background-color: #37008d; // Even darker shade when clicked
+    }
+  }
+}
+
+.search-button {
+  background-color: #65558f;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.export-btn {
-  background: transparent;
-  border: 1px solid white;
-  margin-left: 10px;
-}
-
-table {
-  width: 100%;
-  max-width: 800px; /* Set a max width for the table */
-  text-align: left;
-  border-collapse: collapse;
-  margin-top: 20px; /* Add some space above the table */
-}
-
-th,
-td {
-  padding: 15px;
-  border-bottom: 1px solid #ddd;
-  color: white; /* Table header and data color */
-}
-
-.load-more {
-  background: none;
-  border: none;
-  color: white; /* Text color for link */
-  text-decoration: underline; /* Underlined to look like a link */
-  cursor: pointer;
-  padding: 0;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
   font-size: 16px;
-  margin-top: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  max-height: 50px;
+  max-width: 170px;
+  padding: 5px;
+
+  &:hover {
+    background-color: rgb(73, 63, 111);
+  }
 }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: -30px;
+  border-radius: 10px; // Rounded corners
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); // Subtle shadow for depth
+  max-height: 100vh;
+
+
+  h2 {
+    text-align: center;
+    color: white;
+    margin-bottom: 10px;
+    font-size: 26px;
+    margin-top: 30px;
+  }
+
+  .filter-container {
+    display: flex;
+    flex-direction: column; // Stack filter sections vertically
+    margin-bottom: 20px;
+
+    .filter-form {
+      display: flex; // Use flexbox for the form
+      flex-wrap: wrap; // Allow wrapping on smaller screens
+      gap: 10px; // Space between sections
+
+      .filter-section {
+        display: flex; // Allow filter sections to stack elements inside
+        flex-direction: column; // Stack the title and input fields vertically
+        flex: 1; // Allow equal space for each section
+        min-width: 250px; // Minimum width for responsiveness
+
+        .input-wrapper {
+          width: 150px; // Set a custom width
+          margin-bottom: 16px; // Optional: adjust spacing if needed
+
+          .mat-form-field-flex {
+            padding: 0 8px; // Adjust padding to reduce overall height
+          }
+
+          .mat-form-field-outline {
+            height: 36px; // Reduce the height of the outline container
+          }
+
+          .mat-form-field-infix {
+            padding: 4px 0; // Reduce padding inside the input field
+          }
+
+          input.mat-input-element {
+            height: 24px; // Adjust the input field height
+            line-height: 24px; // Ensure the text aligns properly
+            padding: 0 8px; // Control inner padding
+          }
+
+          .mat-form-field-label-wrapper {
+            line-height: 24px; // Align the label properly
+          }
+        }
+
+
+
+        p {
+          margin-bottom: 5px;
+          font-size: 0.9em;
+          color: white; // Change to white as per your requirement
+        }
+
+
+
+        .name-role-container {
+          display: flex; // Use flexbox to align name and role fields
+          gap: 5px; // Space between the input fields
+          width: 100%; // Ensure it takes the full width available
+
+
+          .input-wrapper {
+            flex: 1; // Allow each field to grow equally
+            min-width: 200px; // Set a minimum width for responsive design
+          }
+        }
+
+        .date-range-container {
+          display: flex; // Use flexbox to align date fields
+          gap: 5px; // Space between the date fields
+          width: 100%; // Ensure it takes the full width available
+
+
+          .input-wrapper {
+            flex: 1; // Allow each field to grow equally
+            min-width: 200px; // Set a minimum width for responsive design
+          }
+        }
+      }
+    }
+
+    // Styles for the action row
+    mat-action-row {
+      margin-top: 20px; // Space above the action row
+
+      button {
+        width: 100%; // Make button full width
+      }
+    }
+
+    // Additional button styling for export button if needed
+    .export-btn {
+      background-color: transparent; // Example style
+      border: none; // No border
+      cursor: pointer; // Pointer cursor
+    }
+  }
+.custom-accordion{
+
+overflow-y: scroll;
+max-height: 240px;
+min-height: 240px;
+scrollbar-width: none;
+  // Accordion styling
+  mat-accordion {
+    margin-top: 20px; // Space above accordion
+
+
+    mat-expansion-panel {
+      margin-bottom: 10px; // Space between panels
+      background: #304470; // White background for expansion panels
+      border-radius: 8px; // Rounded corners
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); // Shadow for depth
+
+
+
+      mat-expansion-panel-header {
+        border-radius: 8px; // Rounded corners
+
+      }
+
+      mat-panel-title {
+
+        color: white;
+      }
+      mat-panel-description{
+        color: white;
+      }
+
+      .report-details-table {
+        width: 100%; // Full width table
+        border-collapse: collapse; // Collapsed borders
+
+
+        th {
+          background-color: #65558f; // Header background color
+          color: white; // Header text color
+        padding: 8px;
+        }
+
+        td {
+          padding: 8px; // Padding in table data cells
+          border-bottom: 1px solid #ddd; // Light gray bottom border
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+}
+

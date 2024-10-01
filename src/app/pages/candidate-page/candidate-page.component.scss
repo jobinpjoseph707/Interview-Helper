@@ -1,44 +1,52 @@
+::ng-deep .content {
+  background-image: url('/img/background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+:host{
+  ::ng-deep .mat-mdc-table{
+    background-color: white;
+  //  border-radius: 10px !important;
+  }
 
+}
 
 .form-container {
   font-family: Arial, sans-serif;
-  // display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  height: 84.5vh;
-  width:100%
-}
-::ng-deep .content{
-  background-image: url('/img/background.png');
-  background-size: cover;
-
-  background-repeat: no-repeat;
-}
-
-
-h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: #ffffff;
-  margin-left: 100px;
+  width: 100%;
+  padding: 20px;
 }
 
 .candidate-form {
   width: 85%;
-    background-color: #304470;
+  max-width: 850px;
+  background-color: #304470;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  width: 850px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
   color: white;
+  margin: 0 auto;
+  overflow: hidden;
+  max-height: 500px;
+  overflow-y: auto; // Allow scrolling when necessary
+}
+
+h2 {
+  margin-top: -45px;
+  margin-bottom: 20px;
+  font-size: 26px;
+  color: #ffffff;
   text-align: center;
-  margin-left: 100px;
 }
 
 .form-row {
@@ -47,93 +55,167 @@ h2 {
   margin-bottom: 20px;
 }
 
+.left-column {
+  width: 35%;
+  border:1px solid white;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.right-column {
+  max-height: 18rem;
+  min-height: 18rem;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  width: 62%;
+  border:1px solid white;
+  padding: 5px;
+  border-radius: 10px;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
-  width: 48%;
-  text-align: left;
+  margin-bottom: 15px;
+  flex: 1; // Ensures equal spacing for all form groups
+
+  label {
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #d1d1e9;
+  }
+
+  input,
+  select {
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #304470;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #333;
+    transition: border-color 0.3s ease;
+    width: 100%; // Make input fields take full width of the form group
+
+    &:focus {
+      border-color: #65558f;
+      outline: none;
+    }
+  }
 }
-
-
-
-.form-group label {
-  margin-bottom: 10px;
-  font-size: 14px;
-  color: #D1D1E9;
-}
-
-
-.form-group input,
-.form-group select {
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #304470;
-  border-radius: 5px;
-  background-color: #FFFFFF;
-  color: #B3B3B3;
-}
-
-.form-group select {
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #304470;
-  border-radius: 5px;
-  background-color: #FFFFFF;
-  color: #B3B3B3;
-  transition: background-color 0.3s ease;
-}
-
-// .form-group select:focus {
-//   background-color: #D1D1D9; /* Darker background color when focused */
-//   color: #000000; /* Text color can be adjusted if needed */
-// }
-
-// .form-group option:checked {
-//   color: #000000; /* Change the color of the selected option text */
-// }
-
 
 input::placeholder {
-  color: #B3B3B3;
+  color: #b3b3b3;
   opacity: 1;
 }
 
+.stack-row {
+  display: flex; // Use flexbox for layout
+  align-items: center; // Align items vertically centered
+  margin-bottom: 10px; // Space between stack rows
+  width: 100%; // Ensure the row takes full width
 
-.submit-button {
-  width: 100%;
-  padding: 15px;
-  font-size: 16px;
-  background-color: #65558F;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  .form-group {
+    flex: 1; // Allow form groups to take equal space
+    margin-right: 10px; // Space between form groups
+    min-width: 200px; // Prevent shrinking
+    max-width: 200px;
+  }
+
 }
-
-.submit-button:hover {
-  background-color: rgb(109, 85, 214);
-}
-
-/* Other existing styles */
 
 .error-message {
-  color: red; /* Color for error messages */
+  color: red;
   font-size: 12px;
-  margin-top: 5px;
+  margin-bottom: 8px;
 }
 
 input.ng-invalid.ng-touched,
 select.ng-invalid.ng-touched {
-  border-color: red; /* Border color for invalid fields */
+  border-color: red;
 }
 
 input.ng-valid.ng-touched,
 select.ng-valid.ng-touched {
-  border-color: #304470; /* Border color for valid fields */
+  border-color: #304470;
 }
 
-form {
-  position: relative;
+.submit-button  {
+  background-color: #65558f; // Base background color
+  color: white; // Text color
+  border: none; // Remove default border
+  border-radius: 8px; // Rounded corners
+  padding: 12px 20px; // Padding for a larger button
+  font-size: 16px; // Font size
+  cursor: pointer; // Pointer cursor on hover
+  transition: background-color 0.3s ease, transform 0.2s ease; // Smooth transition
+  width: 100%; // Make button take full width of the form
+
+  &:hover {
+    background-color: #7a6daa; // Darker color on hover
+    transform: scale(1.05); // Slightly enlarge on hover
+  }
+
+  &:disabled {
+    background-color: #65558f; // Lighter color when disabled
+    color: #a3a3a3; // Light grey text when disabled
+    cursor: not-allowed; // Change cursor to indicate disabled
+  }
 }
 
+button {
+  background-color: transparent; // Transparent background
+  border: none; // Remove border
+  cursor: pointer; // Pointer cursor on hover
+  padding: 2px; // Reduced padding for smaller buttons
+  width: 30px; // Fixed width for uniformity
+  height: 40px; // Fixed height for uniformity
+  display: flex; // Flexbox for centering
+  justify-content: center; // Center the icon
+  align-items: center; // Center the icon vertically
+
+  img,
+  i {
+    width: 26px; // Smaller icon width
+    height: 26px; // Smaller icon height
+    transition: transform 0.2s; // Optional: Add transition for a hover effect
+  }
+
+  &:hover img,
+  &:hover i {
+    transform: scale(1.1); // Slightly enlarge the icon on hover
+  }
+}
+
+
+.add-button {
+  margin-top: 15px;
+  border-radius: 6px;
+  min-width: 50px;
+  background-color: #65558f;
+  color: white;
+  &:hover {
+    background-color: #7a6daa; // Darker color on hover
+    transform: scale(1.05); // Slightly enlarge on hover
+  }
+
+  &:disabled {
+    background-color: #65558f; // Lighter color when disabled
+    color: #a3a3a3; // Light grey text when disabled
+    cursor: not-allowed; // Change cursor to indicate disabled
+  }
+}
+
+
+.delete-icon {
+
+
+  &.disabled-icon {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+    pointer-events: none;
+
+    &:hover {
+      cursor: not-allowed !important;
+    }
+  }
+}

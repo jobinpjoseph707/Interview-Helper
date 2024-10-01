@@ -2,70 +2,131 @@
   <h2>Candidate Form</h2>
   <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()" class="candidate-form">
     <div class="form-row">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" id="name" formControlName="name" placeholder="Value">
-        <div *ngIf="candidateForm.get('name')?.invalid && candidateForm.get('name')?.touched" class="error-message">
-          <div *ngIf="candidateForm.get('name')?.errors?.['required']">Name is required.</div>
-          <div *ngIf="candidateForm.get('name')?.errors?.['pattern']">Name should not contain numbers or special characters.</div>
+      <div class="left-column">
+        <!-- Left Column Fields (e.g., Name, Role, Interview Date) -->
+        <div class="form-group">
+          <label *ngIf="!(candidateForm.get('name')?.invalid && candidateForm.get('name')?.touched)">Name</label>
+          <div *ngIf="candidateForm.get('name')?.invalid && candidateForm.get('name')?.touched" class="error-message">
+            <div *ngIf="candidateForm.get('name')?.errors?.['required']">Name is required.</div>
+            <div *ngIf="candidateForm.get('name')?.errors?.['pattern']">The Name must only contain letters.</div>
+          </div>
+          <input type="text" id="name" formControlName="name" placeholder="Enter Name" />
         </div>
-      </div>
-      <div class="form-group">
-        <label for="role">Role</label>
-        <input type="text" id="role" formControlName="role" placeholder="Value">
-        <div *ngIf="candidateForm.get('role')?.invalid && candidateForm.get('role')?.touched" class="error-message">
-          Role is required.
-        </div>
-      </div>
-    </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label for="candidate-id">Candidate ID</label>
-        <input type="text" id="candidate-id" formControlName="candidateId" placeholder="Value">
-        <div *ngIf="candidateForm.get('candidateId')?.invalid && candidateForm.get('candidateId')?.touched" class="error-message">
-          Candidate ID is required.
+        <div class="form-group">
+          <label *ngIf="!(candidateForm.get('role')?.invalid && candidateForm.get('role')?.touched)">Role</label>
+          <div *ngIf="candidateForm.get('role')?.invalid && candidateForm.get('role')?.touched" class="error-message">
+            <div *ngIf="candidateForm.get('role')?.errors?.['required']">Role is required.</div>
+          </div>
+          <select id="role" formControlName="role">
+            <option value="" disabled selected>Select Role</option>
+            <option *ngFor="let role of roleOptions" [value]="role.name">{{ role.name }}</option>
+          </select>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="stack">Stack</label>
-        <select id="stack" formControlName="stack">
-          <option value="" disabled>Select Stack</option>
-          <option value="frontend">Frontend</option>
-          <option value="backend">Backend</option>
-          <option value="fullstack">Fullstack</option>
-        </select>
-        <div *ngIf="candidateForm.get('stack')?.invalid && candidateForm.get('stack')?.touched" class="error-message">
-          Stack is required.
-        </div>
-      </div>
-    </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label for="interview-date">Interview Date</label>
-        <input type="date" id="interview-date" formControlName="interviewDate">
-        <div *ngIf="candidateForm.get('interviewDate')?.invalid && candidateForm.get('interviewDate')?.touched" class="error-message">
-          Interview Date is required.
+        <div class="form-group">
+          <label *ngIf="!(candidateForm.get('interviewDate')?.invalid && candidateForm.get('interviewDate')?.touched)">Interview Date</label>
+          <div *ngIf="candidateForm.get('interviewDate')?.invalid && candidateForm.get('interviewDate')?.touched" class="error-message">
+            Interview Date is required.
+          </div>
+          <input type="date" id="interview-date" formControlName="interviewDate" />
         </div>
       </div>
-      <div class="form-group">
-        <label for="experience">Experience Level</label>
-        <select id="experience" formControlName="experience">
-          <option value="" disabled>Select Experience</option>
-          <option value="0-1">0-1 years</option>
-          <option value="1-3">1-3 years</option>
-          <option value="3-5">3-5 years</option>
-          <option value="5+">5+ years</option>
-        </select>
-        <div *ngIf="candidateForm.get('experience')?.invalid && candidateForm.get('experience')?.touched" class="error-message">
-          Experience Level is required.
-        </div>
-      </div>
-    </div>
 
-    <div class="form-row">
-      <button type="submit" class="submit-button" [disabled]="candidateForm.invalid">START</button>
+      <div class="right-column">
+        <div class="form-row stack-row">
+          <!-- Stack and Experience Fields in Same Line -->
+          <div class="form-group">
+            <label *ngIf="!(candidateForm.get('stackName')?.invalid && candidateForm.get('stackName')?.touched)">Technology</label>
+            <div *ngIf="candidateForm.get('stackName')?.invalid && candidateForm.get('stackName')?.touched" class="error-message">
+              Technology is required.
+            </div>
+            <select id="stackName" formControlName="stackName">
+              <option value="" disabled>Select Technology</option>
+              <option *ngFor="let option of stackOptions" [value]="option.technology">{{ option.technology }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label *ngIf="!(candidateForm.get('experienceLevel')?.invalid && candidateForm.get('experienceLevel')?.touched)">Experience Level</label>
+            <div *ngIf="candidateForm.get('experienceLevel')?.invalid && candidateForm.get('experienceLevel')?.touched" class="error-message">
+              Experience Level is required.
+            </div>
+            <select id="experienceLevel" formControlName="experienceLevel">
+              <option value="" disabled>Select Experience Level</option>
+              <option *ngFor="let exp of getExperienceOptions(candidateForm.get('stackName')?.value)" [value]="exp">{{ exp }}</option>
+            </select>
+          </div>
+
+          <!-- Add Stack Button in Same Line -->
+          <button type="button" (click)="addStack()" class="add-button"
+                  [disabled]="!candidateForm.get('stackName')?.value || !candidateForm.get('experienceLevel')?.value">
+            Add
+          </button>
+        </div>
+
+        <!-- Table Inside Right Column -->
+        <div class="table-container mat-elevation-z8">
+          <table mat-table [dataSource]="dataSource">
+            <!-- Table Header with Remove Selected Button -->
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="technology">
+              <th mat-header-cell *matHeaderCellDef> Technology </th>
+              <td mat-cell *matCellDef="let element"> {{element.technology}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="experienceLevel">
+              <th mat-header-cell *matHeaderCellDef> Experience Level </th>
+              <td mat-cell *matCellDef="let element"> {{element.experienceLevel}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>
+                <button type="button"
+                (click)="removeSelectedStacks()"
+                class="remove-button-all"
+                [disabled]="!isAllSelected()">
+          <img class="delete-icon"
+               [ngClass]="{'disabled-icon': !isAllSelected()}"
+               src="https://img.icons8.com/?size=100&id=1S8vEZQolh6d&format=png&color=af4949"
+               alt="delete">
+        </button>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <button type="button" (click)="removeRow(element)" class="remove-button">
+                  <img src="https://img.icons8.com/?size=100&id=fxyhG29jgJRt&format=png&color=af4949" alt="delete">
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+          </table>
+        </div>
+      </div>
     </div>
+    <button type="submit" [disabled]="!candidateForm.valid || addedStacks.length === 0" class="submit-button">
+      Submit
+    </button>
+
+
+
+
+
+
   </form>
 </div>

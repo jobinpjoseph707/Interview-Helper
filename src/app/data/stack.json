@@ -1,0 +1,9 @@
+[
+  { "stackName": "Angular", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+  { "stackName": ".NET", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+  { "stackName": "React", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+  { "stackName": "Python", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+  { "stackName": "Frontend", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+  { "stackName": "Backend", "experienceLevels": ["Fresher", "Mid", "Senior"] },
+  { "stackName": "Fullstack", "experienceLevels": ["Fresher", "Mid", "Senior"] }
+]

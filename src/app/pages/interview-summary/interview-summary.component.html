@@ -1,86 +1,103 @@
-<div class="content">
+
   <div class="container">
     <h2>Reports</h2>
-    <form [formGroup]="interviewForm" (ngSubmit)="onSubmit()">
-      <div class="filter-section">
-        <div class="input-wrapper">
-          <input type="text" placeholder="Name" class="input-field" formControlName="name" />
-          <div *ngIf="interviewForm.get('name')?.errors?.['invalidChars'] && (interviewForm.get('name')?.touched || interviewForm.get('name')?.dirty)" class="error-message">
-            Name cannot contain numbers or special characters.
-          </div>
-          <div *ngIf="interviewForm.get('name')?.errors?.['required'] && (interviewForm.get('name')?.touched || interviewForm.get('name')?.dirty)" class="error-message">
-            Name is required.
-          </div>
-        </div>
+    <div class="filter-container">
+      <form [formGroup]="interviewForm" (ngSubmit)="onSubmit()" class="filter-form">
+        <div class="filter-section">
+          <div class="name-role-container">
+            <mat-form-field appearance="outline" class="input-wrapper">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" />
+              <mat-error *ngIf="interviewForm.get('name')?.errors?.['invalidChars'] && (interviewForm.get('name')?.touched || interviewForm.get('name')?.dirty)">
+                Name cannot contain numbers or special characters.
+              </mat-error>
+            </mat-form-field>
 
-        <div class="input-wrapper">
-          <input type="text" placeholder="Role" class="input-field" formControlName="role" />
-          <div *ngIf="interviewForm.get('role')?.errors?.['invalidChars'] && (interviewForm.get('role')?.touched || interviewForm.get('role')?.dirty)" class="error-message">
-            Role cannot contain numbers or special characters.
-          </div>
-          <div *ngIf="interviewForm.get('role')?.errors?.['required'] && (interviewForm.get('role')?.touched || interviewForm.get('role')?.dirty)" class="error-message">
-            Role is required.
-          </div>
-        </div>
-
-        <div class="date-picker input-wrapper">
-          <input type="date" placeholder="From" formControlName="fromDate" />
-          <div *ngIf="interviewForm.get('fromDate')?.invalid && (interviewForm.get('fromDate')?.touched || interviewForm.get('fromDate')?.dirty)" class="error-message">
-            From date is required.
+            <mat-form-field appearance="outline" class="input-wrapper">
+              <mat-label>Role</mat-label>
+              <mat-select formControlName="role">
+                <mat-option *ngFor="let role of roleOptions" [value]="role.name">{{ role.name }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="interviewForm.get('role')?.errors?.['required'] && (interviewForm.get('role')?.touched || interviewForm.get('role')?.dirty)">
+                Role is required.
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
 
-        <div class="date-picker input-wrapper">
-          <input type="date" placeholder="To" formControlName="toDate" />
-          <div *ngIf="interviewForm.get('toDate')?.invalid && (interviewForm.get('toDate')?.touched || interviewForm.get('toDate')?.dirty)" class="error-message">
-            To date is required.
+        <div class="filter-section">
+          <div class="date-range-container">
+            <mat-form-field appearance="outline" class="input-wrapper">
+              <mat-label>From</mat-label>
+              <input matInput [matDatepicker]="fromPicker" formControlName="fromDate" />
+              <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+              <mat-datepicker #fromPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="input-wrapper">
+              <mat-label>To</mat-label>
+              <input matInput [matDatepicker]="toPicker" formControlName="toDate" />
+              <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+              <mat-datepicker #toPicker></mat-datepicker>
+              <mat-error *ngIf="interviewForm.get('toDate')?.errors?.['dateRangeInvalid']">
+                To date must be after From date.
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
+        <button type="submit" class="search-button" [disabled]="interviewForm.invalid">Search</button>
+        <div class="button-container">
+          <button class="export-btn" type="button">
+            <img src="https://img.icons8.com/?size=100&id=8Q0JnVzEzZWf&format=png&color=000000" alt="Export Icon" style="width: 40px; height: 40px; margin-right: 30px; margin-top: 5px;" />
+          </button>
+        </div>
+      </form>
+    </div>
 
-        <button type="submit" class="search-btn">Search By Date (From-To)</button>
-        <button class="export-btn">
-          <img src="https://img.icons8.com/?size=100&id=8Q0JnVzEzZWf&format=png&color=000000" alt="Export Icon" style="width: 24px; height: 24px;" />
-        </button>
-      </div>
-    </form>
 
-    <table class="reports-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Date</th>
-          <th>Role</th>
-          <th>Report</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Hellen Jackson</td>
-          <td>Oct 21, 2023</td>
-          <td>Front End Developer</td>
-          <td><button class="download-btn">Download</button></td>
-        </tr>
-        <tr>
-          <td>Alan Tom Andrews</td>
-          <td>Oct 21, 2023</td>
-          <td>Front End Developer</td>
-          <td><button class="download-btn">Download</button></td>
-        </tr>
-        <tr>
-          <td>Lakshmi Menon</td>
-          <td>Oct 21, 2023</td>
-          <td>Front End Developer</td>
-          <td><button class="download-btn">Download</button></td>
-        </tr>
-        <tr>
-          <td>Jon B</td>
-          <td>Oct 21, 2023</td>
-          <td>Front End Developer</td>
-          <td><button class="download-btn">Download</button></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="custom-accordion">
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let report of pagedReports">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ report.name }}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ report.date }} | {{ report.role }} | Overall Percentage: {{ report.overallPercentage }}%
+            </mat-panel-description>
+          </mat-expansion-panel-header>
 
-    <button class="load-more">Load More</button>
-  </div>
+          <!-- Report Details Table -->
+          <table class="report-details-table">
+            <thead>
+              <tr>
+                <th>Technology</th>
+                <th>Experience Level</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let stack of report.stacks">
+                <td>{{ stack.technology }}</td>
+                <td>{{ stack.experience }}</td>
+                <td>{{ stack.percentage }}%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Download Button Below the Expanded Table -->
+          <div class="download-container">
+            <button (click)="downloadExpandedReport(report)">
+              Download Entire Report
+            </button>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <mat-paginator [length]="reports.length"
+    [pageSize]="pageSize"
+    (page)="onPageChange($event)">
+</mat-paginator>
 </div>
+
