@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { QuestionService } from '../../services/question.service';
+import { log } from 'console';
 
 @Component({
   selector: 'app-questionpage',
@@ -31,49 +33,80 @@ export class QuestionpageComponent {
   currentTabIndex: number = 0; // Initialize with the first tab index
   // You may need to adjust this structure to fit your tab logic
   timers: { [key: string]: { seconds: number, isRunning: boolean, interval: any } } = {};
+  
 
   reviewText: string = ''; // Variable to store the review text
-  candidateId: string = '4596';
+  candidateId: number = 4596;
   candidateName: string = 'Jobin P Joseph';
   showResultsModal: boolean = false;
   showConfirmationModal: boolean = false; // New property for confirmation modal
 
-  roles: RoleResult[] = [
-    {
-      name: 'Front End',
-      questions: [
-        { id: 1, text: 'What is React?', role: 'Front End', answer: null },
-        { id: 2, text: 'Explain CSS flexbox', role: 'Front End', answer: null },
-        { id: 3, text: 'What is the Virtual DOM in React?', role: 'Front End', answer: null },
-        { id: 4, text: 'What is the difference between class and functional components in React?', role: 'Front End', answer: null },
-        { id: 5, text: 'What is a REST API?', role: 'Back End', answer: null },
-        { id: 6, text: 'How do you manage state in React?', role: 'Front End', answer: null },
-        { id: 7, text: 'What is an event loop in JavaScript?', role: 'Back End', answer: null },
-        { id: 8, text: 'Explain the concept of closures in JavaScript.', role: 'Back End', answer: null },
-        { id: 9, text: 'How do you optimize SQL queries?', role: 'Database', answer: null },
-        { id: 10, text: 'What are SQL joins? Explain different types.', role: 'Database', answer: null },
-        { id: 11, text: 'What is CORS, and how do you handle it in web applications?', role: 'Back End', answer: null },
-        { id: 12, text: 'Explain the box model in CSS.', role: 'Front End', answer: null },
-        { id: 13, text: 'What is normalization in databases?', role: 'Database', answer: null }
-              ],
+  // roles: RoleResult[] = [
+  //   {
+  //     name: 'Front End',
+  //     questions: [
+  //       { id: 1, text: 'What is React?', role: 'Front End', answer: null },
+  //       { id: 2, text: 'Explain CSS flexbox', role: 'Front End', answer: null },
+  //       { id: 3, text: 'What is the Virtual DOM in React?', role: 'Front End', answer: null },
+  //       { id: 4, text: 'What is the difference between class and functional components in React?', role: 'Front End', answer: null },
+  //       { id: 5, text: 'What is a REST API?', role: 'Back End', answer: null },
+  //       { id: 6, text: 'How do you manage state in React?', role: 'Front End', answer: null },
+  //       { id: 7, text: 'What is an event loop in JavaScript?', role: 'Back End', answer: null },
+  //       { id: 8, text: 'Explain the concept of closures in JavaScript.', role: 'Back End', answer: null },
+  //       { id: 9, text: 'How do you optimize SQL queries?', role: 'Database', answer: null },
+  //       { id: 10, text: 'What are SQL joins? Explain different types.', role: 'Database', answer: null },
+  //       { id: 11, text: 'What is CORS, and how do you handle it in web applications?', role: 'Back End', answer: null },
+  //       { id: 12, text: 'Explain the box model in CSS.', role: 'Front End', answer: null },
+  //       { id: 13, text: 'What is normalization in databases?', role: 'Database', answer: null }
+  //             ],
 
-    },
-    {
-      name: 'Back End',
-      questions: [
-        { id: 3, text: 'What is Node.js?', role: 'Back End', answer: null },
-        { id: 4, text: 'Explain database indexing', role: 'Back End', answer: null },
-        // Add more back-end questions...
-      ],
+  //   },
+  //   {
+  //     name: 'Back End',
+  //     questions: [
+  //       { id: 3, text: 'What is Node.js?', role: 'Back End', answer: null },
+  //       { id: 4, text: 'Explain database indexing', role: 'Back End', answer: null },
+  //       // Add more back-end questions...
+  //     ],
 
-    }
-  ];
+  //   }
+  // ];
+  isLoading: boolean = false;
+  roles: RoleResult[] = [];
+
   overallPercentage: number = 83;
-  activeTab: string = 'Front End';  // Set default active tab
-  tabs: string[] = ['Front End', 'Back End', 'Database/SQL']; 
-ngoninit(){
+  tabs: string[] = ['Angular', 'Back End', 'Database/SQL'];
+  activeTab: string = this.tabs[0];  // Set default active tab
+ 
+  constructor(private questionService: QuestionService) {}
+
+ngOnInit(){    
+
+  this.loadQuestions();
+
 
 }
+loadQuestions() {
+  this.isLoading = true;
+
+  const technologies = [
+    { technologyId: 1, experienceLevelId: 2 },
+    { technologyId: 2, experienceLevelId: 2 }
+  ];
+
+  this.questionService.getQuestions(this.candidateId, technologies).subscribe({
+    next: (data) => {
+      this.roles = data;
+      this.tabs = this.roles.map(role => role.name);
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('Error fetching questions:', error);
+      this.isLoading = false;
+    },
+});
+}
+
   ngOnDestroy() {
   }
   get filteredQuestions(): Question[] {
@@ -126,38 +159,8 @@ ngoninit(){
     // Reset timer seconds if needed, or leave it as is
   }
   
-
-
-
-
-
-  // toggleTimer() {
-  //   if (this.isTimerRunning) {
-  //     this.stopTimer();
-  //   } else {
-  //     this.startTimer();
-  //   }
-  //   this.isTimerRunning = !this.isTimerRunning;
-  // }
-
-  // startTimer() {
-  //   this.timerInterval = setInterval(() => {
-  //     this.seconds++;
-  //     if (this.seconds >= 60) {
-  //       this.seconds = 0;
-  //       this.minutes++;
-  //     }
-  //   }, 1000);
-  // }
-
-  // stopTimer() {
-  //   if (this.timerInterval) {
-  //     clearInterval(this.timerInterval);
-  //   }
-  // }
-   
  
-  answerQuestion(questionId: number, answer: 'correct' | 'incorrect' | 'skip') {
+  answerQuestion(questionId: number, answer: 'correct' | 'incorrect' ) {
     this.roles.forEach(role => {
       const question = role.questions.find(q => q.id === questionId);
       if (question) {
@@ -185,9 +188,6 @@ ngoninit(){
           case 'incorrect':
             details.wrong++;
             break;
-          case 'skip':
-            details.skipped++;
-            break;
         }
       });
 
@@ -203,10 +203,6 @@ ngoninit(){
 
   finishInterview() {  
     this.showConfirmationModal = true; // Show confirmation modal instead of results
-
-    // console.log('Interview finished'); 
-    // this.calculateResults(); 
-    // this.showResultsModal = true;
 
   } 
   confirmFinish() {
