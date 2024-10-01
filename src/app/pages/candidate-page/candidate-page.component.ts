@@ -9,6 +9,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
+import { ExperienceLevel } from '../../Models/experience-level';  // Import as a type, not injected
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-candidate-page',
@@ -24,15 +26,16 @@ export class CandidatePageComponent implements OnInit {
   addedStacks: Array<{ technology: string; experienceLevel: string }> = [];
   isStackAdded: boolean = false;
 
-
-
   displayedColumns: string[] = ['select', 'technology', 'experienceLevel', 'actions'];
-
-  // Define dataSource as a MatTableDataSource instead of an array
   dataSource = new MatTableDataSource<{ technology: string; experienceLevel: string }>([]);
   selection = new SelectionModel<{ technology: string; experienceLevel: string }>(true, []);
 
-  constructor(private fb: FormBuilder, private stackService: StackService, private candidateFormService: CandidateFormService) {
+  constructor(
+    private fb: FormBuilder,
+    private stackService: StackService,
+    private candidateFormService: CandidateFormService,
+    private router: Router
+  ) {
     this.candidateForm = this.fb.group({
       name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       role: ['', [Validators.required]],
@@ -40,7 +43,6 @@ export class CandidatePageComponent implements OnInit {
       stackName: ['', Validators.required],
       experienceLevel: ['', Validators.required]
     });
-
   }
 
   ngOnInit(): void {
@@ -63,7 +65,8 @@ export class CandidatePageComponent implements OnInit {
   loadStacks() {
     this.stackService.getStacks().subscribe({
       next: (data) => {
-        this.stackOptions = data;
+        this.stackOptions = data;  // Assign the data to stackOptions
+        console.log('Fetched stack options:', this.stackOptions); // Log the fetched data
       },
       error: (error) => {
         console.error('Error loading stacks:', error);
@@ -73,18 +76,20 @@ export class CandidatePageComponent implements OnInit {
 
   loadRoles() {
     this.stackService.getRoles().subscribe({
-      next: (roles) => {
-        this.roleOptions = roles;
-      },
-      error: (error) => {
-        console.error('Error loading roles:', error);
-      }
+        next: (roles) => {
+            this.roleOptions = roles;
+            console.log('Loaded Roles:', this.roleOptions); // Log role options for debugging
+        },
+        error: (error) => {
+            console.error('Error loading roles:', error);
+        }
     });
-  }
+}
+
 
   getExperienceOptions(stackName: string): string[] {
     const selectedStack = this.stackOptions.find(stack => stack.technology === stackName);
-    return selectedStack ? selectedStack.experienceLevels : [];
+    return selectedStack ? selectedStack.experienceLevels.map(level => level.level) : [];
   }
 
   addStack() {
@@ -92,30 +97,17 @@ export class CandidatePageComponent implements OnInit {
     const experienceLevel = this.candidateForm.get('experienceLevel')?.value;
 
     if (stackName && experienceLevel) {
-      // Add the new stack to the addedStacks array
       this.addedStacks.push({ technology: stackName, experienceLevel: experienceLevel });
-
-      // Update the dataSource using the setter method
-      this.dataSource.data = this.addedStacks; // This line correctly updates the table's data
-
+      this.dataSource.data = this.addedStacks;
       this.isStackAdded = true;
-
-      // Clear stack fields after adding
-      // this.candidateForm.patchValue({
-      //   stackName: '',
-      //   experienceLevel: ''
-      // });
+      // Clear stack fields after adding if needed
     }
   }
-
-
 
   removeRow(element: { technology: string; experienceLevel: string }) {
     const index = this.addedStacks.indexOf(element);
     if (index >= 0) {
       this.addedStacks.splice(index, 1);
-
-      // Update the dataSource data to reflect the removed row
       this.dataSource.data = [...this.addedStacks];
       this.selection.deselect(element);
     }
@@ -123,8 +115,6 @@ export class CandidatePageComponent implements OnInit {
 
   removeSelectedStacks() {
     this.addedStacks = this.addedStacks.filter(row => !this.selection.isSelected(row));
-
-    // Update the dataSource data with the filtered rows
     this.dataSource.data = [...this.addedStacks];
     this.selection.clear();
   }
@@ -140,47 +130,67 @@ export class CandidatePageComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('Candidate Form Values:', this.candidateForm.value); // Log the current form values
-    console.log('Is Form Valid:', this.candidateForm.valid); // Log the form validity
-    console.log('Added Stacks:', this.addedStacks); // Log the added stacks to see their contents
-
     if (this.candidateForm.valid && this.addedStacks.length > 0) {
-      const formData = this.candidateForm.value;
+        const formData = this.candidateForm.value;
 
-      const candidateData = {
-        name: formData.name,
-        role: formData.role,
-        interview_date: formData.interviewDate,
-        technologies: this.addedStacks.map(stack => ({
-          technology: stack.technology,
-          experience_level: stack.experienceLevel
-        }))
-      };
+        // Log form role
+        console.log('Form Role:', formData.role);
 
-      this.candidateFormService.submitCandidate(candidateData).subscribe(
-        (response) => {
-          console.log('Candidate submitted successfully', response);
-          this.resetForm(); // Reset the form after successful submission
-        },
-        (error) => {
-          console.error('Error submitting candidate:', error);
-        }
-      );
+        // Extract role ID
+        // Change 'roleName' to 'name' to match the structure of roleOptions
+        const selectedRole = this.roleOptions.find(role => role.name === formData.role);
+        const roleId = selectedRole ? selectedRole.applicationRoleId : null; // Correct property used
+
+        console.log('Selected Role:', selectedRole);
+        console.log('Role ID:', roleId);
+
+        // Prepare technologies
+        const technologies = this.addedStacks.map(stack => {
+            const selectedTechnology = this.stackOptions.find(opt => opt.technology === stack.technology);
+            const selectedExperienceLevel = selectedTechnology?.experienceLevels.find(level => level.level === stack.experienceLevel);
+
+            console.log('Selected Technology:', selectedTechnology);
+            console.log('Experience Levels:', selectedTechnology?.experienceLevels);
+            console.log('Selected Experience Level:', selectedExperienceLevel);
+
+            return {
+                technologyId: selectedTechnology?.technologyId,
+                experienceLevelId: selectedExperienceLevel ? selectedExperienceLevel.id : null // Use experienceLevelId
+            };
+        });
+
+        // Final candidate data
+        const formattedInterviewDate = new Date(formData.interviewDate).toISOString().split('T')[0];
+        const candidateData = {
+            name: formData.name,
+            applicationRoleId: roleId,
+            interviewDate: formattedInterviewDate,
+            technologies: technologies
+        };
+
+        console.log('Candidate Data:', candidateData);
+
+        // Call the service to submit
+        this.candidateFormService.submitCandidate(candidateData).subscribe(
+            (response) => {
+                console.log('Candidate submitted successfully', response);
+                this.resetForm();
+            },
+            (error) => {
+                console.error('Error submitting candidate:', error);
+            }
+        );
     } else {
-      console.error('Form is invalid or no stacks added');
-      // Mark all form controls as touched to display validation messages
-      Object.values(this.candidateForm.controls).forEach(control => {
-        control.markAsTouched();
-      });
-
-      // Optionally: You could log which specific controls are invalid
-      Object.entries(this.candidateForm.controls).forEach(([key, control]) => {
-        if (control.invalid) {
-          console.log(`${key} is invalid:`, control.errors);
-        }
+        console.error('Form is invalid or no stacks added');
+        Object.values(this.candidateForm.controls).forEach(control => {
+            control.markAsTouched();
+        });
     }
-  )}
-  }
+    this.router.navigate(['/question-page']);
+}
+
+
+
 
 
   resetForm() {
