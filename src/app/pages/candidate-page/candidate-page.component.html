@@ -119,7 +119,14 @@
         </div>
       </div>
     </div>
+    <button type="submit" [disabled]="!candidateForm.valid || addedStacks.length === 0" class="submit-button">
+      Submit
+    </button>
 
-    <button type="submit" [disabled]="candidateForm.invalid || dataSource.length === 0" class="submit-button">Submit</button>
+
+
+
+
+
   </form>
 </div>
