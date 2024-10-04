@@ -9,7 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
-import { ExperienceLevel } from '../../Models/experience-level';  // Import as a type, not injected
+import { ExperienceLevel } from '../../Models/experience-level';
 import { Router } from '@angular/router';
 
 @Component({
@@ -100,7 +100,12 @@ export class CandidatePageComponent implements OnInit {
       this.addedStacks.push({ technology: stackName, experienceLevel: experienceLevel });
       this.dataSource.data = this.addedStacks;
       this.isStackAdded = true;
-      // Clear stack fields after adding if needed
+
+      // Clear stack fields after adding
+      // this.candidateForm.patchValue({
+      //   stackName: '',
+      //   experienceLevel: ''
+      // });
     }
   }
 
@@ -135,11 +140,8 @@ export class CandidatePageComponent implements OnInit {
 
         // Log form role
         console.log('Form Role:', formData.role);
-
-        // Extract role ID
-        // Change 'roleName' to 'name' to match the structure of roleOptions
         const selectedRole = this.roleOptions.find(role => role.name === formData.role);
-        const roleId = selectedRole ? selectedRole.applicationRoleId : null; // Correct property used
+        const roleId = selectedRole ? selectedRole.applicationRoleId : null; 
 
         console.log('Selected Role:', selectedRole);
         console.log('Role ID:', roleId);

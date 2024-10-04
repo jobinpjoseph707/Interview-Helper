@@ -8,7 +8,7 @@ import { QuestionRequest, RoleResult } from '../Models/questions.interface'; // 
 })
 export class QuestionService {
 
-  private apiUrl = 'https://localhost:7042/api/questions'; // Replace with your actual API endpoint
+  private apiUrl = 'https://localhost:7042/api/questions'; 
 
   constructor(private http: HttpClient) {}
 

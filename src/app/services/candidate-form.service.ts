@@ -25,20 +25,20 @@ export class CandidateFormService {
     } else {
       // Server-side error
       try {
-        // Try parsing the error response as JSON
+
         errorMessage = JSON.parse(error.error);
       } catch (e) {
-        // If it fails, manually create a JSON response
+
         errorMessage = this.convertToValidJson(error.error);
       }
     }
 
     console.error('Error occurred:', errorMessage);
-    return of(errorMessage); // Return the formatted error as an observable
+    return of(errorMessage); 
   };
 
   private convertToValidJson(response: any): any {
-    // Attempt to create a structured JSON from the raw error response
+
     const responseString = response.toString();
 
 
