@@ -22,6 +22,7 @@ import { Router } from '@angular/router';
 export class CandidatePageComponent implements OnInit {
   candidateForm: FormGroup;
   stackOptions: Stack[] = [];
+  availableStackOptions: Stack[] = []; // New property to track available technologies
   roleOptions: any[] = [];
   addedStacks: Array<{ technology: string; experienceLevel: string }> = [];
   isStackAdded: boolean = false;
@@ -37,7 +38,7 @@ export class CandidatePageComponent implements OnInit {
     private router: Router
   ) {
     this.candidateForm = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
+      name: ['', [Validators.required, Validators.pattern('^[a-zA-Z][a-zA-Z. ]*$')]],
       role: ['', [Validators.required]],
       interviewDate: ['', Validators.required],
       stackName: ['', Validators.required],
@@ -65,8 +66,9 @@ export class CandidatePageComponent implements OnInit {
   loadStacks() {
     this.stackService.getStacks().subscribe({
       next: (data) => {
-        this.stackOptions = data;  // Assign the data to stackOptions
-        console.log('Fetched stack options:', this.stackOptions); // Log the fetched data
+        this.stackOptions = data;
+        this.availableStackOptions = [...data]; // Initialize available options
+        console.log('Fetched stack options:', this.stackOptions);
       },
       error: (error) => {
         console.error('Error loading stacks:', error);
@@ -76,19 +78,18 @@ export class CandidatePageComponent implements OnInit {
 
   loadRoles() {
     this.stackService.getRoles().subscribe({
-        next: (roles) => {
-            this.roleOptions = roles;
-            console.log('Loaded Roles:', this.roleOptions); // Log role options for debugging
-        },
-        error: (error) => {
-            console.error('Error loading roles:', error);
-        }
+      next: (roles) => {
+        this.roleOptions = roles;
+        console.log('Loaded Roles:', this.roleOptions);
+      },
+      error: (error) => {
+        console.error('Error loading roles:', error);
+      }
     });
-}
-
+  }
 
   getExperienceOptions(stackName: string): string[] {
-    const selectedStack = this.stackOptions.find(stack => stack.technology === stackName);
+    const selectedStack = this.availableStackOptions.find(stack => stack.technology === stackName);
     return selectedStack ? selectedStack.experienceLevels.map(level => level.level) : [];
   }
 
@@ -100,6 +101,9 @@ export class CandidatePageComponent implements OnInit {
       this.addedStacks.push({ technology: stackName, experienceLevel: experienceLevel });
       this.dataSource.data = this.addedStacks;
       this.isStackAdded = true;
+
+      // Remove the added technology from available options
+      this.availableStackOptions = this.availableStackOptions.filter(stack => stack.technology !== stackName);
 
       // Clear stack fields after adding
       // this.candidateForm.patchValue({
@@ -115,10 +119,23 @@ export class CandidatePageComponent implements OnInit {
       this.addedStacks.splice(index, 1);
       this.dataSource.data = [...this.addedStacks];
       this.selection.deselect(element);
+
+      // Add the removed technology back to available options
+      const removedStack = this.stackOptions.find(stack => stack.technology === element.technology);
+      if (removedStack) {
+        this.availableStackOptions.push(removedStack);
+      }
     }
   }
 
   removeSelectedStacks() {
+    this.selection.selected.forEach(selectedStack => {
+      const removedStack = this.stackOptions.find(stack => stack.technology === selectedStack.technology);
+      if (removedStack) {
+        this.availableStackOptions.push(removedStack);
+      }
+    });
+
     this.addedStacks = this.addedStacks.filter(row => !this.selection.isSelected(row));
     this.dataSource.data = [...this.addedStacks];
     this.selection.clear();
@@ -136,64 +153,56 @@ export class CandidatePageComponent implements OnInit {
 
   onSubmit() {
     if (this.candidateForm.valid && this.addedStacks.length > 0) {
-        const formData = this.candidateForm.value;
+      const formData = this.candidateForm.value;
 
-        // Log form role
-        console.log('Form Role:', formData.role);
-        const selectedRole = this.roleOptions.find(role => role.name === formData.role);
-        const roleId = selectedRole ? selectedRole.applicationRoleId : null; 
+      console.log('Form Role:', formData.role);
+      const selectedRole = this.roleOptions.find(role => role.name === formData.role);
+      const roleId = selectedRole ? selectedRole.applicationRoleId : null;
 
-        console.log('Selected Role:', selectedRole);
-        console.log('Role ID:', roleId);
+      console.log('Selected Role:', selectedRole);
+      console.log('Role ID:', roleId);
 
-        // Prepare technologies
-        const technologies = this.addedStacks.map(stack => {
-            const selectedTechnology = this.stackOptions.find(opt => opt.technology === stack.technology);
-            const selectedExperienceLevel = selectedTechnology?.experienceLevels.find(level => level.level === stack.experienceLevel);
+      const technologies = this.addedStacks.map(stack => {
+        const selectedTechnology = this.stackOptions.find(opt => opt.technology === stack.technology);
+        const selectedExperienceLevel = selectedTechnology?.experienceLevels.find(level => level.level === stack.experienceLevel);
 
-            console.log('Selected Technology:', selectedTechnology);
-            console.log('Experience Levels:', selectedTechnology?.experienceLevels);
-            console.log('Selected Experience Level:', selectedExperienceLevel);
+        console.log('Selected Technology:', selectedTechnology);
+        console.log('Experience Levels:', selectedTechnology?.experienceLevels);
+        console.log('Selected Experience Level:', selectedExperienceLevel);
 
-            return {
-                technologyId: selectedTechnology?.technologyId,
-                experienceLevelId: selectedExperienceLevel ? selectedExperienceLevel.id : null // Use experienceLevelId
-            };
-        });
-
-        // Final candidate data
-        const formattedInterviewDate = new Date(formData.interviewDate).toISOString().split('T')[0];
-        const candidateData = {
-            name: formData.name,
-            applicationRoleId: roleId,
-            interviewDate: formattedInterviewDate,
-            technologies: technologies
+        return {
+          technologyId: selectedTechnology?.technologyId,
+          experienceLevelId: selectedExperienceLevel ? selectedExperienceLevel.id : null
         };
+      });
 
-        console.log('Candidate Data:', candidateData);
+      const formattedInterviewDate = new Date(formData.interviewDate).toISOString().split('T')[0];
+      const candidateData = {
+        name: formData.name,
+        applicationRoleId: roleId,
+        interviewDate: formattedInterviewDate,
+        technologies: technologies
+      };
 
-        // Call the service to submit
-        this.candidateFormService.submitCandidate(candidateData).subscribe(
-            (response) => {
-                console.log('Candidate submitted successfully', response);
-                this.resetForm();
-            },
-            (error) => {
-                console.error('Error submitting candidate:', error);
-            }
-        );
+      console.log('Candidate Data:', candidateData);
+
+      this.candidateFormService.submitCandidate(candidateData).subscribe(
+        (response) => {
+          console.log('Candidate submitted successfully', response);
+          this.resetForm();
+        },
+        (error) => {
+          console.error('Error submitting candidate:', error);
+        }
+      );
     } else {
-        console.error('Form is invalid or no stacks added');
-        Object.values(this.candidateForm.controls).forEach(control => {
-            control.markAsTouched();
-        });
+      console.error('Form is invalid or no stacks added');
+      Object.values(this.candidateForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
     }
     this.router.navigate(['/question-page']);
-}
-
-
-
-
+  }
 
   resetForm() {
     this.candidateForm.reset();
@@ -201,5 +210,6 @@ export class CandidatePageComponent implements OnInit {
     this.dataSource.data = [];
     this.isStackAdded = false;
     this.selection.clear();
+    this.availableStackOptions = [...this.stackOptions]; // Reset available options
   }
 }
