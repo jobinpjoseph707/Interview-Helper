@@ -7,14 +7,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { InterviewReportService } from '../../services/interview-report.service';
-import { HttpClientModule } from '@angular/common/http';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
-import { PageEvent } from '@angular/material/paginator'; // Import PageEvent for paginator
-import { MatPaginatorModule } from '@angular/material/paginator'; // Import MatPaginatorModule
+import { PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 // import { jsPDF } from 'jspdf';
 import { StackService } from '../../services/stack.service';
+
 @Component({
   selector: 'app-interview-summary',
   standalone: true,
@@ -30,34 +30,122 @@ import { StackService } from '../../services/stack.service';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    HttpClientModule,
-    MatPaginatorModule // Add MatPaginatorModule to imports
+    MatPaginatorModule
   ],
   templateUrl: './interview-summary.component.html',
   styleUrls: ['./interview-summary.component.scss']
 })
 export class InterviewSummaryComponent implements OnInit {
   interviewForm: FormGroup;
-  reports: any[] = []; // Holds the fetched interview reports
-  pagedReports: any[] = []; // Reports for the current page
+  reports: any[] = [];
+  pagedReports: any[] = [];
   roleOptions: any[] = [];
-  pageSize = 4; // Default page size
-  currentPage = 0; // Current page index
+  pageSize = 4;
+  currentPage = 0;
 
-  constructor(private fb: FormBuilder, private reportService: InterviewReportService, private stackService: StackService) {
+  constructor(
+    private fb: FormBuilder,
+    private reportService: InterviewReportService,
+    private stackService: StackService
+  ) {
     this.interviewForm = this.fb.group({
       name: ['', [this.noSpecialCharsValidator]],
-      role: ['', [Validators.required,this.noSpecialCharsValidator]],
+      role: ['', [this.noSpecialCharsValidator]],
       fromDate: [''],
-      toDate: [''],
-    });
+      toDate: ['']
+    }, { validator: this.dateRangeValidator });
 
-    // Add listeners to update date validations
     this.interviewForm.get('fromDate')?.valueChanges.subscribe(() => this.updateDateValidations());
     this.interviewForm.get('toDate')?.valueChanges.subscribe(() => this.updateDateValidations());
+
+    this.interviewForm.valueChanges.subscribe(() => this.onSubmit());
   }
 
-  // Custom validator to check for special characters
+  ngOnInit(): void {
+    this.fetchReports();
+    this.fetchRoles();
+  }
+
+  fetchReports(queryParams: any = {}): void {
+    this.reportService.getFilteredInterviewReports(queryParams).subscribe({
+      next: (data) => {
+        console.log('Fetched interview reports:', data);
+        this.reports = data;
+        this.updatePagedReports();
+      },
+      error: (error) => {
+        console.error('Error fetching interview reports:', error);
+      }
+    });
+  }
+
+  fetchRoles() {
+    this.stackService.getRoles().subscribe(
+      (roles) => {
+        this.roleOptions = roles;
+        console.log('Fetched Role Options:', this.roleOptions);
+      },
+      (error) => {
+        console.error('Error fetching roles:', error);
+      }
+    );
+  }
+
+  onSubmit() {
+    console.log('onSubmit method called');
+    console.log('Current Form State:', this.interviewForm.value);
+    console.log('Is Form Valid:', this.interviewForm.valid);
+
+    if (this.interviewForm.valid) {
+      const queryParams: any = {};
+
+      const name = this.interviewForm.get('name')?.value;
+      if (name) queryParams.name = name;
+
+      const selectedRoleName = this.interviewForm.get('role')?.value;
+
+      if (selectedRoleName) {
+
+        const selectedRole = this.roleOptions.find(role => role.name === selectedRoleName);
+
+        if (selectedRole) {
+          queryParams.roleId = selectedRole.applicationRoleId; 
+        }
+      }
+
+      const fromDate = this.interviewForm.get('fromDate')?.value;
+      if (fromDate) queryParams.fromDate = fromDate.toISOString();
+
+      const toDate = this.interviewForm.get('toDate')?.value;
+      if (toDate) queryParams.toDate = toDate.toISOString();
+
+      console.log('Query Params for search:', queryParams);
+      this.fetchReports(queryParams);
+    } else {
+      console.log('Form is invalid', this.interviewForm.errors);
+      Object.keys(this.interviewForm.controls).forEach(key => {
+        const control = this.interviewForm.get(key);
+        control?.markAsTouched();
+      });
+    }
+  }
+  resetForm() {
+    this.interviewForm.reset();
+    this.fetchReports();
+  }
+
+  updatePagedReports() {
+    const startIndex = this.currentPage * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.pagedReports = this.reports.slice(startIndex, endIndex);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.updatePagedReports();
+  }
+
   noSpecialCharsValidator(control: any) {
     if (!control.value) {
       return null; // Allow empty values
@@ -67,7 +155,6 @@ export class InterviewSummaryComponent implements OnInit {
     return valid ? null : { invalidChars: true };
   }
 
-  // Update date validations based on current values
   updateDateValidations() {
     const fromDate = this.interviewForm.get('fromDate');
     const toDate = this.interviewForm.get('toDate');
@@ -83,93 +170,48 @@ export class InterviewSummaryComponent implements OnInit {
     }
   }
 
-  // Fetch reports on component initialization
-  ngOnInit(): void {
-    this.reportService.getInterviewReports().subscribe((data) => {
-      this.reports = data;
-      this.updatePagedReports(); // Initialize paged reports after fetching data
-      this.fetchRoles();
-    });
-  }
-  fetchRoles() {
-    this.stackService.getRoles().subscribe(
-      (roles) => {
-        this.roleOptions = roles;
-      },
-      (error) => {
-        console.error('Error fetching roles:', error);
-      }
-    );
-  }
-  // Handle form submission
-  onSubmit(): void {
-    if (this.interviewForm.valid) {
-      const formValues = this.interviewForm.value;
-      this.searchReports(formValues);
+  dateRangeValidator(group: FormGroup): { [key: string]: any } | null {
+    const fromDate = group.get('fromDate')?.value;
+    const toDate = group.get('toDate')?.value;
+
+    if (!fromDate && !toDate) {
+      return null; // No date validation required if both are empty
     }
+
+    if (fromDate && !toDate) {
+      return { toDateRequired: true }; // To date is required when from date is provided
+    }
+
+    if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+      return { dateRangeInvalid: true }; // To date must be after from date
+    }
+
+    return null; // Valid date range
   }
 
-  // Function to search reports based on filters
-  searchReports(queryParams: any): void {
-    // Filter reports based on search criteria
-    this.reports = this.reports.filter(report => {
-      let matches = true;
-
-      if (queryParams.name && !report.name.toLowerCase().includes(queryParams.name.toLowerCase())) {
-        matches = false;
-      }
-      if (queryParams.role && !report.role.toLowerCase().includes(queryParams.role.toLowerCase())) {
-        matches = false;
-      }
-      if (queryParams.fromDate && new Date(report.date) < new Date(queryParams.fromDate)) {
-        matches = false;
-      }
-      if (queryParams.toDate && new Date(report.date) > new Date(queryParams.toDate)) {
-        matches = false;
-      }
-
-      return matches;
-    });
-
-    this.updatePagedReports(); // Update paged reports after filtering
-  }
-
-  // Update paged reports based on current page and page size
-  updatePagedReports() {
-    const startIndex = this.currentPage * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.pagedReports = this.reports.slice(startIndex, endIndex);
-  }
-
-  // Handle paginator page change event
-  onPageChange(event: PageEvent) {
-    this.pageSize = event.pageSize;
-    this.currentPage = event.pageIndex;
-    this.updatePagedReports(); // Update displayed reports based on new page
-  }
   downloadExpandedReport(report: any) {
     // const doc = new jsPDF();
 
     // Add report details to PDF
-    // doc.setFontSize(16);
-    // doc.text('Interview Report', 10, 10);
-    // doc.setFontSize(12);
-    // doc.text(`Name: ${report.name}`, 10, 20);
-    // doc.text(`Date: ${report.date}`, 10, 30);
-    // doc.text(`Role: ${report.role}`, 10, 40);
-    // doc.text(`Overall Percentage: ${report.overallPercentage}%`, 10, 50);
-    // doc.text('Stack Details:', 10, 60);
+    doc.setFontSize(16);
+    doc.text('Interview Report', 10, 10);
+    doc.setFontSize(12);
+    doc.text(`Name: ${report.name}`, 10, 20);
+    doc.text(`Date: ${report.interviewDate}`, 10, 30);
+    doc.text(`Role: ${report.applicationRoleName}`, 10, 40);
+    doc.text(`Overall Score: ${report.overallScore}%`, 10, 50);
+    doc.text('Technology Details:', 10, 60);
 
-    // Adding stack details to PDF
-    // let yOffset = 70;
-    // report.stacks.forEach((stack: any) => {
-    //   doc.text(`Technology: ${stack.technology}`, 10, yOffset);
-    //   yOffset += 10;
-    //   doc.text(`Experience Level: ${stack.experience}`, 10, yOffset);
-    //   yOffset += 10;
-    //   doc.text(`Percentage: ${stack.percentage}%`, 10, yOffset);
-    //   yOffset += 15;
-    // });
+    // Adding technology details to PDF
+    let yOffset = 70;
+    report.technologies.forEach((tech: any) => {
+      doc.text(`Technology: ${tech.technologyName}`, 10, yOffset);
+      yOffset += 10;
+      doc.text(`Experience Level: ${tech.experienceLevelName}`, 10, yOffset);
+      yOffset += 10;
+      doc.text(`Score: ${tech.score}%`, 10, yOffset);
+      yOffset += 15;
+    });
 
     // // Save PDF file
     // doc.save(`${report.name}-report.pdf`);

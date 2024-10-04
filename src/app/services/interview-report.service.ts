@@ -1,199 +1,64 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InterviewReportService {
+  private apiUrl = 'https://localhost:7042/api/Candidate';
 
-  // Hardcoded JSON data
-  private reports = [
-    {
-      "name": "Hellen Jackson",
-      "date": "20-10-2021",
-      "role": "Front End Developer",
-      "overallPercentage": 85,
-      "stacks": [
-        {
-          "technology": "Angular",
-          "experience": "Senior",
+  constructor(private http: HttpClient) {}
 
-          "percentage": 90
-        },
-        {
-          "technology": "React",
-          "experience": "Mid",
+  getFilteredInterviewReports(queryParams: any): Observable<any> {
+    let params = new HttpParams();
 
-          "percentage": 80
-        }
-      ]
-    },
-    {
-      "name": "Hellen Jackson",
-      "date": "20-10-2021",
-      "role": "Front End Developer",
-      "overallPercentage": 85,
-      "stacks": [
-        {
-          "technology": "Angular",
-          "experience": "Senior",
-
-          "percentage": 90
-        },
-        {
-          "technology": "React",
-          "experience": "Mid",
-
-          "percentage": 80
-        }
-      ]
-    },
-    {
-      "name": "Hellen Jackson",
-      "date": "20-10-2021",
-      "role": "Front End Developer",
-      "overallPercentage": 85,
-      "stacks": [
-        {
-          "technology": "Angular",
-          "experience": "Senior",
-
-          "percentage": 90
-        },
-        {
-          "technology": "React",
-          "experience": "Mid",
-
-          "percentage": 80
-        }
-      ]
-    },
-    {
-      "name": "Hellen Jackson",
-      "date": "20-10-2021",
-      "role": "Front End Developer",
-      "overallPercentage": 85,
-      "stacks": [
-        {
-          "technology": "Angular",
-          "experience": "Senior",
-
-          "percentage": 90
-        },
-        {
-          "technology": "React",
-          "experience": "Mid",
-
-          "percentage": 80
-        }
-      ]
-    },
-    {
-      "name": "Hellen Jackson",
-      "date": "20-10-2021",
-      "role": "Front End Developer",
-      "overallPercentage": 85,
-      "stacks": [
-        {
-          "technology": "Angular",
-          "experience": "Senior",
-
-          "percentage": 90
-        },
-        {
-          "technology": "React",
-          "experience": "Mid",
-
-          "percentage": 80
-        }
-      ]
-    },
-    {
-      "name": "Hellen Jackson",
-      "date": "20-10-2021",
-      "role": "Front End Developer",
-      "overallPercentage": 85,
-      "stacks": [
-        {
-          "technology": "Angular",
-          "experience": "Senior",
-
-          "percentage": 90
-        },
-        {
-          "technology": "React",
-          "experience": "Mid",
-
-          "percentage": 80
-        }
-      ]
-    },
-    {
-      "name": "Alan Tom Andrews",
-      "date": "20-10-2021",
-      "role": "Front End Developer",
-      "overallPercentage": 78,
-      "stacks": [
-        {
-          "technology": "Vue.js",
-          "experience": "Mid",
-
-          "percentage": 75
-        },
-        {
-          "technology": "React",
-          "experience": "Fresher",
-
-          "percentage": 80
-        }
-      ]
-    },
-    {
-      "name": "Lakshmi Menon",
-      "date": "20-10-2021",
-      "role": "Full Stack Developer",
-      "overallPercentage": 92,
-      "stacks": [
-        {
-          "technology": "Node.js",
-          "experience": "Senior",
-
-          "percentage": 95
-        },
-        {
-          "technology": "React",
-          "experience": "Senior",
-
-          "percentage": 89
-        }
-      ]
-    },
-    {
-      "name": "Jon B",
-      "date": "20-10-2021",
-      "role": "Back End Developer",
-      "overallPercentage": 82,
-      "stacks": [
-        {
-          "technology": "Node.js",
-          "experience": "Mid",
-
-          "percentage": 84
-        },
-        {
-          "technology": "Django",
-          "experience": "Fresher",
-
-          "percentage": 80
-        }
-      ]
+    if (queryParams.name) {
+      params = params.set('name', queryParams.name);
     }
-  ];
 
-  constructor() {}
+    // Safely handle fromDate and set it to the start of the day (00:00:00)
+    if (queryParams.fromDate) {
+      const fromDate = new Date(queryParams.fromDate);
+      if (!isNaN(fromDate.getTime())) {
+        fromDate.setHours(0, 0, 0, 0); // Start of the day
+        params = params.set('fromDate', fromDate.toISOString());
+      }
+    }
 
-  // Return the hardcoded data as an observable
-  getInterviewReports(): Observable<any> {
-    return of(this.reports);
+    // Safely handle toDate and set it to the end of the day (23:59:59)
+    if (queryParams.toDate) {
+      const toDate = new Date(queryParams.toDate);
+      if (!isNaN(toDate.getTime())) {
+        toDate.setHours(23, 59, 59, 999); // End of the day
+        params = params.set('toDate', toDate.toISOString());
+      }
+    }
+
+    if (queryParams.roleId) {
+      params = params.set('roleId', queryParams.roleId);
+    }
+
+    return this.http.get<any>(this.apiUrl, { params })
+      .pipe(
+        catchError(this.handleError) // Add error handling here
+      );
+  }
+
+  // Error handling function
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+
+      console.error('A client-side error occurred:', error.error.message);
+    } else {
+
+      console.error(
+        `Backend returned code ${error.status}, ` +
+        `body was: ${error.error}`);
+    }
+
+
+    return throwError(() => new Error('Something went wrong with the request. Please try again later.'));
   }
 }

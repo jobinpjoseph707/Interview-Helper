@@ -1,4 +1,5 @@
-<div class="form-container">
+<div
+div class="form-container">
   <h2>Candidate Form</h2>
   <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()" class="candidate-form">
     <div class="form-row">
@@ -38,18 +39,18 @@
           <!-- Stack and Experience Fields in Same Line -->
           <div class="form-group">
             <label *ngIf="!(candidateForm.get('stackName')?.invalid && candidateForm.get('stackName')?.touched)">Technology</label>
-            <div *ngIf="candidateForm.get('stackName')?.invalid && candidateForm.get('stackName')?.touched" class="error-message">
+            <div *ngIf="candidateForm.get('stackName')?.invalid && candidateForm.get('stackName')?.touched && !candidateForm.get('stackName')?.value" class="error-message">
               Technology is required.
             </div>
             <select id="stackName" formControlName="stackName">
               <option value="" disabled>Select Technology</option>
-              <option *ngFor="let option of stackOptions" [value]="option.technology">{{ option.technology }}</option>
+              <option *ngFor="let option of availableStackOptions" [value]="option.technology">{{ option.technology }}</option>
             </select>
-          </div>
+            </div>
 
           <div class="form-group">
             <label *ngIf="!(candidateForm.get('experienceLevel')?.invalid && candidateForm.get('experienceLevel')?.touched)">Experience Level</label>
-            <div *ngIf="candidateForm.get('experienceLevel')?.invalid && candidateForm.get('experienceLevel')?.touched" class="error-message">
+            <div *ngIf="candidateForm.get('experienceLevel')?.invalid && candidateForm.get('experienceLevel')?.touched && !candidateForm.get('experienceLevel')?.value" class="error-message">
               Experience Level is required.
             </div>
             <select id="experienceLevel" formControlName="experienceLevel">
@@ -57,6 +58,7 @@
               <option *ngFor="let exp of getExperienceOptions(candidateForm.get('stackName')?.value)" [value]="exp">{{ exp }}</option>
             </select>
           </div>
+
 
           <!-- Add Stack Button in Same Line -->
           <button type="button" (click)="addStack()" class="add-button"
@@ -122,11 +124,5 @@
     <button type="submit" [disabled]="!candidateForm.valid || addedStacks.length === 0" class="submit-button">
       Submit
     </button>
-
-
-
-
-
-
   </form>
 </div>

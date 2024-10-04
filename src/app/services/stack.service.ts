@@ -24,30 +24,24 @@ export class StackService {
       }),
       // Transform the response into the desired format
       map((responses) => {
-        // Check the response for debugging
         console.log('Technologies Response:', responses.technologies);
         console.log('Experience Levels Response:', responses.experienceLevels);
 
         // Extract experience levels from the response
         const experienceLevels = responses.experienceLevels.map(el => ({
-          id: el.experienceLevelId,  // Use experienceLevelId instead of id
+          id: el.experienceLevelId,
           level: el.level
         }));
 
         // Map technologies to the desired structure, including IDs
         return responses.technologies.map(tech => ({
-          technologyId: tech.technologyId, // Extract technology ID
-          technology: tech.name, // Use the name property directly
-          experienceLevels: experienceLevels // Assign the complete experience levels list
+          technologyId: tech.technologyId,
+          technology: tech.name,
+          experienceLevels: experienceLevels
         }));
       })
     );
   }
-
-
-
-
-
   // Fetch roles from the role API
   getRoles(): Observable<any[]> {
     return this.http.get<any[]>(this.apiRoleUrl).pipe(
