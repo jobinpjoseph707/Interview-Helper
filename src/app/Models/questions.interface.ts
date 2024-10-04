@@ -6,11 +6,11 @@ export interface Question {
   }  
   export interface RoleResult {
     name: string;
+    technologyId:number;
     questions: Question[];
     details?: {
       right: number;
       wrong: number;
-      skipped: number;
     };
     percentage?: number;
   } 
@@ -21,6 +21,7 @@ export interface Question {
 }
 
 export interface QuestionRequest {
+  candidateName:string;
     candidateId: number;              // The ID of the candidate
     technologies: TechnologyExperience[]; // List of technologies and their experience levels
 }

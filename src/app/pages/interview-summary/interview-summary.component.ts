@@ -13,7 +13,7 @@ import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { PageEvent } from '@angular/material/paginator'; // Import PageEvent for paginator
 import { MatPaginatorModule } from '@angular/material/paginator'; // Import MatPaginatorModule
 import { MatSelectModule } from '@angular/material/select';
-import { jsPDF } from 'jspdf';
+// import { jsPDF } from 'jspdf';
 import { StackService } from '../../services/stack.service';
 @Component({
   selector: 'app-interview-summary',
@@ -148,30 +148,30 @@ export class InterviewSummaryComponent implements OnInit {
     this.updatePagedReports(); // Update displayed reports based on new page
   }
   downloadExpandedReport(report: any) {
-    const doc = new jsPDF();
+    // const doc = new jsPDF();
 
     // Add report details to PDF
-    doc.setFontSize(16);
-    doc.text('Interview Report', 10, 10);
-    doc.setFontSize(12);
-    doc.text(`Name: ${report.name}`, 10, 20);
-    doc.text(`Date: ${report.date}`, 10, 30);
-    doc.text(`Role: ${report.role}`, 10, 40);
-    doc.text(`Overall Percentage: ${report.overallPercentage}%`, 10, 50);
-    doc.text('Stack Details:', 10, 60);
+    // doc.setFontSize(16);
+    // doc.text('Interview Report', 10, 10);
+    // doc.setFontSize(12);
+    // doc.text(`Name: ${report.name}`, 10, 20);
+    // doc.text(`Date: ${report.date}`, 10, 30);
+    // doc.text(`Role: ${report.role}`, 10, 40);
+    // doc.text(`Overall Percentage: ${report.overallPercentage}%`, 10, 50);
+    // doc.text('Stack Details:', 10, 60);
 
     // Adding stack details to PDF
-    let yOffset = 70;
-    report.stacks.forEach((stack: any) => {
-      doc.text(`Technology: ${stack.technology}`, 10, yOffset);
-      yOffset += 10;
-      doc.text(`Experience Level: ${stack.experience}`, 10, yOffset);
-      yOffset += 10;
-      doc.text(`Percentage: ${stack.percentage}%`, 10, yOffset);
-      yOffset += 15;
-    });
+    // let yOffset = 70;
+    // report.stacks.forEach((stack: any) => {
+    //   doc.text(`Technology: ${stack.technology}`, 10, yOffset);
+    //   yOffset += 10;
+    //   doc.text(`Experience Level: ${stack.experience}`, 10, yOffset);
+    //   yOffset += 10;
+    //   doc.text(`Percentage: ${stack.percentage}%`, 10, yOffset);
+    //   yOffset += 15;
+    // });
 
-    // Save PDF file
-    doc.save(`${report.name}-report.pdf`);
+    // // Save PDF file
+    // doc.save(`${report.name}-report.pdf`);
   }
 }

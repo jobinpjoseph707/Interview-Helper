@@ -99,10 +99,7 @@ align-items: center;
     //   color: #7b2cbf;
     // }
 
-    .answer-buttons{
-      display: flex;
-      align-self: flex-end;
-    }
+ 
      
      
     
@@ -216,6 +213,11 @@ align-items: center;
     text-align: center;
     font-size: 18px;
     margin-top: 20px;
+  }
+  
+  .action-buttons{
+    display: flex !important;
+    flex-direction: row !important;
   }
   
   .download-button {

@@ -11,6 +11,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { ExperienceLevel } from '../../Models/experience-level';  // Import as a type, not injected
 import { Router } from '@angular/router';
+import { QuestionRequest, TechnologyExperience } from '../../Models/questions.interface';
 
 @Component({
   selector: 'app-candidate-page',
@@ -26,6 +27,8 @@ export class CandidatePageComponent implements OnInit {
   addedStacks: Array<{ technology: string; experienceLevel: string }> = [];
   isStackAdded: boolean = false;
 
+  technologiesData:TechnologyExperience[]=[];
+  
   displayedColumns: string[] = ['select', 'technology', 'experienceLevel', 'actions'];
   dataSource = new MatTableDataSource<{ technology: string; experienceLevel: string }>([]);
   selection = new SelectionModel<{ technology: string; experienceLevel: string }>(true, []);
@@ -153,11 +156,16 @@ export class CandidatePageComponent implements OnInit {
             console.log('Experience Levels:', selectedTechnology?.experienceLevels);
             console.log('Selected Experience Level:', selectedExperienceLevel);
 
-            return {
-                technologyId: selectedTechnology?.technologyId,
-                experienceLevelId: selectedExperienceLevel ? selectedExperienceLevel.id : null // Use experienceLevelId
-            };
-        });
+            if (selectedTechnology?.technologyId && selectedExperienceLevel?.id) {
+              return {
+                  technologyId: selectedTechnology.technologyId,  // Ensure it is a number
+                  experienceLevelId: selectedExperienceLevel.id  // Ensure it is a number
+              };
+          } else {
+              return null;  // Return null if the values are invalid
+          }
+      })
+      .filter(tech => tech !== null);
 
         // Final candidate data
         const formattedInterviewDate = new Date(formData.interviewDate).toISOString().split('T')[0];
@@ -174,8 +182,16 @@ export class CandidatePageComponent implements OnInit {
         this.candidateFormService.submitCandidate(candidateData).subscribe(
             (response) => {
                 console.log('Candidate submitted successfully', response);
-                this.resetForm();
-            },
+                const QuestionRequest:QuestionRequest={
+                  candidateName:response.name,
+                  candidateId:response.candidateId,
+                  technologies:candidateData.technologies
+                }
+                // this.technologiesData=candidateData.technologies
+                console.log('Candidate submitted successfully', QuestionRequest);
+                // this.resetForm();
+                this.router.navigate(['/question-page'], { state: { QuestionRequest } });
+              },
             (error) => {
                 console.error('Error submitting candidate:', error);
             }
@@ -186,7 +202,7 @@ export class CandidatePageComponent implements OnInit {
             control.markAsTouched();
         });
     }
-    this.router.navigate(['/question-page']);
+    // this.router.navigate(['/question-page']);
 }
 
 

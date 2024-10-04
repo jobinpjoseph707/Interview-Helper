@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Question, RoleResult } from '../../Models/questions.interface';
+import { Question, QuestionRequest, RoleResult } from '../../Models/questions.interface';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { QuestionService } from '../../services/question.service';
 import { log } from 'console';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-questionpage',
@@ -22,82 +23,67 @@ import { log } from 'console';
   styleUrl: './questionpage.component.scss'
 })
 export class QuestionpageComponent {
-  // timers: { minutes: number; seconds: number }[] = []; // Array to store the time for each question
-  // activeQuestionIndex: number | null = null; // To track which timer is running
-  // subscriptions: Subscription[] = []; // To store each timer's subscription
+
+
   isTimerRunning: boolean = false;
   
   timerInterval: any;
   seconds: number = 0;
   minutes: number = 0;
   currentTabIndex: number = 0; // Initialize with the first tab index
-  // You may need to adjust this structure to fit your tab logic
   timers: { [key: string]: { seconds: number, isRunning: boolean, interval: any } } = {};
   
-
+  questionRequest: QuestionRequest | null = null;
   reviewText: string = ''; // Variable to store the review text
   candidateId: number = 4596;
   candidateName: string = 'Jobin P Joseph';
   showResultsModal: boolean = false;
   showConfirmationModal: boolean = false; // New property for confirmation modal
 
-  // roles: RoleResult[] = [
-  //   {
-  //     name: 'Front End',
-  //     questions: [
-  //       { id: 1, text: 'What is React?', role: 'Front End', answer: null },
-  //       { id: 2, text: 'Explain CSS flexbox', role: 'Front End', answer: null },
-  //       { id: 3, text: 'What is the Virtual DOM in React?', role: 'Front End', answer: null },
-  //       { id: 4, text: 'What is the difference between class and functional components in React?', role: 'Front End', answer: null },
-  //       { id: 5, text: 'What is a REST API?', role: 'Back End', answer: null },
-  //       { id: 6, text: 'How do you manage state in React?', role: 'Front End', answer: null },
-  //       { id: 7, text: 'What is an event loop in JavaScript?', role: 'Back End', answer: null },
-  //       { id: 8, text: 'Explain the concept of closures in JavaScript.', role: 'Back End', answer: null },
-  //       { id: 9, text: 'How do you optimize SQL queries?', role: 'Database', answer: null },
-  //       { id: 10, text: 'What are SQL joins? Explain different types.', role: 'Database', answer: null },
-  //       { id: 11, text: 'What is CORS, and how do you handle it in web applications?', role: 'Back End', answer: null },
-  //       { id: 12, text: 'Explain the box model in CSS.', role: 'Front End', answer: null },
-  //       { id: 13, text: 'What is normalization in databases?', role: 'Database', answer: null }
-  //             ],
-
-  //   },
-  //   {
-  //     name: 'Back End',
-  //     questions: [
-  //       { id: 3, text: 'What is Node.js?', role: 'Back End', answer: null },
-  //       { id: 4, text: 'Explain database indexing', role: 'Back End', answer: null },
-  //       // Add more back-end questions...
-  //     ],
-
-  //   }
-  // ];
   isLoading: boolean = false;
   roles: RoleResult[] = [];
 
+  
+  technologyScores: { [key: number]: number } = {}; // Dictionary to store TechnologyId and scores
   overallPercentage: number = 83;
   tabs: string[] = ['Angular', 'Back End', 'Database/SQL'];
   activeTab: string = this.tabs[0];  // Set default active tab
  
-  constructor(private questionService: QuestionService) {}
+  constructor(private questionService: QuestionService, private router: Router) {}
 
-ngOnInit(){    
-
+ngOnInit(){   
+  this.questionRequest = history.state.QuestionRequest; 
+  if (!this.questionRequest) {
+    console.error('No QuestionRequest data found.');
+  }
   this.loadQuestions();
 
 
 }
 loadQuestions() {
   this.isLoading = true;
+  if (!this.questionRequest || !this.questionRequest.candidateId || !this.questionRequest.technologies) {
+    console.error('Invalid Question Request. Cannot load questions.');
+    this.isLoading = false;
+    return;  // Stop execution if the data is invalid
+  }
+  this.candidateId = this.questionRequest.candidateId;
+  this.candidateName=this.questionRequest.candidateName;
+  const technologies = this.questionRequest.technologies;
 
-  const technologies = [
-    { technologyId: 1, experienceLevelId: 2 },
-    { technologyId: 2, experienceLevelId: 2 }
-  ];
 
-  this.questionService.getQuestions(this.candidateId, technologies).subscribe({
+  this.questionService.getQuestions(this.candidateName,this.candidateId, technologies).subscribe({
     next: (data) => {
       this.roles = data;
+ console.log(this.roles);
+ 
       this.tabs = this.roles.map(role => role.name);
+      this.roles.forEach(role => {
+        if (role.technologyId !== undefined) { // Check that the technologyId is defined
+          this.technologyScores[role.technologyId] = 0; // Initialize score to 0 for each TechnologyId
+        }      });
+
+      console.log('Technology Scores Initialized:', this.technologyScores);
       this.isLoading = false;
     },
     error: (error) => {
@@ -147,7 +133,6 @@ loadQuestions() {
   
 
   submitAnswer(questionId: string) {
-    // Logic for submitting the answer...
   
     // Stop the timer for this question
     const timer = this.timers[questionId];
@@ -170,39 +155,72 @@ loadQuestions() {
   }
   calculateResults() {
     let totalRight = 0;
-    let totalQuestions = 0;
+    let totalAnswered = 0; // Total of right and wrong answers
 
     this.roles.forEach(role => {
       const details = {
         right: 0,
         wrong: 0,
-        skipped: 0
       };
 
       role.questions.forEach(question => {
         switch (question.answer) {
           case 'correct':
             details.right++;
-            totalRight++;
+            totalRight++; // Increment the global correct count
+            totalAnswered++; // Increment the global answered count            
             break;
           case 'incorrect':
             details.wrong++;
+            totalAnswered++; 
             break;
         }
       });
 
-      const totalAnswered = details.right + details.wrong;
+      const roleAnswered = details.right + details.wrong;
       role.details = details;
-      role.percentage = totalAnswered > 0 ? Math.round((details.right / totalAnswered) * 100) : 0;
-
-      totalQuestions += role.questions.length;
+      role.percentage = roleAnswered > 0 ? Math.round((details.right / roleAnswered) * 100) : 0;
+      if (this.technologyScores[role.technologyId] !== undefined) {
+        this.technologyScores[role.technologyId] = role.percentage; // Set score for this technology
+      }
+      console.log(`Technology ${role.technologyId} Score: ${role.percentage}`);
     });
 
-    this.overallPercentage = Math.round((totalRight / totalQuestions) * 100);
+    this.overallPercentage = totalAnswered > 0 ? Math.round((totalRight / totalAnswered) * 100) : 0;
+    console.log('Updated Technology Scores:', this.technologyScores);
+
+  }
+  SubmitResults() {
+  
+    const overallScore = this.overallPercentage;
+    const review = this.reviewText; // Assuming this contains the review text entered by the user
+  
+    // Update overall candidate score
+    this.questionService.updateCandidateScore(this.candidateId, overallScore, review).subscribe({
+      next: (response:string) => {
+          console.log('Candidate overall score and review updated successfully', response);
+      },
+      error: (error) => {
+      
+          console.error('Error updating candidate overall score and review:', error);
+      }
+  });
+
+  
+    const technologyScores = this.technologyScores; 
+  
+    this.questionService.updateTechnologyScores(this.candidateId, technologyScores).subscribe({
+      next: (response:string) => {
+          console.log('Candidate technology scores updated successfully', response);
+      },
+      error: (error) => {
+          console.error('Error updating candidate technology scores:', error);
+      }
+  });
   }
 
   finishInterview() {  
-    this.showConfirmationModal = true; // Show confirmation modal instead of results
+    this.showConfirmationModal = true;
 
   } 
   confirmFinish() {
@@ -226,7 +244,7 @@ loadQuestions() {
 
   closeModal() {
     this.showResultsModal = false;
-    // this.showConfirmationModal = false;
+    this.showConfirmationModal = false;
   }
 
   logChange(questionText: string, answer: 'correct' | 'incorrect' | 'skip') {  
