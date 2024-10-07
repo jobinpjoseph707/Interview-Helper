@@ -12,7 +12,7 @@ import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
-// import { jsPDF } from 'jspdf';
+import { jsPDF } from 'jspdf';
 import { StackService } from '../../services/stack.service';
 
 @Component({
@@ -190,7 +190,7 @@ export class InterviewSummaryComponent implements OnInit {
   }
 
   downloadExpandedReport(report: any) {
-    // const doc = new jsPDF();
+    const doc = new jsPDF();
 
     // Add report details to PDF
     doc.setFontSize(16);
