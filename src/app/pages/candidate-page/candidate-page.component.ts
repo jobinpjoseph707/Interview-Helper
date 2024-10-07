@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 export class CandidatePageComponent implements OnInit {
   candidateForm: FormGroup;
   stackOptions: Stack[] = [];
-  availableStackOptions: Stack[] = []; // New property to track available technologies
+  availableStackOptions: Stack[] = [];
   roleOptions: any[] = [];
   addedStacks: Array<{ technology: string; experienceLevel: string }> = [];
   isStackAdded: boolean = false;
@@ -41,8 +41,8 @@ export class CandidatePageComponent implements OnInit {
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z][a-zA-Z. ]*$')]],
       role: ['', [Validators.required]],
       interviewDate: ['', Validators.required],
-      stackName: ['', Validators.required],
-      experienceLevel: ['', Validators.required]
+      stackName: [''],
+      experienceLevel: ['']
     });
   }
 
@@ -106,10 +106,10 @@ export class CandidatePageComponent implements OnInit {
       this.availableStackOptions = this.availableStackOptions.filter(stack => stack.technology !== stackName);
 
       // Clear stack fields after adding
-      // this.candidateForm.patchValue({
-      //   stackName: '',
-      //   experienceLevel: ''
-      // });
+      this.candidateForm.patchValue({
+        stackName: '',
+        experienceLevel: ''
+      });
     }
   }
 
@@ -151,8 +151,17 @@ export class CandidatePageComponent implements OnInit {
     this.isAllSelected() ? this.selection.clear() : this.selection.select(...this.dataSource.data);
   }
 
+  isFormValid(): boolean {
+    return !!(
+      this.candidateForm.get('name')?.valid &&
+      this.candidateForm.get('role')?.valid &&
+      this.candidateForm.get('interviewDate')?.valid &&
+      this.addedStacks.length > 0
+    );
+  }
+
   onSubmit() {
-    if (this.candidateForm.valid && this.addedStacks.length > 0) {
+    if (this.isFormValid()) {
       const formData = this.candidateForm.value;
 
       console.log('Form Role:', formData.role);
