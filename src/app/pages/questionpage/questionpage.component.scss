@@ -215,9 +215,9 @@ align-items: center;
     margin-top: 20px;
   }
   
-  .action-buttons{
-    display: flex !important;
-    flex-direction: row !important;
+  .answer-buttons{
+    display: flex ;
+    align-items: center;
   }
   
   .download-button {

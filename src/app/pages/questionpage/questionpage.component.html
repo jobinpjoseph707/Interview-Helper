@@ -26,19 +26,17 @@
           <button mat-icon-button (click)="answerQuestion(question.id, 'correct')" [class.selected]="question.answer === 'correct'">
             <mat-icon class="right-icon" [class.selected]="question.answer === 'correct'">check_circle</mat-icon>
           </button>
-          
           <button mat-icon-button (click)="answerQuestion(question.id, 'incorrect')" [class.selected]="question.answer === 'incorrect'">
             <mat-icon class="wrong-icon" [class.selected]="question.answer === 'incorrect'">cancel</mat-icon>
           </button>
-
-<div class="timer">
-  <mat-icon (click)="toggleTimer(question.id)" [ngStyle]="{ 'color': timers[question.id]?.isRunning ? 'rgb(202, 191, 143)' : 'white' }">
-    {{ timers[question.id]?.isRunning ? 'pause_circle_filled' : 'play_circle_filled' }}
-  </mat-icon>
-  <span>{{ formatTime(timers[question.id]?.seconds ?? 0) }}</span>
-</div>
+          <div class="timer">
+          <mat-icon (click)="toggleTimer(question.id)" [ngStyle]="{ 'color': timers[question.id]?.isRunning ? 'rgb(202, 191, 143)' : 'white' }">
+          {{ timers[question.id]?.isRunning ? 'pause_circle_filled' : 'play_circle_filled' }}
+          </mat-icon>
+          <span>{{ formatTime(timers[question.id]?.seconds??0) }}</span>
         </div>
-      </mat-card-content>
+      </div>
+     </mat-card-content>
     </mat-card>
   }
   <button class="finish-button" (click)="finishInterview()">Finish</button>
