@@ -1,5 +1,11 @@
-<div class="header">
+
+<mat-toolbar class="header">
+  <button *ngIf="showMenuButton" mat-icon-button (click)="onToggleSidenav()">
+    <mat-icon>menu</mat-icon>
+  </button>
   <div class="logo">
-    <img src="img/exp.png" alt="Experion Logo">
+    <img src="img/exp.png" alt="Experion Logo" />
   </div>
-</div>
+</mat-toolbar>
+
+

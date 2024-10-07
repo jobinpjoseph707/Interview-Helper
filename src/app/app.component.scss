@@ -1,19 +1,19 @@
-.layout {
-  display: flex;
-  height: calc(100vh - 72px); // Full height minus the header height
-}
+// .layout {
+//   display: flex;
+//   height: calc(100vh - 72px); // Full height minus the header height
+// }
 
-.content {
-  flex-grow: 1; // This ensures the content takes up the remaining space next to the sidebar
-  padding: 20px;
-  background-color: #f5f5f5; // Light background for the content area
-}
+// .content {
+//   flex-grow: 1; // This ensures the content takes up the remaining space next to the sidebar
+//   padding: 20px;
+//   background-color: #f5f5f5; // Light background for the content area
+// }
 
-app-header {
-  width: 100%;
-}
+// app-header {
+//   width: 100%;
+// }
 
-app-sidebar {
-  height: 100%;
-}
+// app-sidebar {
+//   height: 100%;
+// }
 

@@ -1,36 +1,40 @@
 import { Component } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav'; // Import MatSidenavModule
+import { MatListModule } from '@angular/material/list'; // Import MatListModule
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
-  imports: [RouterModule] 
+  imports: [MatIcon,RouterModule,MatSidenavModule,MatListModule] 
 })
 export class SidebarComponent {
   items: MenuItem[] | undefined;
 
   ngOnInit() {
-    this.items = [
-      {
-        label: 'Candidate Form',
-        routerLink: '/'
-      },
+    // this.items = [
+    //   {
+    //     label: 'Candidate Form',
+    //     routerLink: '/interview-helper/Candidate-Forms'
+    //   },
 
-      {
-        label: 'Interview Summary',
-        routerLink: '/interview-summary'
-      },
-      {
-        label:'Question-Page',
-        routerLink:'/question-page'
-      }
-      // {
-      //   label: 'status',
-      //   routerLink: '/voc-status'
-      // },
-    ];
+    //   {
+    //     label: 'Interview Summary',
+    //     routerLink: '/interview-helper/interview-summarys/'
+    //   },
+    //   {
+    //     label:'Question-Page',
+    //     routerLink:'/interview-helper/question-pages'
+    //   }
+    // ];
+  }
+  isSidenavOpen = true; // Default sidenav open on larger screens
+
+  toggleSidenav() {
+    this.isSidenavOpen = !this.isSidenavOpen;
   }
 }

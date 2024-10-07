@@ -1,0 +1,16 @@
+
+.sidenav-container {
+    height:calc(100vh - 72px);  // Adjust for header height
+  }
+  .sidenav {
+    width: 80px;
+    padding: 0px;
+    margin:0px
+  }
+  .content {
+    width: calc(100vw - 120px);
+    background-image: url('/img/background.png');
+    background-size: cover; 
+    padding: 20px;
+    height:calc(100vh - 112px);  // Adjust for header height
+  }
