@@ -14,6 +14,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { jsPDF } from 'jspdf';
 import { StackService } from '../../services/stack.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { ExcelServiceService } from '../../services/excel-service.service';
 
 @Component({
   selector: 'app-interview-summary',
@@ -30,7 +32,7 @@ import { StackService } from '../../services/stack.service';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatPaginatorModule
+    MatPaginatorModule,
   ],
   templateUrl: './interview-summary.component.html',
   styleUrls: ['./interview-summary.component.scss']
@@ -46,7 +48,8 @@ export class InterviewSummaryComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private reportService: InterviewReportService,
-    private stackService: StackService
+    private stackService: StackService,
+    private excelExportService: ExcelServiceService
   ) {
     this.interviewForm = this.fb.group({
       name: ['', [this.noSpecialCharsValidator]],
@@ -55,10 +58,12 @@ export class InterviewSummaryComponent implements OnInit {
       toDate: ['']
     }, { validator: this.dateRangeValidator });
 
-    this.interviewForm.get('fromDate')?.valueChanges.subscribe(() => this.updateDateValidations());
-    this.interviewForm.get('toDate')?.valueChanges.subscribe(() => this.updateDateValidations());
-
-    this.interviewForm.valueChanges.subscribe(() => this.onSubmit());
+    this.interviewForm.valueChanges
+      .pipe(debounceTime(500), distinctUntilChanged())
+      .subscribe(() => {
+        this.updateDateValidations();
+        this.onSubmit(); // Only submit after debounce and form validation check
+      });
   }
 
   ngOnInit(): void {
@@ -92,43 +97,38 @@ export class InterviewSummaryComponent implements OnInit {
   }
 
   onSubmit() {
+    if (!this.interviewForm.valid) {
+      return;
+    }
+
     console.log('onSubmit method called');
     console.log('Current Form State:', this.interviewForm.value);
     console.log('Is Form Valid:', this.interviewForm.valid);
 
-    if (this.interviewForm.valid) {
-      const queryParams: any = {};
+    const queryParams: any = {};
 
-      const name = this.interviewForm.get('name')?.value;
-      if (name) queryParams.name = name;
+    const name = this.interviewForm.get('name')?.value;
+    if (name) queryParams.name = name;
 
-      const selectedRoleName = this.interviewForm.get('role')?.value;
-
-      if (selectedRoleName) {
-
-        const selectedRole = this.roleOptions.find(role => role.name === selectedRoleName);
-
-        if (selectedRole) {
-          queryParams.roleId = selectedRole.applicationRoleId; 
-        }
+    const selectedRoleName = this.interviewForm.get('role')?.value;
+    if (selectedRoleName) {
+      const selectedRole = this.roleOptions.find(role => role.name === selectedRoleName);
+      if (selectedRole) {
+        queryParams.roleId = selectedRole.applicationRoleId;
       }
-
-      const fromDate = this.interviewForm.get('fromDate')?.value;
-      if (fromDate) queryParams.fromDate = fromDate.toISOString();
-
-      const toDate = this.interviewForm.get('toDate')?.value;
-      if (toDate) queryParams.toDate = toDate.toISOString();
-
-      console.log('Query Params for search:', queryParams);
-      this.fetchReports(queryParams);
-    } else {
-      console.log('Form is invalid', this.interviewForm.errors);
-      Object.keys(this.interviewForm.controls).forEach(key => {
-        const control = this.interviewForm.get(key);
-        control?.markAsTouched();
-      });
     }
+
+    const fromDate = this.interviewForm.get('fromDate')?.value;
+    const toDate = this.interviewForm.get('toDate')?.value;
+    if (fromDate && toDate) {
+      queryParams.fromDate = fromDate.toISOString();
+      queryParams.toDate = toDate.toISOString();
+    }
+
+    console.log('Query Params for search:', queryParams);
+    this.fetchReports(queryParams);
   }
+
   resetForm() {
     this.interviewForm.reset();
     this.fetchReports();
@@ -170,25 +170,6 @@ export class InterviewSummaryComponent implements OnInit {
     }
   }
 
-  dateRangeValidator(group: FormGroup): { [key: string]: any } | null {
-    const fromDate = group.get('fromDate')?.value;
-    const toDate = group.get('toDate')?.value;
-
-    if (!fromDate && !toDate) {
-      return null; // No date validation required if both are empty
-    }
-
-    if (fromDate && !toDate) {
-      return { toDateRequired: true }; // To date is required when from date is provided
-    }
-
-    if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
-      return { dateRangeInvalid: true }; // To date must be after from date
-    }
-
-    return null; // Valid date range
-  }
-
   downloadExpandedReport(report: any) {
     const doc = new jsPDF();
 
@@ -216,4 +197,40 @@ export class InterviewSummaryComponent implements OnInit {
     // // Save PDF file
     // doc.save(`${report.name}-report.pdf`);
   }
+
+  downloadExpandedExcelReport(report: any): void {
+    const reportData = report.technologies.map((stack: any) => ({
+      'Technology': stack.technologyName,
+      'Experience Level': stack.experienceLevelName,
+      'Score (%)': stack.score
+    }));
+
+    this.excelExportService.exportToExcel(reportData, `Report_${report.name}`);
+  }
+
+  downloadAllReports(): void {
+    const allReportsData = this.reports.flatMap(report => report.technologies.map((stack: any) => ({
+      'Candidate Name': report.name,
+      'Interview Date': report.interviewDate,
+      'Application Role': report.applicationRoleName,
+      'Overall Score (%)': report.overallScore,
+      'Technology': stack.technologyName,
+      'Experience Level': stack.experienceLevelName,
+      'Score (%)': stack.score
+    })));
+
+    this.excelExportService.exportToExcel(allReportsData, 'All_Reports');
+  }
+
+  dateRangeValidator(group: FormGroup): { [key: string]: any } | null {
+    const fromDate = group.get('fromDate')?.value;
+    const toDate = group.get('toDate')?.value;
+
+    if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+      return { dateRangeInvalid: true };
+    }
+
+    return null;
+  }
 }
+
