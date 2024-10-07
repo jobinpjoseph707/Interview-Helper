@@ -233,3 +233,4 @@ export class InterviewSummaryComponent implements OnInit {
     return null;
   }
 }
+
