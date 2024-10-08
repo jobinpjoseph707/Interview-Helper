@@ -1,29 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, catchError, throwError, map } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { Stack } from '../Models/stack';
+import { environment } from '../../environments/environment';
+import { map } from 'rxjs/operators'; 
 
 @Injectable({
   providedIn: 'root',
 })
 export class StackService {
-  private apiTechnologyUrl = 'https://localhost:7042/api/Technology';
-  private apiExperienceLevelUrl = 'https://localhost:7042/api/ExperienceLevel';
-  private apiRoleUrl = 'https://localhost:7042/api/ApplicationRole';
+  private apiTechnologyUrl = `${environment.apiUrl}/Technology`;
+  private apiExperienceLevelUrl = `${environment.apiUrl}/ExperienceLevel`;
+  private apiRoleUrl = `${environment.apiUrl}/ApplicationRole`;
 
   constructor(private http: HttpClient) {}
 
+  // Fetch stacks, which includes technologies and experience levels
   getStacks(): Observable<Stack[]> {
     return forkJoin({
       technologies: this.http.get<{ technologyId: number; name: string }[]>(this.apiTechnologyUrl), // Fetch technologies
       experienceLevels: this.http.get<{ experienceLevelId: number; level: string }[]>(this.apiExperienceLevelUrl) // Fetch experience levels
     }).pipe(
-      catchError((error) => {
-        console.error('Error fetching stack options', error);
-        return throwError(() => new Error('Error fetching stack options.'));
-      }),
-      // Transform the response into the desired format
-      map((responses) => {
+      map((responses: { technologies: { technologyId: number; name: string }[]; experienceLevels: { experienceLevelId: number; level: string }[] }) => {
         console.log('Technologies Response:', responses.technologies);
         console.log('Experience Levels Response:', responses.experienceLevels);
 
@@ -42,13 +40,9 @@ export class StackService {
       })
     );
   }
+
   // Fetch roles from the role API
   getRoles(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiRoleUrl).pipe(
-      catchError((error) => {
-        console.error('Error fetching role options', error);
-        return throwError(() => new Error('Error fetching role options.'));
-      })
-    );
+    return this.http.get<any[]>(this.apiRoleUrl);
   }
 }

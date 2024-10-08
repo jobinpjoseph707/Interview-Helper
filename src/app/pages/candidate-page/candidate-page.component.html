@@ -121,7 +121,7 @@ div class="form-container">
         </div>
       </div>
     </div>
-    <button type="submit" [disabled]="!isFormValid()" class="submit-button">
+    <button type="submit" [disabled]="!isFormValid()" (click)="onSubmit()" class="submit-button">
       Submit
     </button>
   </form>

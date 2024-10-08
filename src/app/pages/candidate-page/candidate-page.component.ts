@@ -12,6 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ExperienceLevel } from '../../Models/experience-level';
 import { Router } from '@angular/router';
 import { QuestionRequest, TechnologyExperience } from '../../Models/questions.interface';
+import {MatSnackBar} from '@angular/material/snack-bar'
 
 @Component({
   selector: 'app-candidate-page',
@@ -19,6 +20,7 @@ import { QuestionRequest, TechnologyExperience } from '../../Models/questions.in
   imports: [ReactiveFormsModule, FormsModule, CommonModule, MatTableModule, MatCheckboxModule],
   templateUrl: './candidate-page.component.html',
   styleUrls: ['./candidate-page.component.scss'],
+
 })
 export class CandidatePageComponent implements OnInit {
   candidateForm: FormGroup;
@@ -29,7 +31,7 @@ export class CandidatePageComponent implements OnInit {
   isStackAdded: boolean = false;
 
   technologiesData:TechnologyExperience[]=[];
-  
+
   displayedColumns: string[] = ['select', 'technology', 'experienceLevel', 'actions'];
   dataSource = new MatTableDataSource<{ technology: string; experienceLevel: string }>([]);
   selection = new SelectionModel<{ technology: string; experienceLevel: string }>(true, []);
@@ -38,7 +40,8 @@ export class CandidatePageComponent implements OnInit {
     private fb: FormBuilder,
     private stackService: StackService,
     private candidateFormService: CandidateFormService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.candidateForm = this.fb.group({
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z][a-zA-Z. ]*$')]],
@@ -57,6 +60,7 @@ export class CandidatePageComponent implements OnInit {
     this.candidateForm.patchValue({
       interviewDate: formattedDate
     });
+    this.candidateFormService.loager;
   }
 
   private formatDate(date: Date): string {
@@ -182,16 +186,15 @@ export class CandidatePageComponent implements OnInit {
         console.log('Experience Levels:', selectedTechnology?.experienceLevels);
         console.log('Selected Experience Level:', selectedExperienceLevel);
 
-            if (selectedTechnology?.technologyId && selectedExperienceLevel?.id) {
-              return {
-                  technologyId: selectedTechnology.technologyId,  // Ensure it is a number
-                  experienceLevelId: selectedExperienceLevel.id  // Ensure it is a number
-              };
-          } else {
-              return null;  // Return null if the values are invalid
-          }
-      })
-      .filter(tech => tech !== null);
+        if (selectedTechnology?.technologyId && selectedExperienceLevel?.id) {
+          return {
+            technologyId: selectedTechnology.technologyId,
+            experienceLevelId: selectedExperienceLevel.id
+          };
+        } else {
+          return null;
+        }
+      }).filter(tech => tech !== null);
 
       const formattedInterviewDate = new Date(formData.interviewDate).toISOString().split('T')[0];
       const candidateData = {
@@ -203,32 +206,51 @@ export class CandidatePageComponent implements OnInit {
 
       console.log('Candidate Data:', candidateData);
 
-        // Call the service to submit
-        this.candidateFormService.submitCandidate(candidateData).subscribe(
-            (response) => {
-                console.log('Candidate submitted successfully', response);
-                const QuestionRequest:QuestionRequest={
-                  candidateName:response.name,
-                  candidateId:response.candidateId,
-                  technologies:candidateData.technologies
-                }
-                // this.technologiesData=candidateData.technologies
-                console.log('Candidate submitted successfully', QuestionRequest);
-                // this.resetForm();
-                this.router.navigate(['/interview-helper/question-page'], { state: { QuestionRequest } });
-              },
-            (error) => {
-                console.error('Error submitting candidate:', error);
-            }
-        );
+      // Call the service to submit
+      this.candidateFormService.submitCandidate(candidateData).subscribe(
+        (response) => {
+          console.log('Candidate submitted successfully', response);
+          const QuestionRequest: QuestionRequest = {
+            candidateName: response.name,
+            candidateId: response.candidateId,
+            technologies: candidateData.technologies
+          };
+          console.log('Candidate submitted successfully', QuestionRequest);
+
+          // Show success message
+          this.showSnackBar('Candidate submitted successfully', 'success');
+
+          // Navigate to the question page
+          this.router.navigate(['/interview-helper/question-page'], { state: { QuestionRequest } });
+        },
+        (error) => {
+          console.error('Error submitting candidate:', error);
+          // Show error message
+          this.showSnackBar('Error submitting candidate. Please try again.', 'error');
+        }
+      );
     } else {
       console.error('Form is invalid or no stacks added');
       Object.values(this.candidateForm.controls).forEach(control => {
         control.markAsTouched();
       });
+      // Show validation error message
+      this.showSnackBar('Please fill out all required fields and add at least one technology stack.', 'error');
     }
-    // this.router.navigate(['/question-page']);
-}
+  }
+
+  // Helper method to show SnackBar
+  private showSnackBar(message: string, action: 'success' | 'error') {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: action === 'success' ? ['success-snackbar'] : ['error-snackbar']
+    });
+  }
+
+
+
 
 
 
