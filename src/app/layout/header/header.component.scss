@@ -1,16 +1,18 @@
 .header {
   background-color: #25355A;
-  height: 72px;
+  height:5rem;
   display: flex;
   align-items: center;
-  padding: 0 5px;
+  padding: 0;
+  margin: 0;
+  width: 100vw;
 
   .logo {
     display: flex;
     align-items: center;
 
     img {
-      height: 50px;
+      height: 3.5rem;
       width: auto; // Maintain aspect ratio
     }
   }

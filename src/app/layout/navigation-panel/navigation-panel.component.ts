@@ -24,11 +24,21 @@ export class NavigationPanelComponent {
   ngOnInit() {
     this.checkScreenSize();
   }
-
   checkScreenSize() {
     this.isTabletOrSmaller = window.innerWidth < 768;
-    if (!this.isTabletOrSmaller && this.sidenav) {
-      this.sidenav.open();
+    if (this.sidenav) {
+      if (this.isTabletOrSmaller) {
+        this.sidenav.close();
+      } else {
+        this.sidenav.open();
+      }
     }
   }
+
+  // checkScreenSize() {
+  //   this.isTabletOrSmaller = window.innerWidth < 768;
+  //   if (!this.isTabletOrSmaller && this.sidenav) {
+  //     this.sidenav.open();
+  //   }
+  // }
 }
