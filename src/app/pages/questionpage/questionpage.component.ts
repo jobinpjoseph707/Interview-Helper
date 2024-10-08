@@ -26,13 +26,13 @@ export class QuestionpageComponent {
 
 
   isTimerRunning: boolean = false;
-  
+
   timerInterval: any;
   seconds: number = 0;
   minutes: number = 0;
   currentTabIndex: number = 0; // Initialize with the first tab index
   timers: { [key: string]: { seconds: number, isRunning: boolean, interval: any } } = {};
-  
+
   questionRequest: QuestionRequest | null = null;
   reviewText: string = ''; // Variable to store the review text
   candidateId: number = 4596;
@@ -43,19 +43,20 @@ export class QuestionpageComponent {
   isLoading: boolean = false;
   roles: RoleResult[] = [];
 
-  
+
   technologyScores: { [key: number]: number } = {}; // Dictionary to store TechnologyId and scores
   overallPercentage: number = 83;
   tabs: string[] = ['Angular', 'Back End', 'Database/SQL'];
   activeTab: string = this.tabs[0];  // Set default active tab
- 
+
   constructor(private questionService: QuestionService, private router: Router) {}
 
-ngOnInit(){   
-  this.questionRequest = history.state.QuestionRequest; 
+ngOnInit(){
+  this.questionRequest = history.state.QuestionRequest;
   if (!this.questionRequest) {
     console.error('No QuestionRequest data found.');
   }
+  console.log("Questions"+this.questionRequest);
   this.loadQuestions();
 
 
@@ -76,7 +77,7 @@ loadQuestions() {
     next: (data) => {
       this.roles = data;
  console.log(this.roles);
- 
+
       this.tabs = this.roles.map(role => role.name);
       this.roles.forEach(role => {
         if (role.technologyId !== undefined) { // Check that the technologyId is defined
@@ -105,7 +106,7 @@ loadQuestions() {
 
   toggleTimer(questionId: number) {
     const timer = this.timers[questionId] || { seconds: 0, isRunning: false, interval: null };
-  
+
     if (timer.isRunning) {
       clearInterval(timer.interval);
       timer.isRunning = false;
@@ -116,35 +117,35 @@ loadQuestions() {
       }, 1000);
       timer.isRunning = true;
     }
-  
+
     // Update the timers object
     this.timers[questionId] = timer;
   }
-  
+
   formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${this.padZero(minutes)}:${this.padZero(secs)}`;
   }
-  
+
   padZero(num: number): string {
     return num < 10 ? '0' + num : num.toString();
   }
-  
+
 
   submitAnswer(questionId: string) {
-  
+
     // Stop the timer for this question
     const timer = this.timers[questionId];
     if (timer && timer.isRunning) {
       clearInterval(timer.interval);
       timer.isRunning = false;
     }
-  
+
     // Reset timer seconds if needed, or leave it as is
   }
-  
- 
+
+
   answerQuestion(questionId: number, answer: 'correct' | 'incorrect' ) {
     this.roles.forEach(role => {
       const question = role.questions.find(q => q.id === questionId);
@@ -168,11 +169,11 @@ loadQuestions() {
           case 'correct':
             details.right++;
             totalRight++; // Increment the global correct count
-            totalAnswered++; // Increment the global answered count            
+            totalAnswered++; // Increment the global answered count
             break;
           case 'incorrect':
             details.wrong++;
-            totalAnswered++; 
+            totalAnswered++;
             break;
         }
       });
@@ -191,24 +192,24 @@ loadQuestions() {
 
   }
   SubmitResults() {
-  
+
     const overallScore = this.overallPercentage;
     const review = this.reviewText; // Assuming this contains the review text entered by the user
-  
+
     // Update overall candidate score
     this.questionService.updateCandidateScore(this.candidateId, overallScore, review).subscribe({
       next: (response:string) => {
           console.log('Candidate overall score and review updated successfully', response);
       },
       error: (error) => {
-      
+
           console.error('Error updating candidate overall score and review:', error);
       }
   });
 
-  
-    const technologyScores = this.technologyScores; 
-  
+
+    const technologyScores = this.technologyScores;
+
     this.questionService.updateTechnologyScores(this.candidateId, technologyScores).subscribe({
       next: (response:string) => {
           console.log('Candidate technology scores updated successfully', response);
@@ -219,10 +220,10 @@ loadQuestions() {
   });
   }
 
-  finishInterview() {  
+  finishInterview() {
     this.showConfirmationModal = true;
 
-  } 
+  }
   confirmFinish() {
     this.showConfirmationModal = false;
     this.calculateResults();
@@ -247,8 +248,8 @@ loadQuestions() {
     this.showConfirmationModal = false;
   }
 
-  logChange(questionText: string, answer: 'correct' | 'incorrect' | 'skip') {  
-    console.log(`Question "${questionText}" answered as "${answer}".`);  
-  }  
- 
+  logChange(questionText: string, answer: 'correct' | 'incorrect' | 'skip') {
+    console.log(`Question "${questionText}" answered as "${answer}".`);
+  }
+
 }
