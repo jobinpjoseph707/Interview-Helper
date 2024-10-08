@@ -3,6 +3,7 @@
     height:calc(100vh - 72px);  // Adjust for header height
     background-image: url('/img/background.png');
     background-size: cover;
+
   }
   .sidenav {
     width: 80px;
@@ -12,6 +13,8 @@
   .content {
     width: calc(100vw - 120px);
 
+
     padding: 20px;
-    height:calc(100vh - 112px);  // Adjust for header height
+    // height:calc(100vh - 112px);  // Adjust for header height
   }
+
