@@ -1,19 +1,23 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { inject } from '@angular/core';
 
+// The API Interceptor
 export const apiInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
+  const snackBar = inject(MatSnackBar); 
+
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Call the error handling function
-      const handledError = handleError(error);
-      return throwError(() => handledError); // Rethrow based on the use case
+      const handledError = handleError(error, snackBar);
+      return throwError(() => handledError);
     })
   );
 };
 
 // The error handling function
-function handleError(error: HttpErrorResponse): any {
+function handleError(error: HttpErrorResponse, snackBar: MatSnackBar): any {
   let errorMessage: any;
 
   if (error.error instanceof ErrorEvent) {
@@ -29,20 +33,27 @@ function handleError(error: HttpErrorResponse): any {
       errorMessage = convertToValidJson(error.error);
     }
   }
-if(error.ok){
-  errorMessage={message:"Details Fetched",details:error.error};
-}
+
+  // Handle successful response even if there's an error
+  if (error.ok) {
+    errorMessage = { message: "Details Fetched", details: error.error };
+  }
+
   // Additional logic for handling HTTP status codes
   if (error.status === 401) {
-    // Handle Unauthorized (401) error, for example, redirect to login
     errorMessage = { message: "Unauthorized access - Please login", details: error.error };
   } else if (error.status === 404) {
-    // Handle Not Found (404) error
     errorMessage = { message: "Resource not found", details: error.error };
   } else if (error.status === 500) {
-    // Handle Internal Server Error (500)
     errorMessage = { message: "Internal server error", details: error.error };
   }
+
+  // Show snackbar message on error
+  snackBar.open(errorMessage.message, 'Close', {
+    duration: 5000,
+    verticalPosition: 'top',
+    horizontalPosition: 'right'
+  });
 
   console.error('Error occurred:', errorMessage);
   return errorMessage;

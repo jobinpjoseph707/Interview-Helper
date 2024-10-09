@@ -217,16 +217,6 @@ button {
 }
 
 
-::ng-deep .success-snackbar {
-  background: #4CAF50;
-  color: white;
-}
-
-::ng-deep .error-snackbar {
-  background: #F44336;
-  color: white;
-}
-
 /* Responsive styles */
 @media screen and (min-width: 768px) {
   .form-row {
