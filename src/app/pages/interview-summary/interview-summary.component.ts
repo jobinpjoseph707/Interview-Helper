@@ -16,6 +16,7 @@ import { jsPDF } from 'jspdf';
 import { StackService } from '../../services/stack.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ExcelServiceService } from '../../services/excel-service.service';
+import {MatSnackBar} from '@angular/material/snack-bar'
 
 @Component({
   selector: 'app-interview-summary',
@@ -49,7 +50,8 @@ export class InterviewSummaryComponent implements OnInit {
     private fb: FormBuilder,
     private reportService: InterviewReportService,
     private stackService: StackService,
-    private excelExportService: ExcelServiceService
+    private excelExportService: ExcelServiceService,
+    private snackBar: MatSnackBar
   ) {
     this.interviewForm = this.fb.group({
       name: ['', [this.noSpecialCharsValidator]],
@@ -77,9 +79,11 @@ export class InterviewSummaryComponent implements OnInit {
         console.log('Fetched interview reports:', data);
         this.reports = data;
         this.updatePagedReports();
+
       },
       error: (error) => {
         console.error('Error fetching interview reports:', error);
+
       }
     });
   }
@@ -98,6 +102,7 @@ export class InterviewSummaryComponent implements OnInit {
 
   onSubmit() {
     if (!this.interviewForm.valid) {
+      this.snackBar.open('Form is invalid. Please correct the errors.', 'Close', { duration: 3000 });
       return;
     }
 
@@ -127,6 +132,8 @@ export class InterviewSummaryComponent implements OnInit {
 
     console.log('Query Params for search:', queryParams);
     this.fetchReports(queryParams);
+
+  
   }
 
   resetForm() {
@@ -171,6 +178,8 @@ export class InterviewSummaryComponent implements OnInit {
   }
 
   downloadExpandedReport(report: any) {
+    this.snackBar.open('Generating PDF report...', 'Close', { duration: 3000 });
+
     const doc = new jsPDF();
 
     // Add report details to PDF
@@ -194,9 +203,12 @@ export class InterviewSummaryComponent implements OnInit {
       yOffset += 15;
     });
 
-    // // Save PDF file
-    // doc.save(`${report.name}-report.pdf`);
+    // Save PDF file
+    doc.save(`${report.name}-report.pdf`);
+
+    this.snackBar.open('PDF report downloaded!', 'Close', { duration: 3000 });
   }
+
 
   downloadExpandedExcelReport(report: any): void {
     const reportData = report.technologies.map((stack: any) => ({
@@ -209,6 +221,8 @@ export class InterviewSummaryComponent implements OnInit {
   }
 
   downloadAllReports(): void {
+    this.snackBar.open('Downloading all reports...', 'Close', { duration: 3000 });
+
     const allReportsData = this.reports.flatMap(report => report.technologies.map((stack: any) => ({
       'Candidate Name': report.name,
       'Interview Date': report.interviewDate,
@@ -220,7 +234,10 @@ export class InterviewSummaryComponent implements OnInit {
     })));
 
     this.excelExportService.exportToExcel(allReportsData, 'All_Reports');
+
+    this.snackBar.open('All reports downloaded successfully!', 'Close', { duration: 3000 });
   }
+
 
   dateRangeValidator(group: FormGroup): { [key: string]: any } | null {
     const fromDate = group.get('fromDate')?.value;

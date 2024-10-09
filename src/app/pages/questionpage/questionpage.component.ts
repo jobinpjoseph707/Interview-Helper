@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { QuestionService } from '../../services/question.service';
 import { log } from 'console';
 import { Router } from '@angular/router';
+import {MatSnackBar} from '@angular/material/snack-bar'
 
 @Component({
   selector: 'app-questionpage',
@@ -49,25 +50,26 @@ export class QuestionpageComponent {
   tabs: string[] = ['Angular', 'Back End', 'Database/SQL'];
   activeTab: string = this.tabs[0];  // Set default active tab
 
-  constructor(private questionService: QuestionService, private router: Router) {}
+  constructor(private questionService: QuestionService, private router: Router,   private snackBar: MatSnackBar) {}
 
 ngOnInit(){
   this.questionRequest = history.state.QuestionRequest;
   if (!this.questionRequest) {
     console.error('No QuestionRequest data found.');
+    this.showSnackbar('Error: No question data found', 'error');
   }
-  console.log("Questions"+this.questionRequest);
+  console.log("Questions", this.questionRequest);
   this.loadQuestions();
-
 
 }
 loadQuestions() {
   this.isLoading = true;
-  if (!this.questionRequest || !this.questionRequest.candidateId || !this.questionRequest.technologies) {
-    console.error('Invalid Question Request. Cannot load questions.');
-    this.isLoading = false;
-    return;  // Stop execution if the data is invalid
-  }
+    if (!this.questionRequest || !this.questionRequest.candidateId || !this.questionRequest.technologies) {
+      console.error('Invalid Question Request. Cannot load questions.');
+      this.showSnackbar('Error: Invalid question request', 'error');
+      this.isLoading = false;
+      return;
+    }
   this.candidateId = this.questionRequest.candidateId;
   this.candidateName=this.questionRequest.candidateName;
   const technologies = this.questionRequest.technologies;
@@ -192,34 +194,33 @@ loadQuestions() {
 
   }
   SubmitResults() {
-
     const overallScore = this.overallPercentage;
-    const review = this.reviewText; // Assuming this contains the review text entered by the user
+    const review = this.reviewText;
 
-    // Update overall candidate score
     this.questionService.updateCandidateScore(this.candidateId, overallScore, review).subscribe({
-      next: (response:string) => {
-          console.log('Candidate overall score and review updated successfully', response);
+      next: (response: string) => {
+        console.log('Candidate overall score and review updated successfully', response);
+        this.showSnackbar('Overall score and review updated successfully', 'success');
       },
       error: (error) => {
-
-          console.error('Error updating candidate overall score and review:', error);
+        console.error('Error updating candidate overall score and review:', error);
+        this.showSnackbar('Error updating overall score and review', 'error');
       }
-  });
-
+    });
 
     const technologyScores = this.technologyScores;
 
     this.questionService.updateTechnologyScores(this.candidateId, technologyScores).subscribe({
-      next: (response:string) => {
-          console.log('Candidate technology scores updated successfully', response);
+      next: (response: string) => {
+        console.log('Candidate technology scores updated successfully', response);
+        this.showSnackbar('Technology scores updated successfully', 'success');
       },
       error: (error) => {
-          console.error('Error updating candidate technology scores:', error);
+        console.error('Error updating candidate technology scores:', error);
+        this.showSnackbar('Error updating technology scores', 'error');
       }
-  });
+    });
   }
-
   finishInterview() {
     this.showConfirmationModal = true;
 
@@ -250,6 +251,13 @@ loadQuestions() {
 
   logChange(questionText: string, answer: 'correct' | 'incorrect' | 'skip') {
     console.log(`Question "${questionText}" answered as "${answer}".`);
+  }
+
+  private showSnackbar(message: string, type: 'success' | 'error') {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: type === 'success' ? ['success-snackbar'] : ['error-snackbar']
+    });
   }
 
 }
