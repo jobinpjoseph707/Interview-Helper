@@ -10,6 +10,7 @@
 
 //   }
   .sidenav {
+    height: calc(100vh - 5rem);
     width: 5rem;
     padding: 0px;
     margin:0px
@@ -29,5 +30,6 @@ mat-sidenav-container {
 
   .content {
     padding: 20px;
-    
+ 
   }
+ 
