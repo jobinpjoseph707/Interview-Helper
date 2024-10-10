@@ -16,6 +16,7 @@ import { jsPDF } from 'jspdf';
 import { StackService } from '../../services/stack.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ExcelServiceService } from '../../services/excel-service.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-interview-summary',
@@ -49,7 +50,8 @@ export class InterviewSummaryComponent implements OnInit {
     private fb: FormBuilder,
     private reportService: InterviewReportService,
     private stackService: StackService,
-    private excelExportService: ExcelServiceService
+    private excelExportService: ExcelServiceService,
+    private snackBar: MatSnackBar
   ) {
     this.interviewForm = this.fb.group({
       name: ['', [this.noSpecialCharsValidator]],
@@ -58,17 +60,33 @@ export class InterviewSummaryComponent implements OnInit {
       toDate: ['']
     }, { validator: this.dateRangeValidator });
 
+    this.interviewForm.get('fromDate')?.valueChanges.subscribe(() => {
+      this.updateToDateValidation();
+    });
+
     this.interviewForm.valueChanges
       .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(() => {
         this.updateDateValidations();
-        this.onSubmit(); // Only submit after debounce and form validation check
+        this.onSubmit();
       });
   }
 
   ngOnInit(): void {
     this.fetchReports();
     this.fetchRoles();
+  }
+
+  updateToDateValidation() {
+    const fromDateControl = this.interviewForm.get('fromDate');
+    const toDateControl = this.interviewForm.get('toDate');
+
+    if (fromDateControl?.value) {
+      toDateControl?.setValidators([Validators.required]);
+    } else {
+      toDateControl?.clearValidators();
+    }
+    toDateControl?.updateValueAndValidity();
   }
 
   fetchReports(queryParams: any = {}): void {
@@ -98,6 +116,7 @@ export class InterviewSummaryComponent implements OnInit {
 
   onSubmit() {
     if (!this.interviewForm.valid) {
+      this.snackBar.open('Form is invalid. Please correct the errors.', 'Close', { duration: 3000 });
       return;
     }
 
@@ -171,6 +190,8 @@ export class InterviewSummaryComponent implements OnInit {
   }
 
   downloadExpandedReport(report: any) {
+    this.snackBar.open('Generating PDF report...', 'Close', { duration: 3000 });
+
     const doc = new jsPDF();
 
     // Add report details to PDF
@@ -194,8 +215,10 @@ export class InterviewSummaryComponent implements OnInit {
       yOffset += 15;
     });
 
-    // // Save PDF file
-    // doc.save(`${report.name}-report.pdf`);
+    // Save PDF file
+    doc.save(`${report.name}-report.pdf`);
+
+    this.snackBar.open('PDF report downloaded!', 'Close', { duration: 3000 });
   }
 
   downloadExpandedExcelReport(report: any): void {
@@ -209,6 +232,8 @@ export class InterviewSummaryComponent implements OnInit {
   }
 
   downloadAllReports(): void {
+    this.snackBar.open('Downloading all reports...', 'Close', { duration: 3000 });
+
     const allReportsData = this.reports.flatMap(report => report.technologies.map((stack: any) => ({
       'Candidate Name': report.name,
       'Interview Date': report.interviewDate,
@@ -220,11 +245,17 @@ export class InterviewSummaryComponent implements OnInit {
     })));
 
     this.excelExportService.exportToExcel(allReportsData, 'All_Reports');
+
+    this.snackBar.open('All reports downloaded successfully!', 'Close', { duration: 3000 });
   }
 
   dateRangeValidator(group: FormGroup): { [key: string]: any } | null {
     const fromDate = group.get('fromDate')?.value;
     const toDate = group.get('toDate')?.value;
+
+    if (fromDate && !toDate) {
+      return { toDateRequired: true };
+    }
 
     if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
       return { dateRangeInvalid: true };
@@ -233,4 +264,3 @@ export class InterviewSummaryComponent implements OnInit {
     return null;
   }
 }
-

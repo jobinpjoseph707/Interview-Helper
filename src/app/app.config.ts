@@ -4,11 +4,12 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { apiInterceptorInterceptor } from './core/interceptor/api-interceptor.interceptor';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
-import {MatSnackBarModule} from '@angular/material/snack-bar'
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { apiInterceptorInterceptor } from './interceptor/api-interceptor.interceptor';
 
+// Application Configuration
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -17,12 +18,13 @@ export const appConfig: ApplicationConfig = {
 
     provideHttpClient(
       withFetch(),
-      withInterceptors([apiInterceptorInterceptor]) // Register the functional interceptor here
+      withInterceptors([apiInterceptorInterceptor]) // Register the interceptor here
     ),
+
     provideAnimationsAsync(),
     MessageService,
     ConfirmationService,
-    DatePipe ,// Include DatePipe if needed in your application
+    DatePipe,
     importProvidersFrom(MatSnackBarModule)
   ]
 };
