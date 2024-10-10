@@ -16,11 +16,11 @@
 
 .form-container {
   font-family: Arial, sans-serif;
-  display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   padding: 20px;
+ max-height: calc(100vh - 200px);
 }
 
 .candidate-form {
@@ -224,13 +224,16 @@ button {
     justify-content: space-between;
   }
 
+  .candidate-form {
+    padding: 40px;
+    height: calc(100vh - 150px);
+  }
+
   .left-column {
     width: 35%;
   }
 
-  .right-column {
-    width: 62%;
-  }
+
 
   .stack-row .form-group {
     flex: 1 0 calc(50% - 10px);
@@ -245,6 +248,11 @@ button {
 @media screen and (min-width: 1024px) {
   .candidate-form {
     padding: 40px;
+    height: calc(100vh - 150px);
+  }
+
+  .form-container{
+    height: calc(100vh - 550px);
   }
 
   .stack-row .form-group {

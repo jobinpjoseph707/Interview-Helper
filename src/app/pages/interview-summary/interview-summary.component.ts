@@ -16,7 +16,7 @@ import { jsPDF } from 'jspdf';
 import { StackService } from '../../services/stack.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ExcelServiceService } from '../../services/excel-service.service';
-import {MatSnackBar} from '@angular/material/snack-bar'
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-interview-summary',
@@ -60,11 +60,15 @@ export class InterviewSummaryComponent implements OnInit {
       toDate: ['']
     }, { validator: this.dateRangeValidator });
 
+    this.interviewForm.get('fromDate')?.valueChanges.subscribe(() => {
+      this.updateToDateValidation();
+    });
+
     this.interviewForm.valueChanges
       .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(() => {
         this.updateDateValidations();
-        this.onSubmit(); // Only submit after debounce and form validation check
+        this.onSubmit();
       });
   }
 
@@ -73,17 +77,27 @@ export class InterviewSummaryComponent implements OnInit {
     this.fetchRoles();
   }
 
+  updateToDateValidation() {
+    const fromDateControl = this.interviewForm.get('fromDate');
+    const toDateControl = this.interviewForm.get('toDate');
+
+    if (fromDateControl?.value) {
+      toDateControl?.setValidators([Validators.required]);
+    } else {
+      toDateControl?.clearValidators();
+    }
+    toDateControl?.updateValueAndValidity();
+  }
+
   fetchReports(queryParams: any = {}): void {
     this.reportService.getFilteredInterviewReports(queryParams).subscribe({
       next: (data) => {
         console.log('Fetched interview reports:', data);
         this.reports = data;
         this.updatePagedReports();
-
       },
       error: (error) => {
         console.error('Error fetching interview reports:', error);
-
       }
     });
   }
@@ -132,8 +146,6 @@ export class InterviewSummaryComponent implements OnInit {
 
     console.log('Query Params for search:', queryParams);
     this.fetchReports(queryParams);
-
-  
   }
 
   resetForm() {
@@ -209,7 +221,6 @@ export class InterviewSummaryComponent implements OnInit {
     this.snackBar.open('PDF report downloaded!', 'Close', { duration: 3000 });
   }
 
-
   downloadExpandedExcelReport(report: any): void {
     const reportData = report.technologies.map((stack: any) => ({
       'Technology': stack.technologyName,
@@ -238,10 +249,13 @@ export class InterviewSummaryComponent implements OnInit {
     this.snackBar.open('All reports downloaded successfully!', 'Close', { duration: 3000 });
   }
 
-
   dateRangeValidator(group: FormGroup): { [key: string]: any } | null {
     const fromDate = group.get('fromDate')?.value;
     const toDate = group.get('toDate')?.value;
+
+    if (fromDate && !toDate) {
+      return { toDateRequired: true };
+    }
 
     if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
       return { dateRangeInvalid: true };
@@ -250,4 +264,3 @@ export class InterviewSummaryComponent implements OnInit {
     return null;
   }
 }
-

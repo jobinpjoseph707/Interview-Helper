@@ -264,4 +264,6 @@ export class CandidatePageComponent implements OnInit {
     this.selection.clear();
     this.availableStackOptions = [...this.stackOptions]; // Reset available options
   }
+
+  
 }
