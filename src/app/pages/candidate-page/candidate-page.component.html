@@ -1,5 +1,4 @@
-<div
-div class="form-container">
+<div class="form-container">
   <h2>Candidate Form</h2>
   <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()" class="candidate-form">
     <div class="form-row">
@@ -37,7 +36,8 @@ div class="form-container">
       <div class="right-column">
         <div class="form-row stack-row">
           <!-- Stack and Experience Fields in Same Line -->
-          <div class="form-group">
+          <div class="form-group ">
+
             <label *ngIf="!(candidateForm.get('stackName')?.invalid && candidateForm.get('stackName')?.touched)">Technology</label>
             <div *ngIf="candidateForm.get('stackName')?.invalid && candidateForm.get('stackName')?.touched && !candidateForm.get('stackName')?.value" class="error-message">
               Technology is required.
