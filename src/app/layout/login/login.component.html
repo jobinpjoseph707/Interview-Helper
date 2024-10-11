@@ -1,0 +1,98 @@
+<app-header></app-header>
+<div class="login-container">
+  <div class="login-card">
+    <div class="card-inner" [class.flipped]="isFlipped">
+      <!-- Login Form -->
+      <div class="card-face card-front">
+        <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              id="username"
+              formControlName="username"
+              placeholder="Enter your username"
+              required
+            />
+            <div
+              *ngIf="loginForm.controls['username'].invalid && loginForm.controls['username'].touched"
+              class="error-message"
+            >
+              Username is required.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              formControlName="password"
+              placeholder="Enter your password"
+              required
+            />
+            <div
+              *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched"
+              class="error-message"
+            >
+              Password is required.
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="loginForm.invalid" class="submit-button">
+            Login
+          </button>
+        </form>
+        <div class="signup-link">
+          Don't have an account?
+          <a (click)="flipCard()">Sign up</a>
+        </div>
+      </div>
+
+      <!-- Sign-up Form -->
+      <div class="card-face card-back">
+        <form class="signup-form" [formGroup]="signupForm" (ngSubmit)="onSignup()">
+          <div class="form-group">
+            <label for="new-username">Username</label>
+            <input
+              id="new-username"
+              formControlName="username"
+              placeholder="Choose a username"
+              required
+            />
+            <div
+              *ngIf="signupForm.controls['username'].invalid && signupForm.controls['username'].touched"
+              class="error-message"
+            >
+              Username is required.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="new-password">Password</label>
+            <input
+              id="new-password"
+              type="password"
+              formControlName="password"
+              placeholder="Choose a password"
+              required
+            />
+            <div
+              *ngIf="signupForm.controls['password'].invalid && signupForm.controls['password'].touched"
+              class="error-message"
+            >
+              Password is required.
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="signupForm.invalid" class="submit-button">
+            Sign up
+          </button>
+        </form>
+        <div class="signup-link">
+          Already have an account?
+          <a (click)="flipCard()">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

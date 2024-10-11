@@ -1,12 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NavigationPanelComponent } from './layout/navigation-panel/navigation-panel.component';
+import { LoginComponent } from './layout/login/login.component';
 
-export const routes: Routes = [
+export const routes: Routes = [{path:'login',
+  component:LoginComponent
+},
   {
-      path:'interview-helper',    
+      path:'interview-helper',
     component:NavigationPanelComponent,
       children:[
+        {path:'',component:LoginComponent
+
+        },
+
         {
           path: 'candidate-form',
           loadComponent: () => import('./pages/candidate-page/candidate-page.component').then((m) => m.CandidatePageComponent),
@@ -18,13 +25,13 @@ export const routes: Routes = [
         {
           path: 'interview-summary',
           loadComponent: () => import('./pages/interview-summary/interview-summary.component').then((m) => m.InterviewSummaryComponent),
-      
+
         }
 
       ]
   },
-  { path: '', redirectTo: 'interview-helper/candidate-form', pathMatch: 'full' }, // Default redirect
-  { path: '**', redirectTo: 'interview-helper/candidate-form' } // Fallback route in case of unmatched paths
+  { path: '', redirectTo: 'login', pathMatch: 'full' }, // Default redirect
+  { path: '**', redirectTo: 'login' } // Fallback route in case of unmatched paths
   // ,
   // {
   //   path: '',
