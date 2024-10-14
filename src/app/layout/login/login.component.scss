@@ -15,14 +15,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-
   box-sizing: border-box;
 }
 
 .login-card {
   width: 340px;
-  height: 400px; /* Reduced height */
-margin-top: 60px;
+  height: 430px; /* Reduced height */
+  margin-top: 55px;
   perspective: 1000px;
 }
 
@@ -65,7 +64,8 @@ margin-top: 60px;
 }
 
 /* Form Styles */
-.login-form, .signup-form {
+.login-form,
+.signup-form {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -75,6 +75,7 @@ margin-top: 60px;
   margin-bottom: 20px; /* Increased gap between form fields */
   width: 100%;
   position: relative;
+  height: 90px; /* Fixed height to prevent box size from changing */
 }
 
 label {
@@ -94,6 +95,7 @@ input {
   font-size: 16px;
   transition: all 0.3s ease;
   box-sizing: border-box;
+  position: relative;
 }
 
 input:focus {
@@ -103,15 +105,43 @@ input:focus {
   box-shadow: 0 0 0 2px rgba(101, 85, 143, 0.2);
 }
 
+/* Error Message Styles */
 .error-message {
   color: #ff4444;
   font-size: 12px;
-  text-align: left;
   position: absolute;
-  bottom: -25px;
+  bottom: -20px; /* Position the error message below the input */
   left: 0;
+  height: 15px; /* Reserve space for the error message */
+  line-height: 15px;
+  white-space: normal; /* Allow wrapping of long error messages */
+
 }
 
+.form-group {
+  height: 90px; /* Ensure uniform height for all form fields, keeping enough space for error messages */
+}
+
+input {
+  position: relative; /* Ensure inputs do not get impacted by floating error messages */
+}
+
+/* Responsive error message handling for smaller screens */
+@media (max-width: 480px) {
+  .error-message {
+    white-space: normal; /* Wrap error messages on small screens */
+    height: auto;
+    line-height: normal;
+  }
+}
+
+input:focus + .error-message {
+  display: block;
+  position: absolute;
+  bottom: -20px;
+}
+
+/* Submit Button Styles */
 .submit-button {
   background-color: #65558f;
   color: white;
@@ -137,6 +167,7 @@ input:focus {
   cursor: not-allowed;
 }
 
+/* Signup Link Styles */
 .signup-link {
   margin-top: 15px;
   font-size: 14px;

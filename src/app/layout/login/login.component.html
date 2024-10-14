@@ -14,10 +14,11 @@
               required
             />
             <div
-              *ngIf="loginForm.controls['username'].invalid && loginForm.controls['username'].touched"
+              *ngIf="loginForm.get('username')?.invalid && (loginForm.get('username')?.dirty || loginForm.get('username')?.touched)"
               class="error-message"
             >
-              Username is required.
+              <small *ngIf="loginForm.get('username')?.errors?.['required']">Username is required.</small>
+              <small *ngIf="loginForm.get('username')?.errors?.['invalidUsername']">Username must contain only letters</small>
             </div>
           </div>
 
@@ -31,10 +32,14 @@
               required
             />
             <div
-              *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched"
+              *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
               class="error-message"
             >
-              Password is required.
+              <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
+              <small *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.minLength">Password must be at least 8 characters long.</small>
+              <small *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.specialChar">Password must contain at least one special character.</small>
+              <small *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.number">Password must contain at least one number.</small>
+              <small *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.noSpace">Password cannot contain spaces.</small>
             </div>
           </div>
 
@@ -60,10 +65,11 @@
               required
             />
             <div
-              *ngIf="signupForm.controls['username'].invalid && signupForm.controls['username'].touched"
+              *ngIf="signupForm.get('username')?.invalid && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)"
               class="error-message"
             >
-              Username is required.
+              <small *ngIf="signupForm.get('username')?.errors?.['required']">Username is required.</small>
+              <small *ngIf="signupForm.get('username')?.errors?.['invalidUsername']">Username must contain only letters and dots, and cannot start with a dot.</small>
             </div>
           </div>
 
@@ -77,10 +83,14 @@
               required
             />
             <div
-              *ngIf="signupForm.controls['password'].invalid && signupForm.controls['password'].touched"
+              *ngIf="signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)"
               class="error-message"
             >
-              Password is required.
+              <small *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</small>
+              <small *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.minLength">Password must be at least 8 characters long.</small>
+              <small *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.specialChar">Password must contain at least one special character.</small>
+              <small *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.number">Password must contain at least one number.</small>
+              <small *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.noSpace">Password cannot contain spaces.</small>
             </div>
           </div>
 
