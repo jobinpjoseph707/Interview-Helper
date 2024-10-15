@@ -89,18 +89,22 @@ export class InterviewSummaryComponent implements OnInit {
     toDateControl?.updateValueAndValidity();
   }
 
-  fetchReports(queryParams: any = {}): void {
-    this.reportService.getFilteredInterviewReports(queryParams).subscribe({
-      next: (data) => {
-        console.log('Fetched interview reports:', data);
-        this.reports = data;
-        this.updatePagedReports();
-      },
-      error: (error) => {
-        console.error('Error fetching interview reports:', error);
-      }
-    });
-  }
+fetchReports(queryParams: any = {}): void {
+  this.reportService.getFilteredInterviewReports(queryParams).subscribe({
+    next: (data) => {
+      console.log('Fetched interview reports:', data);
+      // Sort the reports in descending order by interview date
+      this.reports = data.sort((a: any, b: any) => {
+        return new Date(b.interviewDate).getTime() - new Date(a.interviewDate).getTime();
+      });
+      this.updatePagedReports();
+    },
+    error: (error) => {
+      console.error('Error fetching interview reports:', error);
+    }
+  });
+}
+
 
   fetchRoles() {
     this.stackService.getRoles().subscribe(
