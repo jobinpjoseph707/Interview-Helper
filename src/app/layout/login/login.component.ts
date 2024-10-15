@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { HeaderComponent } from "../header/header.component";
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -13,7 +14,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  constructor(private fb: FormBuilder,private router: Router) {}
+  constructor(private fb: FormBuilder,private router: Router,    private authService: AuthService,
+  ) {}
 
   loginForm!:FormGroup;
   signupForm!: FormGroup;
@@ -39,9 +41,19 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      console.log('Login successful');
-      // Logic to handle login submission
-      this.router.navigate(['/interview-helper/candidate-form']);
+      const credentials = this.loginForm.value;
+      console.log(credentials);
+      
+      this.authService.login(credentials).subscribe({
+        next: () => {
+          console.log('Login successful');
+          this.router.navigate(['/interview-helper/candidate-form']); // Navigate after login
+        },
+        error: (err) => {
+          console.error('Login failed:', err);
+          alert('Invalid login credentials.');
+        },
+      });
     } else {
       this.loginForm.markAllAsTouched();
     }
@@ -49,8 +61,19 @@ export class LoginComponent {
 
   onSignup(): void {
     if (this.signupForm.valid) {
-      console.log('Signup successful');
-      // Logic to handle signup submission
+      const newUser = this.signupForm.value;
+      console.log(newUser);
+      
+      this.authService.register(newUser).subscribe({
+        next: () => {
+          console.log('Signup successful');
+          this.flipCard(); // Flip back to login form after signup
+        },
+        error: (err) => {
+          console.error('Signup failed:', err);
+          alert('User registration failed.');
+        },
+      });
     } else {
       this.signupForm.markAllAsTouched();
     }

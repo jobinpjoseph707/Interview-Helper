@@ -3,12 +3,19 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 // The API Interceptor
 export const apiInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
-  const snackBar = inject(MatSnackBar); 
+  const authService = inject(AuthService);  // Inject AuthService to get token
+  const authToken = authService.getToken(); // Get token from AuthService
 
-  return next(req).pipe(
+  const snackBar = inject(MatSnackBar); 
+  // Clone the request to add the Authorization header if token exists
+  const authReq = authToken
+    ? req.clone({ headers: req.headers.set('Authorization', `Bearer ${authToken}`) })
+    : req;
+  return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       const handledError = handleError(error, snackBar);
       return throwError(() => handledError);
