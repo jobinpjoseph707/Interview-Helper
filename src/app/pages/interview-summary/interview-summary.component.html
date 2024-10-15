@@ -59,7 +59,7 @@
         </div>
       </form>
     </div>
-    <div class="custom-accordion">
+    <div *ngIf="pagedReports && pagedReports.length > 0; else noData" class="custom-accordion">
       <mat-accordion>
         <mat-expansion-panel *ngFor="let report of pagedReports">
           <mat-expansion-panel-header>
@@ -98,6 +98,10 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
+
+    <ng-template #noData>
+      <div class="no-data-message">No data found</div>
+    </ng-template>
 
     <mat-paginator [length]="reports.length"
     [pageSize]="pageSize"
