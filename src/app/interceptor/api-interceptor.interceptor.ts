@@ -1,14 +1,19 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, throwError } from 'rxjs';
+import { catchError, finalize, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { LoaderService } from '../services/loader.service';
 
 // The API Interceptor
 export const apiInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
+  const loaderService = inject(LoaderService);
   const authService = inject(AuthService);  // Inject AuthService to get token
   const authToken = authService.getToken(); // Get token from AuthService
+
+  loaderService.show();
+
 
   const snackBar = inject(MatSnackBar);
   // Clone the request to add the Authorization header if token exists
@@ -19,6 +24,9 @@ export const apiInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       const handledError = handleError(error, snackBar);
       return throwError(() => handledError);
+    }), finalize(() => {
+      // Hide loader after request completes, whether successful or not
+      loaderService.hide();
     })
   );
 };
