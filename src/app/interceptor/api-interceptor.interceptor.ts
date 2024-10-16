@@ -1,77 +1,87 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, throwError } from 'rxjs';
+import { HttpErrorResponse, HttpEvent, HttpResponse } from '@angular/common/http';
+import { catchError, tap, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
-// The API Interceptor
-export const apiInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);  // Inject AuthService to get token
-  const authToken = authService.getToken(); // Get token from AuthService
-
+export const apiInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
   const snackBar = inject(MatSnackBar);
-  // Clone the request to add the Authorization header if token exists
-  const authReq = authToken
-    ? req.clone({ headers: req.headers.set('Authorization', `Bearer ${authToken}`) })
+
+  const token = authService.getToken();
+  const authReq = token
+    ? req.clone({
+        headers: req.headers.set('Authorization', `Bearer ${token}`)
+      })
     : req;
+
   return next(authReq).pipe(
+    tap((event: HttpEvent<any>) => {
+      if (event instanceof HttpResponse) {
+        handleSuccess(event, snackBar);
+      }
+    }),
     catchError((error: HttpErrorResponse) => {
-      const handledError = handleError(error, snackBar);
-      return throwError(() => handledError);
+      const errorMessage = handleError(error, snackBar);
+      return throwError(() => new Error(errorMessage));
     })
   );
 };
 
-// The error handling function
-function handleError(error: HttpErrorResponse, snackBar: MatSnackBar): any {
-  let errorMessage: any;
+// Updated Success handling function
+function handleSuccess(response: HttpResponse<any>, snackBar: MatSnackBar): void {
+  let responseMessage: string | null = null;
 
-  if (error.error instanceof ErrorEvent) {
-    // Client-side error
-    errorMessage = { message: "Client-side error", details: error.error.message };
-  } else {
-    // Server-side error
-    try {
-      // If the error is JSON, parse it
-      errorMessage = JSON.parse(error.error);
-    } catch (e) {
-      // If JSON parsing fails, try custom handling logic
-      errorMessage = convertToValidJson(error.error);
+  if (response.body && typeof response.body === 'object') {
+    if ('message' in response.body && typeof response.body.message === 'string') {
+      responseMessage = response.body.message;
+    } else if ('status' in response.body && response.body.status === 'success' && 'message' in response.body) {
+      responseMessage = response.body.message;
     }
   }
 
-  // Handle successful response even if there's an error
-  if (error.ok) {
-    errorMessage = { message: "Details Fetched", details: error.error };
+  // Only show a snackbar if there's a message from the backend
+  if (responseMessage) {
+    snackBar.open(responseMessage, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+    });
   }
 
-  // Additional logic for handling HTTP status codes
-  if (error.status === 401) {
-    errorMessage = { message: "Unauthorized access - Please login", details: error.error };
-  } else if (error.status === 404) {
-    errorMessage = { message: "Resource not found", details: error.error };
-  } else if (error.status === 500) {
-    errorMessage = { message: "Internal server error", details: error.error };
-  }
-
-  // Show snackbar message on error
-  snackBar.open(errorMessage.message, 'Close', {
-    duration: 5000,
-    verticalPosition: 'top',
-    horizontalPosition: 'right'
-  });
-
-  console.error('Error occurred:', errorMessage);
-  return errorMessage;
+  console.log('API Interceptor Success:', responseMessage || 'No message provided', response);
 }
 
-// The JSON conversion function
-function convertToValidJson(response: any): any {
-  const responseString = response.toString();
+// Error handling function (unchanged)
+function handleError(error: HttpErrorResponse, snackBar: MatSnackBar): string {
+  let errorMessage = 'An unknown error occurred';
 
-  return {
-    message: "Internal Server Error",
-    details: responseString.includes("System.Exception") ? responseString : "Unknown error occurred"
-  };
+  if (error.error instanceof ErrorEvent) {
+    errorMessage = `Error: ${error.error.message}`;
+  } else {
+    switch (error.status) {
+      case 401:
+        errorMessage = 'Unauthorized access - Please login';
+        break;
+      case 404:
+        errorMessage = 'Resource not found';
+        break;
+      case 500:
+        errorMessage = 'Internal server error';
+        break;
+      default:
+        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+        break;
+    }
+  }
+
+  snackBar.open(errorMessage, 'Close', {
+    duration: 5000,
+    verticalPosition: 'top',
+    horizontalPosition: 'right',
+  });
+
+  console.error('API Interceptor Error:', errorMessage);
+  return errorMessage;
 }

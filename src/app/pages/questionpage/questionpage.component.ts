@@ -20,8 +20,8 @@ import {MatSnackBar} from '@angular/material/snack-bar'
     MatButtonModule,
     MatIconModule,MatCardModule,FormsModule,CommonModule,
   ],
-  templateUrl: './questionpage.component.html',
-  styleUrl: './questionpage.component.scss'
+  templateUrl:'./questionpage.component.html',
+  styleUrl:'./questionpage.component.scss'
 })
 export class QuestionpageComponent {
 

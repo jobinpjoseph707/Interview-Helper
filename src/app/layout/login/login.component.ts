@@ -4,54 +4,47 @@ import { HeaderComponent } from "../header/header.component";
 import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [HeaderComponent, ReactiveFormsModule, CommonModule, MatSnackBarModule],
+  imports: [HeaderComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
-  constructor(private fb: FormBuilder,private router: Router,    private authService: AuthService,    private snackBar: MatSnackBar
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
+  signupForm!: FormGroup;
+  isFlipped = false;
 
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService
   ) {}
 
-  loginForm!:FormGroup;
-  signupForm!: FormGroup;
-  isFlipped = false; // Variable to track the card flip state
-
-
-
   ngOnInit(): void {
-    // Initialize the login form with validators
+    this.initForms();
+  }
+
+  initForms(): void {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, this.usernameValidator]],
       password: ['', [Validators.required, this.passwordValidator]],
     });
 
-    // Initialize the signup form with validators
     this.signupForm = this.fb.group({
       username: ['', [Validators.required, this.usernameValidator]],
       password: ['', [Validators.required, this.passwordValidator]],
     });
   }
 
-// Custom validator for username
-usernameValidator(control: AbstractControl): ValidationErrors | null {
-  const username = control.value;
+  usernameValidator(control: AbstractControl): ValidationErrors | null {
+    const username = control.value;
+    const validUsername = /^[a-zA-Z][a-zA-Z. ]*$/.test(username);
+    return validUsername ? null : { invalidUsername: true };
+  }
 
-  // The first character must be a letter (a-zA-Z)
-  // After the first character, letters (a-zA-Z), dots (.), and spaces are allowed
-  const validUsername = /^[a-zA-Z][a-zA-Z. ]*$/.test(username);
-
-  return validUsername ? null : { invalidUsername: true };
-}
-
-
-  // Custom validator for password
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.value;
     const hasMinLength = password.length >= 8;
@@ -70,34 +63,42 @@ usernameValidator(control: AbstractControl): ValidationErrors | null {
         minLength: !hasMinLength,
         specialChar: !hasSpecialChar,
         number: !hasNumber,
-        noSpace: !hasNoSpace
-      }
+        noSpace: !hasNoSpace,
+      },
     };
   }
 
-  // Flip the card to switch between login and signup forms
   flipCard(): void {
     this.isFlipped = !this.isFlipped;
+    this.resetForm(this.isFlipped ? this.loginForm : this.signupForm);
+  }
+
+  resetForm(form: FormGroup): void {
+    form.reset();
+    Object.keys(form.controls).forEach(key => {
+      const control = form.get(key);
+      control?.setErrors(null);
+      control?.markAsUntouched();
+      control?.markAsPristine();
+    });
   }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
       const credentials = this.loginForm.value;
       console.log(credentials);
-      
+
       this.authService.login(credentials).subscribe({
         next: () => {
           console.log('Login successful');
-          this.router.navigate(['/interview-helper/candidate-form']); // Navigate after login
+          this.router.navigate(['/interview-helper/candidate-form']);
         },
         error: (err) => {
           console.error('Login failed:', err);
-          alert('Invalid login credentials.');
-        },
+        }
       });
     } else {
       this.loginForm.markAllAsTouched();
-      this.showSnackbar('Please correct the errors in the form.', 'error');
     }
   }
 
@@ -105,29 +106,18 @@ usernameValidator(control: AbstractControl): ValidationErrors | null {
     if (this.signupForm.valid) {
       const newUser = this.signupForm.value;
       console.log(newUser);
-      
+
       this.authService.register(newUser).subscribe({
         next: () => {
           console.log('Signup successful');
-          this.flipCard(); // Flip back to login form after signup
+          this.flipCard();
         },
         error: (err) => {
           console.error('Signup failed:', err);
-          alert('User registration failed.');
-        },
+        }
       });
     } else {
       this.signupForm.markAllAsTouched();
-      this.showSnackbar('Please correct the errors in the form.', 'error');
     }
-  }
-
-  showSnackbar(message: string, type: 'success' | 'error'): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      panelClass: type === 'success' ? ['success-snackbar'] : ['error-snackbar']
-    });
   }
 }
