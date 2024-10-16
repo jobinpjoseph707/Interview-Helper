@@ -73,9 +73,10 @@ export class CandidatePageComponent implements OnInit {
   loadStacks() {
     this.stackService.getStacks().subscribe({
       next: (data) => {
-        this.stackOptions = data;
-        this.availableStackOptions = [...data]; // Initialize available options
-        console.log('Fetched stack options:', this.stackOptions);
+        // Sort the stacks alphabetically by technology name
+        this.stackOptions = data.sort((a, b) => a.technology.localeCompare(b.technology));
+        this.availableStackOptions = [...this.stackOptions];
+        console.log('Fetched and sorted stack options:', this.stackOptions);
       },
       error: (error) => {
         console.error('Error loading stacks:', error);
@@ -131,9 +132,13 @@ export class CandidatePageComponent implements OnInit {
       const removedStack = this.stackOptions.find(stack => stack.technology === element.technology);
       if (removedStack) {
         this.availableStackOptions.push(removedStack);
+
+        // Sort the availableStackOptions in ascending order after adding
+        this.availableStackOptions.sort((a, b) => a.technology.localeCompare(b.technology));
       }
     }
   }
+
 
   removeSelectedStacks() {
     this.selection.selected.forEach(selectedStack => {
@@ -265,5 +270,5 @@ export class CandidatePageComponent implements OnInit {
     this.availableStackOptions = [...this.stackOptions]; // Reset available options
   }
 
-  
+
 }

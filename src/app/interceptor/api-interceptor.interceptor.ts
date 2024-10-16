@@ -10,7 +10,7 @@ export const apiInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);  // Inject AuthService to get token
   const authToken = authService.getToken(); // Get token from AuthService
 
-  const snackBar = inject(MatSnackBar); 
+  const snackBar = inject(MatSnackBar);
   // Clone the request to add the Authorization header if token exists
   const authReq = authToken
     ? req.clone({ headers: req.headers.set('Authorization', `Bearer ${authToken}`) })
