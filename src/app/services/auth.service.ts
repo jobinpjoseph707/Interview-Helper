@@ -1,79 +1,49 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'https://localhost:7042/api/Auth'; // Base URL for backend auth APIs
+  private apiUrl = environment.apiUrl; // Base API URL
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient) {}
 
-  /**
-   * Login user and store JWT token in localStorage
-   */
-
+  // Login method that sends user credentials to the backend
   login(userAuth: { username: string; password: string }): Observable<any> {
-    console.log(userAuth);
-    
-    return this.http.post(`${this.baseUrl}/login`, {
-        userName: userAuth.username,
-        userPassword: userAuth.password
-    }).pipe(
-      tap((response: any) => {
-        localStorage.setItem('username', response.user.userName);
-        localStorage.setItem('authToken', response.token);
-      }),
-      catchError(this.handleError)
-        );
-}
+    const payload = {
+      userName: userAuth.username,
+      userPassword: userAuth.password
+    };
+    return this.http.post<any>(`${this.apiUrl}/Auth/login`, payload);
+  }
 
-
-  /**
-   * Register new user
-   */
+  // Register method for creating a new user
   register(user: { username: string; password: string }): Observable<any> {
     const payload = {
       userName: user.username,
       userPassword: user.password
-  };
-    return this.http.post(`${this.baseUrl}/register`, payload).pipe(
-      tap(() => console.log('User registered successfully')),
-      catchError(this.handleError)
-    );
+    };
+    return this.http.post<any>(`${this.apiUrl}/Auth/register`, payload);
   }
 
-  /**
-   * Check if user is logged in (token exists)
-   */
+  // Method to check if the user is logged in by checking for a token in localStorage
   isLoggedIn(): boolean {
     return !!localStorage.getItem('authToken');
   }
 
-  /**
-   * Get JWT token from localStorage
-   */
+  // Method to get the JWT token from localStorage
   getToken(): string | null {
     return localStorage.getItem('authToken');
   }
 
-  /**
-   * Logout user by clearing token and navigating to login
-   */
+  // Logout method that removes the token and user info from localStorage
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('username');
-    this.router.navigate(['/login']);
   }
 
-  /**
-   * Error handling method
-   */
-  private handleError(error: any): Observable<never> {
-    console.error('AuthService Error:', error);
-    return throwError(() => new Error(error.message || 'Authentication failed'));
-  }
+
 }
