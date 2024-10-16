@@ -33,6 +33,7 @@ export class QuestionpageComponent {
   minutes: number = 0;
   currentTabIndex: number = 0; // Initialize with the first tab index
   timers: { [key: string]: { seconds: number, isRunning: boolean, interval: any } } = {};
+  currentlyRunningTimer: number | null = null;
 
   questionRequest: QuestionRequest | null = null;
   reviewText: string = ''; // Variable to store the review text
@@ -85,6 +86,7 @@ loadQuestions() {
         if (role.technologyId !== undefined) { // Check that the technologyId is defined
           this.technologyScores[role.technologyId] = 0; // Initialize score to 0 for each TechnologyId
         }      });
+        this.activeTab = this.tabs[0];  // Set default active tab
 
       console.log('Technology Scores Initialized:', this.technologyScores);
       this.isLoading = false;
@@ -97,6 +99,11 @@ loadQuestions() {
 }
 
   ngOnDestroy() {
+    Object.values(this.timers).forEach(timer => {
+      if (timer.interval) {
+        clearInterval(timer.interval);
+      }
+    });
   }
   get filteredQuestions(): Question[] {
     const activeRole = this.roles.find(role => role.name === this.activeTab);
@@ -107,21 +114,62 @@ loadQuestions() {
   }
 
   toggleTimer(questionId: number) {
-    const timer = this.timers[questionId] || { seconds: 0, isRunning: false, interval: null };
+    if (this.currentlyRunningTimer && this.currentlyRunningTimer !== questionId) {
+      // Stop the currently running timer if it's different from the one being toggled
+      this.stopTimer(this.currentlyRunningTimer);
+    }
+    if (!this.timers[questionId]) {
+      this.timers[questionId] = { seconds: 0, isRunning: false, interval: null };
+    }
+    const timer = this.timers[questionId];
 
     if (timer.isRunning) {
-      clearInterval(timer.interval);
-      timer.isRunning = false;
-      // You may want to update the timer state in your timers object
+      this.stopTimer(questionId);
     } else {
-      timer.interval = setInterval(() => {
-        timer.seconds++;
-      }, 1000);
-      timer.isRunning = true;
+      this.startTimer(questionId);
     }
+    // const timer = this.timers[questionId] || { seconds: 0, isRunning: false, interval: null };
+    // if (timer.isRunning) {
+    //   this.stopTimer(questionId);
+    // } else {
+    //   this.startTimer(questionId);
+    // }
+    // if (timer.isRunning) {
+    //   clearInterval(timer.interval);
+    //   timer.isRunning = false;
+    //   // You may want to update the timer state in your timers object
+    // } else {
+    //   timer.interval = setInterval(() => {
+    //     timer.seconds++;
+    //   }, 1000);
+    //   timer.isRunning = true;
+    // }
 
     // Update the timers object
     this.timers[questionId] = timer;
+  }
+  private startTimer(questionId: number) {
+    const timer = this.timers[questionId];
+    if (!timer) return;
+
+    timer.interval = setInterval(() => {
+      timer.seconds++;
+    }, 1000);
+    timer.isRunning = true;
+    this.currentlyRunningTimer = questionId;
+  }
+
+  private stopTimer(questionId: number) {
+    const timer = this.timers[questionId];
+    if (!timer) return;
+
+    if (timer.interval) {
+      clearInterval(timer.interval);
+    }
+    timer.isRunning = false;
+    if (this.currentlyRunningTimer === questionId) {
+      this.currentlyRunningTimer = null;
+    }
   }
 
   formatTime(seconds: number): string {

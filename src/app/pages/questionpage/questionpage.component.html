@@ -30,16 +30,20 @@
             <mat-icon class="wrong-icon" [class.selected]="question.answer === 'incorrect'">cancel</mat-icon>
           </button>
           <div class="timer">
-          <mat-icon (click)="toggleTimer(question.id)" [ngStyle]="{ 'color': timers[question.id]?.isRunning ? 'rgb(202, 191, 143)' : 'white' }">
+            <mat-icon (click)="toggleTimer(question.id)" [ngStyle]="{ 'color': timers[question.id]?.isRunning ? 'rgb(202, 191, 143)' : 'white' }">
+              {{ timers[question.id]?.isRunning ? 'pause_circle_filled' : 'play_circle_filled' }}
+            </mat-icon>
+            <span>{{ formatTime(timers[question.id]?.seconds ?? 0) }}</span>
+          <!-- <mat-icon (click)="toggleTimer(question.id)" [ngStyle]="{ 'color': timers[question.id]?.isRunning ? 'rgb(202, 191, 143)' : 'white' }">
           {{ timers[question.id]?.isRunning ? 'pause_circle_filled' : 'play_circle_filled' }}
-          </mat-icon>
-          <span>{{ formatTime(timers[question.id]?.seconds??0) }}</span>
+          </mat-icon> -->
+          <!-- <span>{{ formatTime(timers[question.id]?.seconds??0) }}</span> -->
         </div>
       </div>
      </mat-card-content>
     </mat-card>
   }
-  <button class="finish-button" (click)="finishInterview()">Finish</button>
+  <button class="finish-button" (click)="finishInterview()">Save</button>
   
   @if(showConfirmationModal){
   <div class="modal-overlay" >
