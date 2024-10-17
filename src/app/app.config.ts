@@ -7,7 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { apiInterceptor } from './interceptor/api-interceptor.interceptor';
+import { apiInterceptorInterceptor } from './interceptor/api-interceptor.interceptor';
 
 // Application Configuration
 export const appConfig: ApplicationConfig = {
@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
 
     provideHttpClient(
       withFetch(),
-      withInterceptors([apiInterceptor]) // Register the interceptor here
+      withInterceptors([apiInterceptorInterceptor]) // Register the interceptor here
     ),
 
     provideAnimationsAsync(),
