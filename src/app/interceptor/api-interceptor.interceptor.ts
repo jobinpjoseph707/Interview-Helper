@@ -96,3 +96,4 @@ function handleError(error: HttpErrorResponse, snackBar: MatSnackBar): string {
   console.error('API Interceptor Error:', errorMessage);
   return errorMessage;
 }
+ 
