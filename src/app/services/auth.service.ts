@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -17,7 +17,14 @@ export class AuthService {
       userName: userAuth.username,
       userPassword: userAuth.password
     };
-    return this.http.post<any>(`${this.apiUrl}/Auth/login`, payload);
+    return this.http.post<any>(`${this.apiUrl}/Auth/login`, payload).pipe(
+      tap(response => {
+        if (response && response.token) {
+          localStorage.setItem('authToken', response.token);
+          localStorage.setItem('username', userAuth.username);
+        }
+      })
+    );
   }
 
   // Register method for creating a new user
