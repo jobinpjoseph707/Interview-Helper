@@ -17,10 +17,10 @@ export const apiInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
 
   const snackBar = inject(MatSnackBar);
 
-  const token = authService.getToken();
-  const authReq = token
+  // const token = authService.getToken();
+  const authReq = authToken
     ? req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`)
+        headers: req.headers.set('Authorization', `Bearer ${authToken}`)
       })
     : req;
 
@@ -96,3 +96,4 @@ function handleError(error: HttpErrorResponse, snackBar: MatSnackBar): string {
   console.error('API Interceptor Error:', errorMessage);
   return errorMessage;
 }
+ 
