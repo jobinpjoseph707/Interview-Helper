@@ -15,6 +15,9 @@ export class ExitQuestionGuard implements CanDeactivate<QuestionpageComponent> {
     component: QuestionpageComponent
   ): Observable<boolean> | Promise<boolean> | boolean {
     // If the candidateId is 0, allow navigation without confirmation
+    if (component.isSubmitting) {
+      return true;
+    }
     if (component.candidateId === 0) {
       return true;
     }

@@ -53,6 +53,7 @@ export class QuestionpageComponent {
 
   constructor(private questionService: QuestionService, private router: Router,   private snackBar: MatSnackBar) {}
   hasUnsavedChanges: boolean = true; // Set to true if the user makes changes
+  isSubmitting: boolean = false; // Track submission state
 
   // This method will be called when navigating away from the page
   canDeactivate(): boolean {
@@ -252,6 +253,7 @@ loadQuestions() {
   SubmitResults() {
     const overallScore = this.overallPercentage;
     const review = this.reviewText;
+    this.isSubmitting = true; // Set to true when submitting
 
     this.questionService.updateCandidateScore(this.candidateId, overallScore, review).subscribe({
       next: (response: string) => {
