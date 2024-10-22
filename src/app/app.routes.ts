@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NavigationPanelComponent } from './layout/navigation-panel/navigation-panel.component';
 import { LoginComponent } from './layout/login/login.component';
-
+import { ExitQuestionGuard } from './guard/exit-question.guard';
 export const routes: Routes = [{path:'login',
   component:LoginComponent
 },
@@ -21,6 +21,8 @@ export const routes: Routes = [{path:'login',
         {
           path: 'question-page',
           loadComponent: () => import('./pages/questionpage/questionpage.component').then((m) => m.QuestionpageComponent),
+                  canDeactivate: [ExitQuestionGuard], // Apply the guard here
+
         },
         {
           path: 'interview-summary',
