@@ -44,15 +44,15 @@
     </mat-card>
   }
   <button class="finish-button" (click)="finishInterview()">Save</button>
-  
+
   @if(showConfirmationModal){
   <div class="modal-overlay" >
     <div class="modal-content">
       <h2>Confirm Finish</h2>
-      <textarea 
-      [(ngModel)]="reviewText" 
-      placeholder="Write your review here..." 
-      rows="4" 
+      <textarea
+      [(ngModel)]="reviewText"
+      placeholder="Write your review here..."
+      rows="4"
       cols="50">
     </textarea>
       <p>Are you sure you want to finish the interview?</p>
@@ -100,9 +100,9 @@
       </div>
 
       <div class="action-buttons">
-        <button mat-raised-button  class="download-button" (click)="downloadResults()">
+        <!-- <button mat-raised-button  class="download-button" (click)="downloadResults()">
           Download
-        </button>
+        </button> -->
         <button mat-raised-button  class="download-button" (click)="SubmitResults()">
           Submit
         </button>
@@ -112,4 +112,3 @@
 }
 
   </div>
-  

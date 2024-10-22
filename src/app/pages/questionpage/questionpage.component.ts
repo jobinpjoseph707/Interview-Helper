@@ -249,6 +249,7 @@ loadQuestions() {
       next: (response: string) => {
         console.log('Candidate overall score and review updated successfully', response);
         this.showSnackbar('Overall score and review updated successfully', 'success');
+        this.router.navigate(['/interview-helper/interview-summary']);
       },
       error: (error) => {
         console.error('Error updating candidate overall score and review:', error);
@@ -280,10 +281,10 @@ loadQuestions() {
   }
 
 
-  downloadResults() {
-    // Implement download logic here
-    console.log('Downloading results...');
-  }
+  // downloadResults() {
+  //   // Implement download logic here
+  //   console.log('Downloading results...');
+  // }
 
   setRoleExpanded(role: any, expanded: boolean) {
     role.expanded = expanded;  // Set the expanded state manually based on the event
