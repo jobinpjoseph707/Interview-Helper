@@ -37,7 +37,7 @@ export class QuestionpageComponent {
 
   questionRequest: QuestionRequest | null = null;
   reviewText: string = ''; // Variable to store the review text
-  candidateId: number = 4596;
+  candidateId: number = 0;
   candidateName: string = 'Jobin P Joseph';
   showResultsModal: boolean = false;
   showConfirmationModal: boolean = false; // New property for confirmation modal
@@ -52,7 +52,15 @@ export class QuestionpageComponent {
   activeTab: string = this.tabs[0];  // Set default active tab
 
   constructor(private questionService: QuestionService, private router: Router,   private snackBar: MatSnackBar) {}
+  hasUnsavedChanges: boolean = true; // Set to true if the user makes changes
 
+  // This method will be called when navigating away from the page
+  canDeactivate(): boolean {
+    if (this.hasUnsavedChanges) {
+      return confirm('Unsaved changes will be discarded, and incomplete sections (questions & interview) will not be retained. Exit without saving?');
+    }
+    return true;
+  }
 ngOnInit(){
   this.questionRequest = history.state.QuestionRequest;
   if (!this.questionRequest) {

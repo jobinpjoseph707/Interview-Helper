@@ -1,0 +1,81 @@
+.dialog-overlay {
+    position: fixed;
+    color: white; // White text color
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); // Semi-transparent background
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; // On top of other elements
+  }
+  
+  .dialog-content {
+    background-color: #1a2a4d; // Dark background for the dialog
+    color: white; // White text for contrast
+    padding: 20px; // Padding around content
+    border-radius: 8px; // Rounded corners
+    width: 80%; // Responsive width
+    max-width: 500px; // Maximum width for the dialog
+    box-shadow: 0 4px 10px rgba(245, 245, 245, 0.3); // Soft shadow for depth
+  }
+  
+  .dialog-header {
+    display: flex; // Flex layout for header
+    justify-content: space-between; // Space between title and close button
+    align-items: center; // Center align items vertically
+    padding-bottom: 10px; // Space below header
+  }
+  
+  .dialog-title {
+    color: rgb(234, 9, 9); // White text color
+    font-size: 20px; // Title font size
+    font-weight: bold; // Bold title
+  }
+  
+  .close-button {
+    background: none; // No background for close button
+    border: none; // No border
+    color: white; // White text color
+    font-size: 24px; // Larger font size for close button
+    cursor: pointer; // Pointer cursor on hover
+  }
+  
+  .dialog-body {
+    color: white; // White text color
+    margin: 15px 0; // Margins for body content
+    font-size: 16px; // Font size for body text
+  }
+  
+  .dialog-footer {
+    color: white; // White text color
+    display: flex; // Flex layout for footer
+    justify-content: flex-end; // Align buttons to the right
+    margin-top: 15px; // Space above footer
+  }
+  
+  .confirm-button {
+    background-color: #e3550e; // Blue background for confirm button
+    color: white; // White text color
+    padding: 10px 15px; // Padding for button
+    border: none; // No border
+    border-radius: 4px; // Rounded corners
+    cursor: pointer; // Pointer cursor
+    margin-left: 10px; // Space between buttons
+  }
+  
+
+  
+  .cancel-button {
+    background-color: #2563eb; // Darker blue on hover
+    color: white; // White text color
+    padding: 10px 15px; // Padding for button
+    border: none; // No border
+    cursor: pointer; // Pointer cursor
+    margin-left: 10px; // Space between buttons
+  }
+  
+
+  
