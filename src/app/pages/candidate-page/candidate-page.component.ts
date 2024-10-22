@@ -9,7 +9,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
-import { ExperienceLevel } from '../../Models/experience-level';
 import { Router } from '@angular/router';
 import { QuestionRequest, TechnologyExperience } from '../../Models/questions.interface';
 import {MatSnackBar} from '@angular/material/snack-bar'
@@ -199,9 +198,15 @@ export class CandidatePageComponent implements OnInit {
         } else {
           return null;
         }
-      }).filter(tech => tech !== null);
+      }).filter(tech => tech !== null); // Filter out nulls
 
-      const formattedInterviewDate = new Date(formData.interviewDate).toISOString().split('T')[0];
+      // Get the date from the form and set it to Indian Standard Time
+      const interviewDate = new Date(formData.interviewDate);
+      const currentTime = new Date(); // Get the current time
+      interviewDate.setHours(currentTime.getHours() + 5, currentTime.getMinutes() + 30, currentTime.getSeconds());
+
+      const formattedInterviewDate = interviewDate.toISOString(); // This will include both date and time in ISO format
+
       const candidateData = {
         name: formData.name,
         applicationRoleId: roleId,
@@ -243,6 +248,10 @@ export class CandidatePageComponent implements OnInit {
       this.showSnackBar('Please fill out all required fields and add at least one technology stack.', 'error');
     }
   }
+
+
+
+
 
   // Helper method to show SnackBar
   private showSnackBar(message: string, action: 'success' | 'error') {
