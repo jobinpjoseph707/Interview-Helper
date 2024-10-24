@@ -1,16 +1,43 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { HeaderComponent } from "../header/header.component";
-import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HeaderComponent } from "../header/header.component";
 import { AuthService } from '../../services/auth.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [HeaderComponent, ReactiveFormsModule, CommonModule],
+  imports: [
+    CommonModule,
+    HeaderComponent,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSnackBarModule
+  ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  animations: [
+    trigger('flipState', [
+      state('front', style({
+        transform: 'rotateY(0)'
+      })),
+      state('back', style({
+        transform: 'rotateY(180deg)'
+      })),
+      transition('front => back', animate('400ms ease-out')),
+      transition('back => front', animate('400ms ease-in'))
+    ])
+  ]
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
@@ -20,7 +47,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -41,12 +69,15 @@ export class LoginComponent implements OnInit {
 
   usernameValidator(control: AbstractControl): ValidationErrors | null {
     const username = control.value;
-    const validUsername = /^[a-zA-Z][a-zA-Z. ]*$/.test(username);
+    if (!username) return null;
+    const validUsername = /^[a-zA-Z][^\s]*$/.test(username);
     return validUsername ? null : { invalidUsername: true };
   }
 
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.value;
+    if (!password) return null;
+
     const hasMinLength = password.length >= 8;
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
     const hasNumber = /\d/.test(password);
@@ -86,7 +117,6 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     if (this.loginForm.valid) {
       const credentials = this.loginForm.value;
-      console.log(credentials);
 
       this.authService.login(credentials).subscribe({
         next: () => {
@@ -94,6 +124,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/candidate-form']);
         },
         error: (err) => {
+          this.snackBar.open('Login failed. Please try again.', 'Close', { duration: 3000 });
           console.error('Login failed:', err);
         }
       });
@@ -105,14 +136,14 @@ export class LoginComponent implements OnInit {
   onSignup(): void {
     if (this.signupForm.valid) {
       const newUser = this.signupForm.value;
-      console.log(newUser);
 
       this.authService.register(newUser).subscribe({
         next: () => {
-          console.log('Signup successful');
+          this.snackBar.open('Sign up successful! Please login.', 'Close', { duration: 3000 });
           this.flipCard();
         },
         error: (err) => {
+          this.snackBar.open('Sign up failed. Please try again.', 'Close', { duration: 3000 });
           console.error('Signup failed:', err);
         }
       });

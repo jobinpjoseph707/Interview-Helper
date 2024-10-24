@@ -1,203 +1,172 @@
+::ng-deep  .mat-typography {
+      background-image: url('/img/background.png');
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
 /* Global Styles */
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-::ng-deep.mat-typography {
-  background-image: url('/img/background.png');
-  background-size: cover;
-}
-
-/* Container and Card Styles */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-.login-card {
-  width: 340px;
-  height: 430px; /* Reduced height */
-  margin-top: 55px;
-  perspective: 1000px;
-}
-
-.card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.8s;
-  transform-style: preserve-3d;
-}
-
-.card-inner.flipped {
-  transform: rotateY(180deg);
-}
-
-.card-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.card-front {
-  background-color: #ffffff;
-  color: #333;
-}
-
-.card-back {
-  background-color: #304470;
-  color: white;
-  transform: rotateY(180deg);
-}
-
-/* Form Styles */
-.login-form,
-.signup-form {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.form-group {
-  margin-bottom: 20px; /* Increased gap between form fields */
-  width: 100%;
-  position: relative;
-  height: 90px; /* Fixed height to prevent box size from changing */
-}
-
-label {
+:host {
   display: block;
-  text-align: left;
-  margin-bottom: 5px;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f0f2f5;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-  position: relative;
-}
+  height: 100%;
 
-input:focus {
-  outline: none;
-  background-color: #e4e6e9;
-  border-color: #65558f;
-  box-shadow: 0 0 0 2px rgba(101, 85, 143, 0.2);
-}
+  ::ng-deep {
+    // Material typography and background
 
-/* Error Message Styles */
-.error-message {
-  color: #ff4444;
-  font-size: 12px;
-  position: absolute;
-  bottom: -20px; /* Position the error message below the input */
-  left: 0;
-  height: 15px; /* Reserve space for the error message */
-  line-height: 15px;
-  white-space: normal; /* Allow wrapping of long error messages */
 
-}
+    // Card styles
+    .login-card {
+      width: 100%;
+      max-width: 300px;
+      max-width:300px;
+      perspective: 1000px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-.form-group {
-  height: 90px; /* Ensure uniform height for all form fields, keeping enough space for error messages */
-}
+      // Material card components
+      .mat-mdc-card-header {
+        margin-bottom: 16px;
+      }
 
-input {
-  position: relative; /* Ensure inputs do not get impacted by floating error messages */
-}
+      .mat-mdc-card-content {
+        padding: 0 16px;
+      }
 
-/* Responsive error message handling for smaller screens */
-@media (max-width: 480px) {
-  .error-message {
-    white-space: normal; /* Wrap error messages on small screens */
-    height: auto;
-    line-height: normal;
+      .mat-mdc-card-actions {
+        margin: 8px 0;
+        padding: 8px;
+      }
+
+      // Form fields
+      .mat-mdc-form-field {
+        width: 100%;
+        margin-bottom: 16px;
+      }
+
+      // Submit button
+      .mat-mdc-raised-button[type="submit"] {
+        margin-top: 16px;
+        margin-bottom: 16px;
+        width: 100%;
+      }
+    }
+  }
+
+  // Container layout
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  // Card flip animation
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+  }
+
+  .card-face {
+    position: absolute;
+    width: 100%;
+    backface-visibility: hidden;
+    padding: 16px;
+    background-color: white;
+    margin-top: 40px;
+
+    &.card-back {
+      transform: rotateY(180deg);
+    }
+  }
+
+  .full-width {
+    width: 100%;
+    margin: 8px 0;
   }
 }
 
-input:focus + .error-message {
-  display: block;
-  position: absolute;
-  bottom: -20px;
+
+// Media queries for responsive design
+@media (max-width: 768px) {
+  :host {
+    .login-container {
+      padding: 15px;
+    }
+
+    ::ng-deep {
+      .login-card {
+        max-width: 350px; // Reduce width for tablets
+      }
+    }
+  }
 }
 
-/* Submit Button Styles */
-.submit-button {
-  background-color: #65558f;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 14px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-  margin-top: auto;
-}
+@media (max-width: 600px) {
+  :host {
+    .login-container {
+      padding: 12px;
+    }
 
-.submit-button:hover:not(:disabled) {
-  background-color: #7a6daa;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+    ::ng-deep {
+      .login-card {
+        max-width: 300px; // Further reduce width for smaller screens
+      }
 
-.submit-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-/* Signup Link Styles */
-.signup-link {
-  margin-top: 15px;
-  font-size: 14px;
-}
-
-.signup-link a {
-  color: #7a6daa;
-  text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s ease;
-  cursor: pointer;
-}
-
-.signup-link a:hover {
-  color: #65558f;
-  text-decoration: underline;
-}
-
-/* Additional Styles */
-.card-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #65558f;
+      .mat-mdc-card-content {
+        padding: 0 12px;
+      }
+    }
+  }
 }
 
 @media (max-width: 480px) {
-  .login-card {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
+  :host {
+    .login-container {
+      padding: 10px;
+    }
+
+    ::ng-deep {
+      .login-card {
+        max-width: 100%; // Full width for very small screens
+      }
+
+      .mat-mdc-card-content {
+        padding: 0 8px;
+      }
+
+      .mat-mdc-card-header {
+        padding: 16px 8px 0;
+      }
+
+      .mat-mdc-card-actions {
+        padding: 8px;
+      }
+    }
+  }
+}
+
+
+// Optional: Add hover effects for better interactivity
+:host {
+  ::ng-deep {
+    .mat-mdc-raised-button {
+      transition: transform 0.2s;
+
+      &:not([disabled]):hover {
+        transform: translateY(-1px);
+      }
+    }
+
+    .mat-mdc-form-field:hover {
+      .mat-mdc-form-field-outline {
+        opacity: 1;
+      }
+    }
   }
 }

@@ -1,108 +1,144 @@
 <app-header></app-header>
 <div class="login-container">
-  <div class="login-card">
-    <div class="card-inner" [class.flipped]="isFlipped">
+  <mat-card class="login-card">
+    <div class="card-inner" [@flipState]="isFlipped ? 'back' : 'front'">
       <!-- Login Form -->
       <div class="card-face card-front">
-        <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input
-              id="username"
-              formControlName="username"
-              placeholder="Enter your username"
-              required
-            />
-            <div
-              *ngIf="loginForm.get('username')?.invalid && (loginForm.get('username')?.dirty || loginForm.get('username')?.touched)"
-              class="error-message"
-            >
-              <small *ngIf="loginForm.get('username')?.errors?.['required']">Username is required.</small>
-              <small *ngIf="loginForm.get('username')?.errors?.['invalidUsername']">Username must contain only letters</small>
-            </div>
-          </div>
+        <mat-card-header>
+          <mat-card-title>Login</mat-card-title>
+        </mat-card-header>
 
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              formControlName="password"
-              placeholder="Enter your password"
-              required
-            />
-            <div
-              *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
-              class="error-message"
-            >
-              <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
-              <small *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.minLength">Password must be at least 8 characters long.</small>
-              <small *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.specialChar">Password must contain at least one special character.</small>
-              <small *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.number">Password must contain at least one number.</small>
-              <small *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.noSpace">Password cannot contain spaces.</small>
-            </div>
-          </div>
+        <mat-card-content>
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Username</mat-label>
+              <input
+                matInput
+                formControlName="username"
+                placeholder="Enter your username"
+                required
+              >
+              <mat-error *ngIf="loginForm.get('username')?.errors?.['required']">
+                Username is required
+              </mat-error>
+              <mat-error *ngIf="loginForm.get('username')?.errors?.['invalidUsername']">
+                Username must begin with a letter and no space allowed
+              </mat-error>
+            </mat-form-field>
 
-          <button type="submit" [disabled]="loginForm.invalid" class="submit-button">
-            Login
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                type="password"
+                formControlName="password"
+                placeholder="Enter your password"
+                required
+              >
+              <mat-error *ngIf="loginForm.get('password')?.errors?.['required']">
+                Password is required
+              </mat-error>
+              <mat-error *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.minLength">
+                Password must be at least 8 characters long
+              </mat-error>
+              <mat-error *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.specialChar">
+                Password must contain at least one special character
+              </mat-error>
+              <mat-error *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.number">
+                Password must contain at least one number
+              </mat-error>
+              <mat-error *ngIf="loginForm.get('password')?.errors?.['invalidPassword']?.noSpace">
+                Password cannot contain spaces
+              </mat-error>
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="loginForm.invalid"
+              class="full-width"
+            >
+              Login
+            </button>
+          </form>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-button (click)="flipCard()">
+            Don't have an account? Sign up
           </button>
-        </form>
-        <div class="signup-link">
-          Don't have an account?
-          <a (click)="flipCard()">Sign up</a>
-        </div>
+        </mat-card-actions>
       </div>
 
       <!-- Sign-up Form -->
       <div class="card-face card-back">
-        <form class="signup-form" [formGroup]="signupForm" (ngSubmit)="onSignup()">
-          <div class="form-group">
-            <label for="new-username">Username</label>
-            <input
-              id="new-username"
-              formControlName="username"
-              placeholder="Choose a username"
-              required
-            />
-            <div
-              *ngIf="signupForm.get('username')?.invalid && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)"
-              class="error-message"
-            >
-              <small *ngIf="signupForm.get('username')?.errors?.['required']">Username is required.</small>
-              <small *ngIf="signupForm.get('username')?.errors?.['invalidUsername']">Username must contain only letters and dots, and cannot start with a dot.</small>
-            </div>
-          </div>
+        <mat-card-header>
+          <mat-card-title>Sign Up</mat-card-title>
+        </mat-card-header>
 
-          <div class="form-group">
-            <label for="new-password">Password</label>
-            <input
-              id="new-password"
-              type="password"
-              formControlName="password"
-              placeholder="Choose a password"
-              required
-            />
-            <div
-              *ngIf="signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)"
-              class="error-message"
-            >
-              <small *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</small>
-              <small *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.minLength">Password must be at least 8 characters long.</small>
-              <small *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.specialChar">Password must contain at least one special character.</small>
-              <small *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.number">Password must contain at least one number.</small>
-              <small *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.noSpace">Password cannot contain spaces.</small>
-            </div>
-          </div>
+        <mat-card-content>
+          <form [formGroup]="signupForm" (ngSubmit)="onSignup()">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Username</mat-label>
+              <input
+                matInput
+                formControlName="username"
+                placeholder="Choose a username"
+                required
+              >
+              <mat-error *ngIf="signupForm.get('username')?.errors?.['required']">
+                Username is required
+              </mat-error>
+              <mat-error *ngIf="signupForm.get('username')?.errors?.['invalidUsername']">
+                Username must begin with a letter and no space allowed
+              </mat-error>
+            </mat-form-field>
 
-          <button type="submit" [disabled]="signupForm.invalid" class="submit-button">
-            Sign up
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                type="password"
+                formControlName="password"
+                placeholder="Choose a password"
+                required
+              >
+              <mat-error *ngIf="signupForm.get('password')?.errors?.['required']">
+                Password is required
+              </mat-error>
+              <mat-error *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.minLength">
+                Password must be at least 8 characters long
+              </mat-error>
+              <mat-error *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.specialChar">
+                Password must contain at least one special character
+              </mat-error>
+              <mat-error *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.number">
+                Password must contain at least one number
+              </mat-error>
+              <mat-error *ngIf="signupForm.get('password')?.errors?.['invalidPassword']?.noSpace">
+                Password cannot contain spaces
+              </mat-error>
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="signupForm.invalid"
+              class="full-width"
+            >
+              Sign up
+            </button>
+          </form>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-button (click)="flipCard()">
+            Already have an account? Login
           </button>
-        </form>
-        <div class="signup-link">
-          Already have an account?
-          <a (click)="flipCard()">Login</a>
-        </div>
+        </mat-card-actions>
       </div>
     </div>
-  </div>
+  </mat-card>
 </div>
