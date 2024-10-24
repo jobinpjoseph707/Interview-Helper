@@ -18,6 +18,14 @@ export class ExitQuestionGuard implements CanDeactivate<QuestionpageComponent> {
     if (component.isSubmitting) {
       return true;
     }
+    const totalAnswered = component.roles.reduce((total, role) => {
+      const answered = role.questions.filter(q => q.answer).length;
+      return total + answered;
+    }, 0);    
+    if (totalAnswered === 0) {
+      // If no questions are answered, show a confirmation dialog
+      return this.showConfirmationDialog();
+    }
     if (component.candidateId === 0) {
       return true;
     }
@@ -33,4 +41,17 @@ export class ExitQuestionGuard implements CanDeactivate<QuestionpageComponent> {
       })
     );
     }
+
+    private showConfirmationDialog(): Observable<boolean> {
+      const dialogRef = this.dialog.open(ConfirmDialogComponentComponent, {
+        width: '400px',
+        data: { message: 'Are you sure you want to leave? No questions are marked.' },
+      });
+  
+      return dialogRef.afterClosed().pipe(
+        map((result: boolean) => result || false) // Default to `false` if dialog is closed without action
+      );
+    }
+
+
 }
