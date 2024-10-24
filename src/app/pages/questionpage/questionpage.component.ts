@@ -41,7 +41,7 @@ export class QuestionpageComponent {
   candidateName: string = 'Jobin P Joseph';
   showResultsModal: boolean = false;
   showConfirmationModal: boolean = false; // New property for confirmation modal
-
+  totalAnswered:number=0;
   isLoading: boolean = false;
   roles: RoleResult[] = [];
 
@@ -215,7 +215,7 @@ loadQuestions() {
   }
   calculateResults() {
     let totalRight = 0;
-    let totalAnswered = 0; // Total of right and wrong answers
+    this.totalAnswered = 0; // Total of right and wrong answers
 
     this.roles.forEach(role => {
       const details = {
@@ -228,11 +228,11 @@ loadQuestions() {
           case 'correct':
             details.right++;
             totalRight++; // Increment the global correct count
-            totalAnswered++; // Increment the global answered count
+            this.totalAnswered++; // Increment the global answered count
             break;
           case 'incorrect':
             details.wrong++;
-            totalAnswered++;
+            this.totalAnswered++;
             break;
         }
       });
@@ -246,7 +246,7 @@ loadQuestions() {
       console.log(`Technology ${role.technologyId} Score: ${role.percentage}`);
     });
 
-    this.overallPercentage = totalAnswered > 0 ? Math.round((totalRight / totalAnswered) * 100) : 0;
+    this.overallPercentage = this.totalAnswered > 0 ? Math.round((totalRight / this.totalAnswered) * 100) : 0;
     console.log('Updated Technology Scores:', this.technologyScores);
 
   }
@@ -287,7 +287,15 @@ loadQuestions() {
   confirmFinish() {
     this.showConfirmationModal = false;
     this.calculateResults();
-    this.showResultsModal = true;
+    if (this.totalAnswered===0){
+      this.showConfirmationModal=false;
+      this.router.navigate(['/interview-helper/candidate-form']).then(() => {
+        this.router.navigate([this.router.url]); // Return to the current page after guard logic runs
+      });
+    }
+    else{
+      this.showResultsModal = true;
+    }
   }
 
 
@@ -318,5 +326,6 @@ loadQuestions() {
       panelClass: type === 'success' ? ['success-snackbar'] : ['error-snackbar']
     });
   }
+  
 
 }

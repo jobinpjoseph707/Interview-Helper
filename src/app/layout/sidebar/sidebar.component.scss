@@ -1,20 +1,24 @@
 .sidebar {
-  background-color: #B0B0B0;
+  background-color: #4A4D8F;
   height: calc(100vh - 5rem);
   display: flex;
   padding: 0;
   margin: 0;
   flex-direction: column;
   align-items: center;
-  // width: 4.5rem;
+  width:inherit;
+   z-index: 100;
   // box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-menu {
+  background-color: #4A4D8F;
   list-style: none;
   padding: 0;
   margin: 0;
   width: 100%;
+  z-index: 100;
+
 }
 ::ng-deep .mat-drawer {
   border-radius: 0px !important;
@@ -35,11 +39,11 @@ a {
 }
 
 a:hover {
-  background-color: #D9D9D9;
+  background-color: #2C3E50;
 }
 
 a.active {
-  background-color: #D9D9D9;
+  background-color: #2C3E50;
 }
 
 // .mat-icon {
