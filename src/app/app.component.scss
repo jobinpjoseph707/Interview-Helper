@@ -19,6 +19,36 @@
 
 
 
+// mat-sidenav-container {
+//     height: calc(100vh - 5rem);
 
+//   }
+.sidenav-container {
+    height: calc(100vh - 5rem); // Full height minus the header
+  }
+  
+  .sidebar {
+    width: 5rem; // Fixed width for sidebar
+    background-color: #172B4D;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .content {
+    padding: 20px;
+    background-image: url('/img/background.png');
+    background-size: auto;
+    height: 100%;
+  }
+  
+  .header {
+    height: 5rem;
+    background-color: #25355A;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
 
-
+  
+  

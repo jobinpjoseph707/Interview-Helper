@@ -1,6 +1,6 @@
 .header {
   background-color: #25355A;
-  height:5rem;
+  height: 5rem;
   display: flex;
   align-items: center;
   padding: 0;
@@ -13,7 +13,6 @@
 
     img {
       height: 3.5rem;
-      width: auto; // Maintain aspect ratio
+      width: auto;
     }
-  }
-}
+  }}

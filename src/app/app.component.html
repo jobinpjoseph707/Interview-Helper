@@ -1,9 +1,83 @@
+<!-- <app-loader></app-loader> -->
+
 <!-- <app-header></app-header>
 <div class="layout">
   <app-sidebar></app-sidebar>
-  <div class="content"> -->
-    <!-- <router-outlet></router-outlet> -->
-  <!-- </div>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
 </div> -->
-<app-loader></app-loader>
-<router-outlet></router-outlet> <!-- Only for routing -->
+<!-- <router-outlet></router-outlet> Only for routing -->
+
+
+
+
+<!-- <app-header 
+      [showMenuButton]="isSmallScreen" 
+      (toggleSidenav)="onToggleSidenav()">
+    </app-header>
+
+    <mat-sidenav-container class="sidenav-container">
+      <mat-sidenav 
+        #sidenav 
+        [mode]="isSmallScreen ? 'over' : 'side'" 
+        [opened]="!isSmallScreen" 
+        class="sidebar">
+        <app-sidebar></app-sidebar>
+      </mat-sidenav>
+
+      <mat-sidenav-content class="content">
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container> -->
+    <ng-container *ngIf="!isLoginPage; else loginContent">
+      <app-header 
+        [showMenuButton]="isSmallScreen" 
+        (toggleSidenav)="onToggleSidenav()">
+      </app-header>
+
+      <mat-sidenav-container class="sidenav-container" [class.modal-open]="isModalOpen">
+        <div 
+          class="backdrop" 
+          [class.active]="isSmallScreen && sidenav?.opened" 
+          (click)="sidenav.close()">
+        </div>
+        
+        <mat-sidenav 
+          #sidenav 
+          [mode]="isSmallScreen ? 'over' : 'side'" 
+          [opened]="!isSmallScreen" 
+          class="sidebar"
+          [class.blur]="isModalOpen"
+          (openedStart)="onSidenavOpen()"
+          (closedStart)="onSidenavClose()">
+          <app-sidebar></app-sidebar>
+        </mat-sidenav>
+
+        <mat-sidenav-content 
+          class="content"
+          [class.blur]="isSmallScreen && sidenav?.opened || isModalOpen">
+          <router-outlet></router-outlet>
+        </mat-sidenav-content>
+
+        <!-- Modal -->
+        <div *ngIf="isModalOpen" class="modal-overlay">
+          <div class="modal-content">
+            <h2>Confirm Finish</h2>
+            <textarea placeholder="Write your review here..."></textarea>
+            <p>Are you sure you want to finish the interview?</p>
+            <div class="modal-actions">
+              <button class="no-btn" (click)="closeModal()">No</button>
+              <button class="yes-btn" (click)="confirmModal()">Yes</button>
+            </div>
+          </div>
+        </div>
+      </mat-sidenav-container>
+    </ng-container>
+
+    <!-- Template for login page -->
+    <ng-template #loginContent>
+      <div class="login-container">
+        <router-outlet></router-outlet>
+      </div>
+    </ng-template>

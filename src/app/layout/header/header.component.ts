@@ -2,6 +2,7 @@ import { NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIcon, } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar'; // Import MatToolbarModule
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'; // Import BreakpointObserver
 
 @Component({
   selector: 'app-header',

@@ -254,6 +254,7 @@ loadQuestions() {
     const overallScore = this.overallPercentage;
     const review = this.reviewText;
     this.isSubmitting = true; // Set to true when submitting
+    document.body.style.overflow = 'hidden';
 
     this.questionService.updateCandidateScore(this.candidateId, overallScore, review).subscribe({
       next: (response: string) => {
@@ -282,6 +283,8 @@ loadQuestions() {
   }
   finishInterview() {
     this.showConfirmationModal = true;
+    document.body.style.overflow = 'hidden';
+
 
   }
   confirmFinish() {

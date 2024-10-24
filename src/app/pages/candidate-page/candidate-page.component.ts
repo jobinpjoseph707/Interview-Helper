@@ -231,7 +231,7 @@ export class CandidatePageComponent implements OnInit {
           this.showSnackBar('Candidate submitted successfully', 'success');
 
           // Navigate to the question page
-          this.router.navigate(['/interview-helper/question-page'], { state: { QuestionRequest } });
+          this.router.navigate(['question-page'], { state: { QuestionRequest } });
         },
         (error) => {
           console.error('Error submitting candidate:', error);
