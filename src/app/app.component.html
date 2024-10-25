@@ -36,19 +36,14 @@
         (toggleSidenav)="onToggleSidenav()">
       </app-header>
 
-      <mat-sidenav-container class="sidenav-container" [class.modal-open]="isModalOpen">
-        <div 
-          class="backdrop" 
-          [class.active]="isSmallScreen && sidenav?.opened" 
-          (click)="sidenav.close()">
-        </div>
+      <mat-sidenav-container class="sidenav-container">
+       
         
         <mat-sidenav 
           #sidenav 
           [mode]="isSmallScreen ? 'over' : 'side'" 
           [opened]="!isSmallScreen" 
           class="sidebar"
-          [class.blur]="isModalOpen"
           (openedStart)="onSidenavOpen()"
           (closedStart)="onSidenavClose()">
           <app-sidebar></app-sidebar>
@@ -56,22 +51,11 @@
 
         <mat-sidenav-content 
           class="content"
-          [class.blur]="isSmallScreen && sidenav?.opened || isModalOpen">
+          [class.blur]="isSmallScreen && sidenav?.opened">
           <router-outlet></router-outlet>
         </mat-sidenav-content>
 
-        <!-- Modal -->
-        <div *ngIf="isModalOpen" class="modal-overlay">
-          <div class="modal-content">
-            <h2>Confirm Finish</h2>
-            <textarea placeholder="Write your review here..."></textarea>
-            <p>Are you sure you want to finish the interview?</p>
-            <div class="modal-actions">
-              <button class="no-btn" (click)="closeModal()">No</button>
-              <button class="yes-btn" (click)="confirmModal()">Yes</button>
-            </div>
-          </div>
-        </div>
+        
       </mat-sidenav-container>
     </ng-container>
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { Question, QuestionRequest, RoleResult } from '../../Models/questions.interface';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -11,6 +11,7 @@ import { QuestionService } from '../../services/question.service';
 import { log } from 'console';
 import { Router } from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar'
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-questionpage',
@@ -24,8 +25,8 @@ import {MatSnackBar} from '@angular/material/snack-bar'
   styleUrl:'./questionpage.component.scss'
 })
 export class QuestionpageComponent {
-
-
+  @ViewChild('resultsModalTemplate') resultsModalTemplate: any;
+  @ViewChild('confirmationModalTemplate') confirmationModalTemplate: any;
   isTimerRunning: boolean = false;
 
   timerInterval: any;
@@ -39,8 +40,6 @@ export class QuestionpageComponent {
   reviewText: string = ''; // Variable to store the review text
   candidateId: number = 0;
   candidateName: string = 'Jobin P Joseph';
-  showResultsModal: boolean = false;
-  showConfirmationModal: boolean = false; // New property for confirmation modal
   totalAnswered:number=0;
   isLoading: boolean = false;
   roles: RoleResult[] = [];
@@ -51,7 +50,7 @@ export class QuestionpageComponent {
   tabs: string[] = ['Angular', 'Back End', 'Database/SQL'];
   activeTab: string = this.tabs[0];  // Set default active tab
 
-  constructor(private questionService: QuestionService, private router: Router,   private snackBar: MatSnackBar) {}
+  constructor(private questionService: QuestionService, private router: Router,   private dialog: MatDialog,    private snackBar: MatSnackBar) {}
   hasUnsavedChanges: boolean = true; // Set to true if the user makes changes
   isSubmitting: boolean = false; // Track submission state
 
@@ -137,24 +136,6 @@ loadQuestions() {
     } else {
       this.startTimer(questionId);
     }
-    // const timer = this.timers[questionId] || { seconds: 0, isRunning: false, interval: null };
-    // if (timer.isRunning) {
-    //   this.stopTimer(questionId);
-    // } else {
-    //   this.startTimer(questionId);
-    // }
-    // if (timer.isRunning) {
-    //   clearInterval(timer.interval);
-    //   timer.isRunning = false;
-    //   // You may want to update the timer state in your timers object
-    // } else {
-    //   timer.interval = setInterval(() => {
-    //     timer.seconds++;
-    //   }, 1000);
-    //   timer.isRunning = true;
-    // }
-
-    // Update the timers object
     this.timers[questionId] = timer;
   }
   private startTimer(questionId: number) {
@@ -260,7 +241,7 @@ loadQuestions() {
       next: (response: string) => {
         console.log('Candidate overall score and review updated successfully', response);
         this.showSnackbar('Overall score and review updated successfully', 'success');
-        this.router.navigate(['/interview-helper/interview-summary']);
+        this.router.navigate(['/interview-summary']);
       },
       error: (error) => {
         console.error('Error updating candidate overall score and review:', error);
@@ -281,23 +262,53 @@ loadQuestions() {
       }
     });
   }
-  finishInterview() {
-    this.showConfirmationModal = true;
-    document.body.style.overflow = 'hidden';
-
-
+  trackRoleByName(index: number, role: any): string {
+    return role.name; // Assuming 'name' is a unique property in your role objects
   }
+  openResultsModal() {
+    this.dialog.open(this.resultsModalTemplate, {
+      width: '600px',
+      panelClass: 'results-modal-dialog'
+    });
+  }
+
+  openConfirmationModal() {
+    this.dialog.open(this.confirmationModalTemplate, {
+      width: '400px',
+      panelClass: 'confirmation-modal-dialog'
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        console.log("iam in the model");
+        
+        this.calculateResults();
+        if (this.totalAnswered === 0) {
+          this.router.navigate(['candidate-form']).then(() => {
+            this.router.navigate([this.router.url]); // Return to the current page after guard logic runs
+          });
+        } else {
+          this.dialog.closeAll();
+        console.log("iam in the next model");
+
+          this.openResultsModal(); // Open results modal after confirmation
+        }
+      }
+    });
+  }
+
+  finishInterview() {
+    this.openConfirmationModal();
+  }
+  
   confirmFinish() {
-    this.showConfirmationModal = false;
+    this.dialog.closeAll();
     this.calculateResults();
     if (this.totalAnswered===0){
-      this.showConfirmationModal=false;
-      this.router.navigate(['/interview-helper/candidate-form']).then(() => {
+      this.router.navigate(['candidate-form']).then(() => {
         this.router.navigate([this.router.url]); // Return to the current page after guard logic runs
       });
     }
     else{
-      this.showResultsModal = true;
+      this.openResultsModal(); // Open results modal after confirmation
     }
   }
 
@@ -311,12 +322,12 @@ loadQuestions() {
     role.expanded = expanded;  // Set the expanded state manually based on the event
   }
   cancelFinish() {
-    this.showConfirmationModal = false;
+this.dialog.closeAll()
   }
 
   closeModal() {
-    this.showResultsModal = false;
-    this.showConfirmationModal = false;
+    this.dialog.closeAll();
+
   }
 
   logChange(questionText: string, answer: 'correct' | 'incorrect' | 'skip') {

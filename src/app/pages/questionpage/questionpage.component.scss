@@ -53,17 +53,7 @@ align-items: center;
       }
     }
   }
-  // .candidate-info{
-  //   background-color: #16213e;
-  //   border-radius: 8px;
-  //   padding: 20px;
-  //   margin-bottom: 15px;
-  //   display: flex;
-  //   justify-content: space-between;
-  //   align-items: center;
-  //   color: white;
 
-  // }
 
   .dialog-overlay {
     position: fixed;
@@ -83,8 +73,6 @@ align-items: center;
     color: white; // White text color
     padding: 20px;
     border-radius: 8px;
-    width: 80%; // Responsive width
-    max-width: 500px;
     box-shadow: 0 4px 10px rgba(245, 245, 245, 0.3); // Soft shadow for depth
   }
   
