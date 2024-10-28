@@ -1,40 +1,36 @@
 /* Base styles */
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-:host{
-  ::ng-deep .mat-mdc-table{
+:host {
+  ::ng-deep .mat-mdc-table {
     background-color: white;
-  //  border-radius: 10px !important;
   }
-
 }
 
+/* Mobile-first base styles */
 .form-container {
   font-family: Arial, sans-serif;
   justify-content: center;
   align-items: center;
   width: 100%;
   padding: 20px;
- max-height: calc(100vh - 200px);
 }
 
 .candidate-form {
-  width: 85%;
-  max-width: 850px;
+  width: 100%;
   background-color: #304470;
-  padding: 30px;
+  padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
   color: white;
   margin: 0 auto;
   overflow: hidden;
-  max-height: 500px;
-  overflow-y: auto; // Allow scrolling when necessary
+  max-height: fit-content;
+  overflow-y: auto;
 }
 
 h2 {
@@ -47,33 +43,33 @@ h2 {
 
 .form-row {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   margin-bottom: 20px;
 }
 
 .left-column {
-  width: 35%;
-  border:1px solid white;
-  padding: 5px;
+  width: 100%;
+  padding: 8px;
   border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 .right-column {
-  max-height: 18rem;
+  width: 100%;
+  max-height: 20rem;
   min-height: 18rem;
   overflow-y: scroll;
   scrollbar-width: none;
-  width: 62%;
-  border:1px solid white;
-  padding: 5px;
+  padding: 8px;
   border-radius: 10px;
 }
 
+/* Common styles that don't change with screen size */
 .form-group {
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
-  flex: 1; // Ensures equal spacing for all form groups
+  flex: 1;
 
   label {
     margin-bottom: 8px;
@@ -90,7 +86,7 @@ h2 {
     background-color: #ffffff;
     color: #333;
     transition: border-color 0.3s ease;
-    width: 100%; // Make input fields take full width of the form group
+    width: 100%;
 
     &:focus {
       border-color: #65558f;
@@ -99,24 +95,69 @@ h2 {
   }
 }
 
+.stack-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  width: 100%;
+
+  .form-group {
+    width: 100%;
+    margin-right: 0;
+    min-width: auto;
+    max-width: none;
+  }
+}
+
+
+/* Desktop styles - override mobile styles for larger screens */
+@media (min-width: 768px) {
+
+
+  .candidate-form {
+    width: 100%;
+    max-width: 850px;
+    max-height: 500px;
+  }
+
+  .form-row {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .left-column {
+    width: 35%;
+    border: 1px solid white;
+    margin-bottom: 0;
+  }
+
+  .right-column {
+    width: 62%;
+    border: 1px solid white;
+    max-height: 18rem;
+    min-height: 18rem;
+
+  }
+
+
+  .stack-row {
+    flex-direction: row;
+    align-items: center;
+
+    .form-group {
+      flex: 1;
+      margin-right: 10px;
+      min-width: 200px;
+      max-width: 200px;
+    }}
+
+}
+
+/* These styles remain unchanged */
 input::placeholder {
   color: #b3b3b3;
   opacity: 1;
-}
-
-.stack-row {
-  display: flex; // Use flexbox for layout
-  align-items: center; // Align items vertically centered
-  margin-bottom: 10px; // Space between stack rows
-  width: 100%; // Ensure the row takes full width
-
-  .form-group {
-    flex: 1; // Allow form groups to take equal space
-    margin-right: 10px; // Space between form groups
-    min-width: 200px; // Prevent shrinking
-    max-width: 200px;
-  }
-
 }
 
 .error-message {
@@ -135,76 +176,73 @@ select.ng-valid.ng-touched {
   border-color: #304470;
 }
 
-.submit-button  {
-  background-color: #65558f; // Base background color
-  color: white; // Text color
-  border: none; // Remove default border
-  border-radius: 8px; // Rounded corners
-  padding: 12px 20px; // Padding for a larger button
-  font-size: 16px; // Font size
-  cursor: pointer; // Pointer cursor on hover
-  transition: background-color 0.3s ease, transform 0.2s ease; // Smooth transition
-  width: 100%; // Make button take full width of the form
+.submit-button {
+  background-color: #65558f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
 
   &:hover {
-    background-color: #7a6daa; // Darker color on hover
-    transform: scale(1.05); // Slightly enlarge on hover
+    background-color: #7a6daa;
+    transform: scale(1.05);
   }
 
   &:disabled {
-    background-color: #65558f; // Lighter color when disabled
-    color: #a3a3a3; // Light grey text when disabled
-    cursor: not-allowed; // Change cursor to indicate disabled
+    background-color: #65558f;
+    color: #a3a3a3;
+    cursor: not-allowed;
   }
 }
 
 button {
-  background-color: transparent; // Transparent background
-  border: none; // Remove border
-  cursor: pointer; // Pointer cursor on hover
-  padding: 2px; // Reduced padding for smaller buttons
-  width: 30px; // Fixed width for uniformity
-  height: 40px; // Fixed height for uniformity
-  display: flex; // Flexbox for centering
-  justify-content: center; // Center the icon
-  align-items: center; // Center the icon vertically
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  width: 30px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   img,
   i {
-    width: 26px; // Smaller icon width
-    height: 26px; // Smaller icon height
-    transition: transform 0.2s; // Optional: Add transition for a hover effect
+    width: 26px;
+    height: 26px;
+    transition: transform 0.2s;
   }
 
   &:hover img,
   &:hover i {
-    transform: scale(1.1); // Slightly enlarge the icon on hover
+    transform: scale(1.1);
   }
 }
-
 
 .add-button {
   margin-top: 15px;
   border-radius: 6px;
-  min-width: 50px;
+  width: 100%;
   background-color: #65558f;
   color: white;
+
   &:hover {
-    background-color: #7a6daa; // Darker color on hover
-    transform: scale(1.05); // Slightly enlarge on hover
+    background-color: #7a6daa;
+    transform: scale(1.05);
   }
 
   &:disabled {
-    background-color: #65558f; // Lighter color when disabled
-    color: #a3a3a3; // Light grey text when disabled
-    cursor: not-allowed; // Change cursor to indicate disabled
+    background-color: #65558f;
+    color: #a3a3a3;
+    cursor: not-allowed;
   }
 }
 
-
 .delete-icon {
-
-
   &.disabled-icon {
     opacity: 0.5;
     cursor: not-allowed !important;
@@ -215,47 +253,3 @@ button {
     }
   }
 }
-
-
-/* Responsive styles */
-// @media screen and (min-width: 768px) {
-//   .form-row {
-//     flex-direction: row;
-//     justify-content: space-between;
-//   }
-
-//   .candidate-form {
-//     padding: 40px;
-//     height: calc(100vh - 150px);
-//   }
-
-//   .left-column {
-//     width: 35%;
-//   }
-
-
-
-//   .stack-row .form-group {
-//     flex: 1 0 calc(50% - 10px);
-//     margin-right: 10px;
-//   }
-
-//   .stack-row .form-group:last-child {
-//     margin-right: 0;
-//   }
-// }
-
-// @media screen and (min-width: 1024px) {
-//   .candidate-form {
-//     padding: 40px;
-//     height: calc(100vh - 150px);
-//   }
-
-//   .form-container{
-//     height: calc(100vh - 550px);
-//   }
-
-//   .stack-row .form-group {
-//     flex: 1 0 calc(33.33% - 10px);
-//   }
-// }
