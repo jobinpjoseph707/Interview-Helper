@@ -267,7 +267,6 @@ loadQuestions() {
   }
   openResultsModal() {
     this.dialog.open(this.resultsModalTemplate, {
-      width: '600px',
       panelClass: 'results-modal-dialog'
     });
   }
@@ -296,7 +295,17 @@ loadQuestions() {
   }
 
   finishInterview() {
-    this.openConfirmationModal();
+    this.calculateResults();
+    if (this.totalAnswered===0){
+      this.router.navigate(['candidate-form']).then(() => {
+        this.router.navigate([this.router.url]); // Return to the current page after guard logic runs
+      });
+    }
+    else{
+      this.openConfirmationModal();
+      // Open results modal after confirmation
+    }
+
   }
   
   confirmFinish() {

@@ -145,8 +145,8 @@
   </div>
 </ng-template>
 
-<ng-template #resultsModalTemplate>
-  <div class="modal-content mat-elevation-z8">
+<!-- <ng-template #resultsModalTemplate>
+  <div class="modal-content ">
     <button class="closemodel" mat-icon-button (click)="closeModal()">
       <mat-icon>close</mat-icon>
     </button>
@@ -177,16 +177,57 @@
     </div>
   
     <div class="action-buttons">
-      <!-- <button mat-raised-button  class="download-button" (click)="downloadResults()">
-        Download
-      </button> -->
+
       <button mat-raised-button  class="download-button" (click)="SubmitResults()">
         Submit
       </button>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
 
+
+<ng-template #resultsModalTemplate>
+  <div class="modal-content">
+    <button class="closemodel" mat-icon-button (click)="closeModal()">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <div class="candidate-info">
+      <h6>Candidate ID: {{ candidateId }}</h6>
+      <h6>Name: {{ candidateName }}</h6>
+    </div>
+
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let role of roles; trackBy: trackRoleByName" 
+        (opened)="setRoleExpanded(role, true)" 
+        (closed)="setRoleExpanded(role, false)">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Role: {{ role.name }}
+          </mat-panel-title>
+          <mat-panel-description>
+            Total Percentage: {{ role.percentage }}%
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div *ngIf="role.details" class="role-details">
+          <p>Right: {{ role.details.right }}</p>
+          <p>Wrong: {{ role.details.wrong }}</p>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="overall-percentage">
+      <p>Overall Percentage: {{ overallPercentage }}%</p>
+    </div>
+
+    <div class="action-buttons">
+      <button mat-raised-button class="download-button" (click)="SubmitResults()">
+        Submit
+      </button>
+    </div>
+  </div>
+</ng-template>
 <!-- Remove the old modal sections -->
 <!-- @if (showResultsModal) {... } -->
 <!-- @if(showConfirmationModal){... } -->
