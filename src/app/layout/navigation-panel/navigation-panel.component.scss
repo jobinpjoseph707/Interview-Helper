@@ -6,17 +6,24 @@
     padding: 0px;
     margin:0px
   }
-// mat-sidenav-container {
-//     height: calc(100vh - 5rem);
+:host{
+.mat-drawer-content {
+  z-index: 1;
+  height: 100%;
+  overflow: auto;
+}
+}
 
-//   }
 
+.mat-sidenav-content {
+  margin-left: 0 !important;
+}
   .content {
     height: calc(100vh - 7.5rem);
     padding: 20px;
     background-image: url('/img/background.png');
     background-size:auto;
 
- 
+
   }
- 
+
