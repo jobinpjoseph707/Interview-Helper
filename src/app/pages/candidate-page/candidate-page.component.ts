@@ -49,6 +49,7 @@ export class CandidatePageComponent implements OnInit {
       stackName: [''],
       experienceLevel: ['']
     });
+
   }
 
   ngOnInit(): void {
