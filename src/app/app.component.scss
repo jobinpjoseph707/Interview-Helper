@@ -24,22 +24,24 @@
 
 //   }
 .sidenav-container {
-    background-image: url('/img/background.png');
-    background-size: auto;  }
+    width:inherit;
+    height: calc(100vh - 5rem); // Full height minus the header
+
+   }
   
   .sidebar {
     width: 5rem; // Fixed width for sidebar
     background-color: #172B4D;
     padding: 0;
-    margin: 0;    height: calc(100vh - 5rem); // Full height minus the header
+    margin: 0;    
     height: calc(100vh - 5rem); // Full height minus the header
 
   }
   
   .content {
     padding: 20px;
-
-    height: 100%;
+    background-image: url('/img/background.png');
+    background-size:auto; 
   }
   
   .header {
