@@ -24,20 +24,21 @@
 
 //   }
 .sidenav-container {
-    height: calc(100vh - 5rem); // Full height minus the header
-  }
+    background-image: url('/img/background.png');
+    background-size: auto;  }
   
   .sidebar {
     width: 5rem; // Fixed width for sidebar
     background-color: #172B4D;
     padding: 0;
-    margin: 0;
+    margin: 0;    height: calc(100vh - 5rem); // Full height minus the header
+    height: calc(100vh - 5rem); // Full height minus the header
+
   }
   
   .content {
     padding: 20px;
-    background-image: url('/img/background.png');
-    background-size: auto;
+
     height: 100%;
   }
   
