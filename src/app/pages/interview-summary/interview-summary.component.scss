@@ -24,7 +24,8 @@
     }
 
     .mat-mdc-icon-button svg,
-    .mat-mdc-select-arrow svg {
+    .mat-mdc-select-arrow svg,
+    .mat-expansion-indicator svg {
       fill: white;
     }
   }
@@ -210,6 +211,7 @@
             background-color: #65558f;
             color: white;
             padding: 8px;
+            text-align: left;
           }
 
           td {

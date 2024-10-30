@@ -279,7 +279,7 @@ loadQuestions() {
     }).afterClosed().subscribe(result => {
       if (result) {
         console.log("iam in the model");
-        
+
         this.calculateResults();
         if (this.totalAnswered === 0) {
           this.router.navigate(['candidate-form']).then(() => {
@@ -298,7 +298,7 @@ loadQuestions() {
   finishInterview() {
     this.openConfirmationModal();
   }
-  
+
   confirmFinish() {
     this.dialog.closeAll();
     this.calculateResults();
@@ -337,9 +337,9 @@ this.dialog.closeAll()
   private showSnackbar(message: string, type: 'success' | 'error') {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
       panelClass: type === 'success' ? ['success-snackbar'] : ['error-snackbar']
     });
   }
-  
-
 }

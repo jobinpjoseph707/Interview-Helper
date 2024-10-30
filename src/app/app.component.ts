@@ -65,7 +65,7 @@ export class AppComponent {
 
   ngOnInit() {
     this.breakpointObserver
-      .observe(['(max-width: 756px)'])
+      .observe(['(max-width: 768px)'])
       .subscribe(result => {
         this.isSmallScreen = result.matches;
         if (!this.isSmallScreen && !this.isLoginPage) {
