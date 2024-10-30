@@ -17,6 +17,7 @@
   margin: 0;
   z-index: 100;
 width: 100%;
+height: 100vh;
 }
 ::ng-deep .mat-drawer {
   border-radius: 0px !important;
@@ -51,4 +52,11 @@ a.active {
 img {
   height: 2rem;
   width: 2rem;
+}
+
+::ng-deep .custom-tooltip {
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 4px;
+  padding: 8px 12px;
 }

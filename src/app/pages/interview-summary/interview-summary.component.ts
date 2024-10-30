@@ -89,38 +89,39 @@ export class InterviewSummaryComponent implements OnInit {
     toDateControl?.updateValueAndValidity();
   }
 
-fetchReports(queryParams: any = {}): void {
-  this.reportService.getFilteredInterviewReports(queryParams).subscribe({
-    next: (data) => {
-      console.log('Fetched interview reports:', data);
-      // Sort the reports in descending order by interview date
-      this.reports = data.sort((a: any, b: any) => {
-        return new Date(b.interviewDate).getTime() - new Date(a.interviewDate).getTime();
-      });
-      this.updatePagedReports();
-    },
-    error: (error) => {
-      console.error('Error fetching interview reports:', error);
-    }
-  });
-}
+  fetchReports(queryParams: any = {}): void {
+    this.reportService.getFilteredInterviewReports(queryParams).subscribe({
+      next: (data) => {
+        console.log('Fetched interview reports:', data);
+        this.reports = data.sort((a: any, b: any) => {
+          return new Date(b.interviewDate).getTime() - new Date(a.interviewDate).getTime();
+        });
+        this.updatePagedReports();
+      },
+      error: (error) => {
+        console.error('Error fetching interview reports:', error);
+        this.showSnackBar('Error fetching interview reports', 'error');
+      }
+    });
+  }
 
 
   fetchRoles() {
-    this.stackService.getRoles().subscribe(
-      (roles) => {
+    this.stackService.getRoles().subscribe({
+      next: (roles) => {
         this.roleOptions = roles;
         console.log('Fetched Role Options:', this.roleOptions);
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching roles:', error);
+        this.showSnackBar('Error fetching roles', 'error');
       }
-    );
+    });
   }
 
   onSubmit() {
     if (!this.interviewForm.valid) {
-      this.snackBar.open('Form is invalid. Please correct the errors.', 'Close', { duration: 3000 });
+      this.showSnackBar('Form is invalid. Please correct the errors.', 'error');
       return;
     }
 
@@ -194,7 +195,7 @@ fetchReports(queryParams: any = {}): void {
   }
 
   downloadExpandedReport(report: any) {
-    this.snackBar.open('Generating PDF report...', 'Close', { duration: 3000 });
+    this.showSnackBar('Generating PDF report...', 'success');
 
     const doc = new jsPDF();
 
@@ -222,7 +223,7 @@ fetchReports(queryParams: any = {}): void {
     // Save PDF file
     doc.save(`${report.name}-report.pdf`);
 
-    this.snackBar.open('PDF report downloaded!', 'Close', { duration: 3000 });
+    this.showSnackBar('PDF report downloaded!', 'success');
   }
 
   downloadExpandedExcelReport(report: any): void {
@@ -236,7 +237,7 @@ fetchReports(queryParams: any = {}): void {
   }
 
   downloadAllReports(): void {
-    this.snackBar.open('Downloading all reports...', 'Close', { duration: 3000 });
+    this.showSnackBar('Downloading all reports...', 'success');
 
     const allReportsData = this.reports.flatMap(report => report.technologies.map((stack: any) => ({
       'Candidate Name': report.name,
@@ -250,7 +251,7 @@ fetchReports(queryParams: any = {}): void {
 
     this.excelExportService.exportToExcel(allReportsData, 'All_Reports');
 
-    this.snackBar.open('All reports downloaded successfully!', 'Close', { duration: 3000 });
+    this.showSnackBar('All reports downloaded successfully!', 'success');
   }
 
   dateRangeValidator(group: FormGroup): { [key: string]: any } | null {
@@ -267,4 +268,17 @@ fetchReports(queryParams: any = {}): void {
 
     return null;
   }
+
+  private showSnackBar(message: string, action: 'success' | 'error') {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: action === 'success' ? ['success-snackbar'] : ['error-snackbar']
+    });
+  }
+
+
 }
+
+
