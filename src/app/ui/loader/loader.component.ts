@@ -10,13 +10,13 @@ import { NgIf } from '@angular/common';
 })
 export class LoaderComponent {
   isLoading = false;
-
+  
   constructor(private loaderService: LoaderService) {
     // Subscribe to loader state changes
     console.log("loader active");
-    
+
     this.loaderService.loading$.subscribe(
-      
+
       (state: boolean) => (this.isLoading = state)
     );
   }

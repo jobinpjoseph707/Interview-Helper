@@ -18,3 +18,4 @@ export class ConfirmDialogComponentComponent {
     this.dialogRef.close();
   }
 }
+
