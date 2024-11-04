@@ -241,6 +241,7 @@ loadQuestions() {
       next: (response: string) => {
         console.log('Candidate overall score and review updated successfully', response);
         this.showSnackbar('Overall score and review updated successfully', 'success');
+        this.dialog.closeAll(); 
         this.router.navigate(['/interview-summary']);
       },
       error: (error) => {

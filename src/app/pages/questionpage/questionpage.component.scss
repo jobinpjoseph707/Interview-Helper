@@ -134,7 +134,11 @@ align-items: center;
   }
 }
 
- 
+::ng-deep .mat-mdc-dialog-container .mat-mdc-dialog-surface {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+
+}
 
       .mat-mdc-card-content {
         display: flex;
@@ -180,10 +184,10 @@ align-items: center;
   .modal-content {
     background-color: #1a2a4d;
     color: white;
-    padding: 0px;
+    padding: 1rem;
     margin: 0px;
-    border-radius: 8px;
-    width: 100%;
+    width: 95%;
+
   }
 
 
