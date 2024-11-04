@@ -1,5 +1,4 @@
-import { HttpEvent, HttpInterceptorFn, HttpResponse } from '@angular/common/http';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpEvent, HttpInterceptorFn, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { catchError, finalize, tap, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { inject } from '@angular/core';
@@ -9,15 +8,12 @@ import { LoaderService } from '../services/loader.service';
 // The API Interceptor
 export const apiInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
   const loaderService = inject(LoaderService);
-  const authService = inject(AuthService);  // Inject AuthService to get token
-  const authToken = authService.getToken(); // Get token from AuthService
+  const authService = inject(AuthService);
+  const authToken = authService.getToken();
+  const snackBar = inject(MatSnackBar);
 
   loaderService.show();
 
-
-  const snackBar = inject(MatSnackBar);
-
-  // const token = authService.getToken();
   const authReq = authToken
     ? req.clone({
         headers: req.headers.set('Authorization', `Bearer ${authToken}`)
@@ -33,8 +29,8 @@ export const apiInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       const handledError = handleError(error, snackBar);
       return throwError(() => handledError);
-    }), finalize(() => {
-      // Hide loader after request completes, whether successful or not
+    }),
+    finalize(() => {
       loaderService.hide();
     })
   );
@@ -52,7 +48,6 @@ function handleSuccess(response: HttpResponse<any>, snackBar: MatSnackBar): void
     }
   }
 
-  // Only show a snackbar if there's a message from the backend
   if (responseMessage) {
     snackBar.open(responseMessage, 'Close', {
       duration: 3000,
@@ -64,12 +59,15 @@ function handleSuccess(response: HttpResponse<any>, snackBar: MatSnackBar): void
   console.log('API Interceptor Success:', responseMessage || 'No message provided', response);
 }
 
-// Error handling function (unchanged)
+// Error handling function (updated to avoid ReferenceError)
 function handleError(error: HttpErrorResponse, snackBar: MatSnackBar): string {
   let errorMessage = 'An unknown error occurred';
 
-  if (error.error instanceof ErrorEvent) {
+  // Check if the error is a standard ErrorEvent or just a regular HTTP error
+  if (error.error instanceof Error) {
     errorMessage = `Error: ${error.error.message}`;
+  } else if (error.error && typeof error.error === 'object' && 'message' in error.error) {
+    errorMessage = error.error.message; // If your API returns a custom error object
   } else {
     switch (error.status) {
       case 401:
@@ -96,4 +94,3 @@ function handleError(error: HttpErrorResponse, snackBar: MatSnackBar): string {
   console.error('API Interceptor Error:', errorMessage);
   return errorMessage;
 }
- 

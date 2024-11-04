@@ -10,8 +10,10 @@ import { isPlatformBrowser } from '@angular/common';
 export class AuthService {
   private apiUrl = environment.apiUrl; // Base API URL
 
-  constructor(  private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object ) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   // Login method that sends user credentials to the backend
   login(userAuth: { username: string; password: string }): Observable<any> {
@@ -21,7 +23,6 @@ export class AuthService {
     };
     return this.http.post<any>(`${this.apiUrl}/Auth/login`, payload).pipe(
       tap(response => {
-        // Only execute this block if running in the browser
         if (isPlatformBrowser(this.platformId) && response && response.token) {
           localStorage.setItem('authToken', response.token);
           localStorage.setItem('username', userAuth.username);
@@ -39,21 +40,21 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/Auth/register`, payload);
   }
 
-  // Method to check if the user is logged in by checking for a token in localStorage
+  // Method to check if the user is logged in
   isLoggedIn(): boolean {
     return isPlatformBrowser(this.platformId) && !!localStorage.getItem('authToken');
   }
 
   // Method to get the JWT token from localStorage
   getToken(): string | null {
-    return localStorage.getItem('authToken');
+    return isPlatformBrowser(this.platformId) ? localStorage.getItem('authToken') : null;
   }
 
   // Logout method that removes the token and user info from localStorage
   logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('username');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('username');
+    }
   }
-
-
 }

@@ -8,7 +8,7 @@
   </div>
 </div> -->
 <!-- <router-outlet></router-outlet> Only for routing -->
- 
+
 <!-- <app-header
       [showMenuButton]="isSmallScreen"
       (toggleSidenav)="onToggleSidenav()">
@@ -27,6 +27,7 @@
         <router-outlet></router-outlet>
       </mat-sidenav-content>
     </mat-sidenav-container> -->
+    <app-loader></app-loader>
     <ng-container *ngIf="!isLoginPage; else loginContent">
       <app-header
         [showMenuButton]="isSmallScreen"
