@@ -4,13 +4,13 @@
       <label>Name   :</label>
       <span class="value">{{ candidateName }}</span>
     </span>
-  
+
     <span class="candidate-id">
       <label>Candidate ID    :</label>
       <span class="value">{{ candidateId }}</span>
     </span>
   </div>
-  
+
 <div class="interview-container">
     <nav class="tabs">
       @for (tab of tabs; track tab) {
@@ -18,9 +18,7 @@
           {{ tab }}
         </button>
       }
-
     </nav>
-
   @for (question of filteredQuestions; track question.id;let i = $index) {
     <mat-card appearance="outlined" class="question-card">
       <mat-card-content>
@@ -49,7 +47,7 @@
     </mat-card>
   }
 
-</div>  
+</div>
 <footer class="buttonpossition">
   <button class="finish-button" (click)="finishInterview()">Save</button>
 </footer>
@@ -63,10 +61,10 @@
         <button class="closemodel" mat-icon-button (click)="closeModal()">
           <mat-icon>close</mat-icon>
         </button>
-  
+
         <h6>Candidate ID: {{ candidateId }}</h6>
         <h6>Name: {{ candidateName }}</h6>
-  
+
         <mat-accordion>
           @for (role of roles; track role.name) {
             <mat-expansion-panel (opened)="setRoleExpanded(role, true)" (closed)="setRoleExpanded(role, false)">
@@ -78,7 +76,7 @@
                   Total Percentage: {{ role.percentage }}%
                 </mat-panel-description>
               </mat-expansion-panel-header>
-  
+
               @if (role.details) {
                 <div>
                   <p>Right: {{ role.details.right }}</p>
@@ -88,13 +86,13 @@
             </mat-expansion-panel>
           }
         </mat-accordion>
-  
+
         <div class="overall-percentage">
           <p>Overall Percentage: {{ overallPercentage }}%</p>
         </div>
-  
+
         <div class="action-buttons">
-  
+
           <button mat-raised-button  class="download-button" (click)="SubmitResults()">
             Submit
           </button>
@@ -103,7 +101,7 @@
     </div>
   }
   @if(showConfirmationModal){
-   
+
     <div class="dialog-overlay">
       <div class="dialog-content">
         <h1 class="dialog-title">Confirm Finish</h1>
@@ -122,7 +120,7 @@
         </div>
       </div>
     </div>
-    
+
   } -->
 
 <!-- Define modal templates -->
@@ -150,10 +148,10 @@
     <button class="closemodel" mat-icon-button (click)="closeModal()">
       <mat-icon>close</mat-icon>
     </button>
-  
+
     <h6>Candidate ID: {{ candidateId }}</h6>
     <h6>Name: {{ candidateName }}</h6>
-  
+
     <mat-accordion>
       <mat-expansion-panel *ngFor="let role of roles; trackBy: trackRoleByName" (opened)="setRoleExpanded(role, true)" (closed)="setRoleExpanded(role, false)">
         <mat-expansion-panel-header>
@@ -164,18 +162,18 @@
             Total Percentage: {{ role.percentage }}%
           </mat-panel-description>
         </mat-expansion-panel-header>
-  
+
         <div *ngIf="role.details">
           <p>Right: {{ role.details.right }}</p>
           <p>Wrong: {{ role.details.wrong }}</p>
         </div>
       </mat-expansion-panel>
     </mat-accordion>
-  
+
     <div class="overall-percentage">
       <p>Overall Percentage: {{ overallPercentage }}%</p>
     </div>
-  
+
     <div class="action-buttons">
 
       <button mat-raised-button  class="download-button" (click)="SubmitResults()">

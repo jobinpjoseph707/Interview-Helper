@@ -9,19 +9,16 @@
 </div> -->
 <!-- <router-outlet></router-outlet> Only for routing -->
 
-
-
-
-<!-- <app-header 
-      [showMenuButton]="isSmallScreen" 
+<!-- <app-header
+      [showMenuButton]="isSmallScreen"
       (toggleSidenav)="onToggleSidenav()">
     </app-header>
 
     <mat-sidenav-container class="sidenav-container">
-      <mat-sidenav 
-        #sidenav 
-        [mode]="isSmallScreen ? 'over' : 'side'" 
-        [opened]="!isSmallScreen" 
+      <mat-sidenav
+        #sidenav
+        [mode]="isSmallScreen ? 'over' : 'side'"
+        [opened]="!isSmallScreen"
         class="sidebar">
         <app-sidebar></app-sidebar>
       </mat-sidenav>
@@ -30,32 +27,33 @@
         <router-outlet></router-outlet>
       </mat-sidenav-content>
     </mat-sidenav-container> -->
+    <app-loader></app-loader>
     <ng-container *ngIf="!isLoginPage; else loginContent">
-      <app-header 
-        [showMenuButton]="isSmallScreen" 
+      <app-header
+        [showMenuButton]="isSmallScreen"
         (toggleSidenav)="onToggleSidenav()">
       </app-header>
 
       <mat-sidenav-container class="sidenav-container">
-       
-        
-        <mat-sidenav 
-          #sidenav 
-          [mode]="isSmallScreen ? 'over' : 'side'" 
-          [opened]="!isSmallScreen" 
+
+
+        <mat-sidenav
+          #sidenav
+          [mode]="isSmallScreen ? 'over' : 'side'"
+          [opened]="!isSmallScreen"
           class="sidebar"
           (openedStart)="onSidenavOpen()"
           (closedStart)="onSidenavClose()">
           <app-sidebar></app-sidebar>
         </mat-sidenav>
 
-        <mat-sidenav-content 
+        <mat-sidenav-content
           class="content"
           [class.blur]="isSmallScreen && sidenav?.opened">
           <router-outlet></router-outlet>
         </mat-sidenav-content>
 
-        
+
       </mat-sidenav-container>
     </ng-container>
 

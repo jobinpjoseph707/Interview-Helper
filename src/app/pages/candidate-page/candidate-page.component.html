@@ -102,12 +102,13 @@
                 <button type="button"
                 (click)="removeSelectedStacks()"
                 class="remove-button-all"
-                [disabled]="!isAllSelected()">
+                [disabled]="!isAllSelected() || dataSource.data.length === 0">
           <img class="delete-icon"
-               [ngClass]="{'disabled-icon': !isAllSelected()}"
+               [ngClass]="{'disabled-icon': !isAllSelected() || dataSource.data.length === 0}"
                src="https://img.icons8.com/?size=100&id=1S8vEZQolh6d&format=png&color=af4949"
                alt="delete">
         </button>
+
               </th>
               <td mat-cell *matCellDef="let element">
                 <button type="button" (click)="removeRow(element)" class="remove-button">
